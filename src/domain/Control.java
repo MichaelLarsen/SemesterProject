@@ -4,15 +4,17 @@
  */
 package domain;
 
+import dataSource.DBFacade;
+
 /**
  *
  * @author Gruppe 4: Andreas, Michael og Sebastian
  */
-public class Control 
-{
+public class Control {
 
-    /**
-     * @param args the command line arguments
-     */
-    
+    private DBFacade DBFacade;
+
+    public Control() {
+        DBFacade = DBFacade.getInstance();
+    }
 }

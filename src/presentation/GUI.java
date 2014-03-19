@@ -6,16 +6,21 @@
 
 package presentation;
 
+import domain.Control;
+
 /**
  *
  * @author Gruppe 4: Andreas, Michael og Sebastian
  */
 public class GUI extends javax.swing.JFrame {
 
+    private Control ctr;
     /**
      * Creates new form GUI
      */
     public GUI() {
+        
+        ctr = new Control();
         initComponents();
     }
 
