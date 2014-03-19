@@ -12,23 +12,19 @@ import java.sql.DriverManager;
  *
  * @author ANDREAS!!! og lidt sebastian og michael
  */
-public class DBConnector
-{
+public class DBConnector {
 
     private static String id = "SEM2_TEST_GR04";
     private static String pw = "SEM2_TEST_GR04";
 
-    public Connection getConnection()
-    {
+    public Connection getConnection() {
         Connection con = null;
-        try
-        {
+        try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             con = DriverManager.getConnection("jdbc:oracle:thin:@delfi.lyngbyes.dk:1521:KNORD", id, pw);
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Did not load driver or username/password correctly!");
             System.out.println("error in DBConnector.getConnection()");
             System.out.println(e);
@@ -37,14 +33,11 @@ public class DBConnector
         return con;
     }
 
-    public void releaseConnection(Connection con)
-    {
-        try
-        {
+    public void releaseConnection(Connection con) {
+        try {
             con.close();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.err.println(e);
         }
     }
