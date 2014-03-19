@@ -2,18 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package semesterproject;
+package domain;
 
 /**
  *
- * @author Michael
+ * @author Gruppe 4: Andreas, Michael og Sebastian
  */
-public class SemesterProject {
+public class Control 
+{
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        
-    }
+    
 }
