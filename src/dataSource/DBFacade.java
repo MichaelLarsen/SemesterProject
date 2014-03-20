@@ -5,6 +5,8 @@
  */
 package dataSource;
 
+import domain.Customer;
+import domain.Room;
 import java.sql.Connection;
 
 /**
@@ -13,13 +15,13 @@ import java.sql.Connection;
  */
 public class DBFacade {
 
-    private Mapper om;
+    private Mapper mapper;
     private Connection con;
     // Singleton for at sikre at der kun er en forbindelse samt at give global adgang til domænet.
     private static DBFacade instance;
 
     private DBFacade() {
-        om = new Mapper();
+        mapper = new Mapper();
         con = new DBConnector().getConnection(); // Forbindelsen frigivet når programmet bliver lukket af garbage collector
     }
 
@@ -30,6 +32,14 @@ public class DBFacade {
         return instance;
     }
     // Singleton slutning
-    
-    
+
+    public boolean addCustomerToRoom(Customer currentCustomer) {
+        boolean status;
+        status = mapper.addCustomerToRoom(currentCustomer, con);
+        return status;
+    }
+
+    public Room getRoomFromDB() {
+        return mapper.getRoomsFromDB(con);
+    }
 }

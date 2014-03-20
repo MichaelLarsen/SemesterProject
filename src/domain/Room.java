@@ -6,6 +6,8 @@
 
 package domain;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Seb
@@ -13,10 +15,12 @@ package domain;
 public class Room
 {
     private int roomNo;
-    private enum roomType {Single, Double, Family}
+    private String roomType;
     private int price;
     
-    public Room(int roomNo, enum roomType, int price)
+    
+    
+    public Room(int roomNo, String roomType, int price)
     {
         this.roomNo = roomNo;
         this.roomType = roomType;
@@ -33,12 +37,12 @@ public class Room
         this.roomNo = roomNo;
     }
     
-    public enum getRoomType()
+    public String getRoomType()
     {
         return roomType;
     }
         
-    public void setRoomType(enum roomType)
+    public void setRoomType(String roomType)
     {
         this.roomType = roomType;
     }
