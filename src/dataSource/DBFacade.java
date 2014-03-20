@@ -45,4 +45,10 @@ public class DBFacade {
         roomList = mapper.getRoomsFromDB(con);
         return roomList;
     }
+
+    public ArrayList<Customer> getCustomersFromDB() {
+        ArrayList<Customer> customerList;
+        customerList = mapper.getCustomersFromDB(con);
+        return customerList;
+    }
 }

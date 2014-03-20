@@ -50,7 +50,7 @@ public class Room {
     @Override
     public String toString() {
         String str = "";
-        str = "Room number: "+roomNo + "type: " + roomType + "Price($): "+price+"/n";
+        str = "RoomNo: " +roomNo+ " type: " + roomType + " Price($): "+price+" \n";
         return str;
     }
 

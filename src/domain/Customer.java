@@ -24,12 +24,11 @@ public class Customer {
     private String agency;
     private String checkInDate;
     private int numberOfNights;
-    private Room room;
+    private int roomNo;
     //private boolean paid_deposit = false;
-    private double debt;
+    //private double debt;
 
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, String agency, String checkInDate, int numberOfNights, Room room, double debt) {
-        room = null;
+    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, String agency, String checkInDate, int numberOfNights, int roomNo) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,9 +40,9 @@ public class Customer {
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.numberOfNights = numberOfNights;
-        this.room = room;
+        this.roomNo = roomNo;
         //this.paid_deposit = paid_deposit;
-        this.debt = debt;
+        //this.debt = debt;
     }
 
     public int getCustomerId() {
@@ -74,13 +73,13 @@ public class Customer {
 //    {
 //        this.paid_deposit = paid_deposit;
 //    }
-    public double getDebt() {
-        return debt;
-    }
-
-    public void setDebt(double debt) {
-        this.debt = debt;
-    }
+//    public double getDebt() {
+//        return debt;
+//    }
+//
+//    public void setDebt(double debt) {
+//        this.debt = debt;
+//    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -150,22 +149,19 @@ public class Customer {
         this.numberOfNights = numberOfNights;
     }
 
-    public Room getRoom() {
-        return room;
+    public int getRoomNo() {
+        return roomNo;
     }
 
     public void setRoom(Room room) {
-        this.room = room;
+        this.roomNo = roomNo;
     }
-
-    public int getRoomNo() {
-        return room.getRoomNo();
-    }
-    public String roomToString()
-    {
-        String str = room.getRoomNo()+room.getRoomType()+room.getPrice()+"";
+    
+    @Override
+    public String toString() {
+        String str = "";
+        String date = checkInDate;
+        str = "CustomerID: " + customerId + " Name: " + lastName + ", "+ firstName + " CheckIn: " + date.substring(0,11) + " NoOfNights: " + numberOfNights + " RoomNumber: " + roomNo + "\n";
         return str;
-       
     }
-
 }

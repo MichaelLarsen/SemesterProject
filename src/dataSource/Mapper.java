@@ -37,7 +37,6 @@ public class Mapper {
             statement.setString(10, currentCustomer.getCheckInDate());
             statement.setInt(11, currentCustomer.getNumberOfNights());
             statement.setInt(12, currentCustomer.getRoomNo());
-            statement.setDouble(13, currentCustomer.getDebt());
             rowsInserted = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
         }
         catch (SQLException e) {
@@ -66,7 +65,9 @@ public class Mapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                room = new Room(rs.getInt(1), rs.getString(2), rs.getInt(3));
+                room = new Room(rs.getInt(1), 
+                                rs.getString(2), 
+                                rs.getInt(3));
                 roomList.add(room);
             }
         }
@@ -84,6 +85,47 @@ public class Mapper {
             }
         }
         return roomList;
+
+    }
+
+    public ArrayList<Customer> getCustomersFromDB(Connection con) {
+        Customer customer = null;
+        ArrayList<Customer> customerList = new ArrayList<>();
+        String SQLString = "select * from CUSTOMERS";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(rs.getInt(1), 
+                                        rs.getString(2), 
+                                        rs.getString(3),
+                                        rs.getString(4),
+                                        rs.getString(5),
+                                        rs.getString(6),
+                                        rs.getString(7),
+                                        rs.getString(8),
+                                        rs.getString(9),
+                                        rs.getString(10),
+                                        rs.getInt(11),
+                                        rs.getInt(12));
+                customerList.add(customer);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in mapper - getCustomersFromDB");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                System.out.println("Fail in mapper - getCustomersFromDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return customerList;
 
     }
 }

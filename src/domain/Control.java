@@ -30,9 +30,14 @@ public class Control {
         status = DBFacade.addCustomerToRoom(currentCustomer);
         return status;
     }
-    public ArrayList<Room> getRoomFromDB(){
+    public ArrayList<Room> getRoomsFromDB(){
         roomList = DBFacade.getRoomFromDB();
         return roomList;
+    }
+
+    public ArrayList<Customer> getCustomersFromDB() {
+        customerList = DBFacade.getCustomersFromDB();
+        return customerList;
     }
 }
 
