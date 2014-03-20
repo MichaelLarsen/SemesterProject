@@ -17,20 +17,12 @@ public class Control {
     private Customer currentCustomer;
     private ArrayList<Customer> customerList = new ArrayList<>();
     private ArrayList<Room> roomList;
-    
 
     public Control() {
         DBFacade = DBFacade.getInstance();
     }
 
-    public boolean addRoomToCustomer() {
-        boolean status;     
-        if (currentCustomer !=null) { 
-        }
-        status = DBFacade.addCustomerToRoom(currentCustomer);
-        return status;
-    }
-    public ArrayList<Room> getRoomsFromDB(){
+    public ArrayList<Room> getRoomsFromDB() {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
@@ -39,5 +31,15 @@ public class Control {
         customerList = DBFacade.getCustomersFromDB();
         return customerList;
     }
-}
 
+    public boolean bookCustomerToRoom(Room room, Customer customer) {
+        boolean status = false;
+        if (room.getOccupied() == 0) {
+            int roomNumber = room.getRoomNo();
+            customer.setRoomNo(roomNumber);
+            room.setOccupied(1);
+            status = true;
+        }
+        return status;
+    }
+}

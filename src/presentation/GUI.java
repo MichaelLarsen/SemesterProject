@@ -8,7 +8,6 @@ package presentation;
 import domain.Control;
 import domain.Customer;
 import domain.Room;
-import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 /**
@@ -44,6 +43,8 @@ public class GUI extends javax.swing.JFrame {
         getCustomersButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         customerJList = new javax.swing.JList();
+        selectButton = new javax.swing.JButton();
+        statusJLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,6 +66,15 @@ public class GUI extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(customerJList);
 
+        selectButton.setText("Select");
+        selectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButtonActionPerformed(evt);
+            }
+        });
+
+        statusJLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -73,10 +83,14 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(getCustomersButton)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                     .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(selectButton)
+                        .addGap(31, 31, 31)
+                        .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addContainerGap(263, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +103,14 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(getCustomersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(selectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -121,6 +142,20 @@ public class GUI extends javax.swing.JFrame {
         }
         customerJList.setModel(customerModel);
     }//GEN-LAST:event_getCustomersButtonActionPerformed
+
+    private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
+        Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
+        Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+        boolean status;
+        status = ctr.bookCustomerToRoom(room,customer);
+        if (status) {
+            statusJLabel.setText("Customer booked room " + room.getRoomNo());
+        }
+        else
+        {
+            statusJLabel.setText("Room is occupied!");
+        }
+    }//GEN-LAST:event_selectButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,5 +204,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList roomJList;
+    private javax.swing.JButton selectButton;
+    private javax.swing.JLabel statusJLabel;
     // End of variables declaration//GEN-END:variables
 }

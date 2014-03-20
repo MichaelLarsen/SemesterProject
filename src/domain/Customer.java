@@ -153,7 +153,7 @@ public class Customer {
         return roomNo;
     }
 
-    public void setRoom(Room room) {
+    public void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
     }
     

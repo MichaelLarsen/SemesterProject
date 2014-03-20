@@ -16,11 +16,13 @@ public class Room {
     private int roomNo;
     private String roomType;
     private int price;
+    private int occupied;
 
-    public Room(int roomNo, String roomType, int price) {
+    public Room(int roomNo, String roomType, int price, int occupied) {
         this.roomNo = roomNo;
         this.roomType = roomType;
         this.price = price;
+        this.occupied = occupied;
     }
 
     public int getRoomNo() {
@@ -46,11 +48,23 @@ public class Room {
     public void setPrice(int price) {
         this.price = price;
     }
+    
+    public int getOccupied() {
+        return occupied;
+    }
+    
+    public void setOccupied(int occupied) {
+        this.occupied = occupied;
+    }
 
     @Override
     public String toString() {
+        String booked = "no";
+        if (occupied == 1) {
+            booked = "yes";
+        }
         String str = "";
-        str = "RoomNo: " +roomNo+ " type: " + roomType + " Price($): "+price+" \n";
+        str = "RoomNo: " +roomNo+ " Type: " + roomType + " Price($): " + price + " Occupied: " + booked + "\n";
         return str;
     }
 

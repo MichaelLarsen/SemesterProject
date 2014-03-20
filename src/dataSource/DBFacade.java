@@ -34,12 +34,6 @@ public class DBFacade {
     }
     // Singleton slutning
 
-    public boolean addCustomerToRoom(Customer currentCustomer) {
-        boolean status;
-        status = mapper.addCustomerToRoom(currentCustomer, con);
-        return status;
-    }
-
     public ArrayList<Room> getRoomFromDB() {
         ArrayList<Room> roomList;
         roomList = mapper.getRoomsFromDB(con);
