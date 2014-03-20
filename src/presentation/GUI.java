@@ -90,8 +90,10 @@ public class GUI extends javax.swing.JFrame {
 
     private void getRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getRoomButtonActionPerformed
         String str = "";
-        str = ctr.getRoomFromDB();
-        TextAreaRooms.setText(str);
+        for (int i = 0; i < ctr.getRoomFromDB().size(); i++) {
+            str = ctr.getRoomFromDB().get(i).toString();
+            TextAreaRooms.append(str);
+        }        
     }//GEN-LAST:event_getRoomButtonActionPerformed
 
     /**
