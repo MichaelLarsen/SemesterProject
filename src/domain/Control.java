@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class Control {
 
     private DBFacade DBFacade;
-    private Customer currentCustomer;
     private ArrayList<Customer> customerList = new ArrayList<>();
     private ArrayList<Room> roomList;
 
@@ -26,7 +25,7 @@ public class Control {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
-
+    
     public ArrayList<Customer> getCustomersFromDB() {
         customerList = DBFacade.getCustomersFromDB();
         return customerList;
@@ -34,10 +33,23 @@ public class Control {
 
     public boolean bookCustomerToRoom(Room room, Customer customer) {
         boolean status = false;
-        if (room.getOccupied() == 0) {
-            int roomNumber = room.getRoomNo();
-            customer.setRoomNo(roomNumber);
-            room.setOccupied(1);
+        boolean check = false;
+        int oldRoomNo = customer.getRoomNo();
+        
+
+        if (room.getEmptyBeds() > 0) {
+            while (!check) {
+                for (int i = 0; i < roomList.size(); i++) {
+                    if (oldRoomNo == roomList.get(i).getRoomNo()) {
+                        roomList.get(i).decrementOccupiedBeds();
+                        //UPDATE DATABASE
+                        check = true;
+                    }
+                }
+            }
+            int newRoomNumber = room.getRoomNo();
+            customer.setRoomNo(newRoomNumber);
+            room.incrementOccupiedBeds();
             status = true;
         }
         return status;

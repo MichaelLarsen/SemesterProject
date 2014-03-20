@@ -17,6 +17,8 @@ import javax.swing.DefaultListModel;
 public class GUI extends javax.swing.JFrame {
 
     private Control ctr;
+    private DefaultListModel<Customer> customerModel;
+    private DefaultListModel<Room> roomModel;
 
     /**
      * Creates new form GUI
@@ -25,6 +27,8 @@ public class GUI extends javax.swing.JFrame {
 
         ctr = new Control();
         initComponents();
+        customerModel = new DefaultListModel<>();
+        roomModel = new DefaultListModel<>();
     }
 
     /**
@@ -128,7 +132,7 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 //Bruger jlist til at hente rum og derfor også kunne vælge rum i form af objekt.
     private void getRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getRoomButtonActionPerformed
-        DefaultListModel<Room> roomModel = new DefaultListModel<>();
+        roomModel.removeAllElements();
         for (int i = 0; i < ctr.getRoomsFromDB().size(); i++) {
             roomModel.addElement(ctr.getRoomsFromDB().get(i));
         }
@@ -136,7 +140,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_getRoomButtonActionPerformed
 
     private void getCustomersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getCustomersButtonActionPerformed
-        DefaultListModel<Customer> customerModel = new DefaultListModel<>();
+        customerModel.removeAllElements();
         for (int i = 0; i < ctr.getCustomersFromDB().size(); i++) {
             customerModel.addElement(ctr.getCustomersFromDB().get(i));
         }
@@ -144,16 +148,22 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
-        Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
-        Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
-        boolean status;
-        status = ctr.bookCustomerToRoom(room,customer);
-        if (status) {
-            statusJLabel.setText("Customer booked room " + room.getRoomNo());
+        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
+            statusJLabel.setText("You must select a room and a customer!");
         }
-        else
-        {
-            statusJLabel.setText("Room is occupied!");
+        else {
+            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
+            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+            boolean status;
+            status = ctr.bookCustomerToRoom(room, customer);
+            if (status) {
+                statusJLabel.setText("Customer booked room " + room.getRoomNo());
+                roomJList.setModel(roomModel);
+                customerJList.setModel(customerModel);
+            }
+            else {
+                statusJLabel.setText("Room is occupied!");
+            }
         }
     }//GEN-LAST:event_selectButtonActionPerformed
 

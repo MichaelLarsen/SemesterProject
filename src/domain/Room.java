@@ -5,8 +5,6 @@
  */
 package domain;
 
-
-
 /**
  *
  * @author Seb
@@ -14,15 +12,34 @@ package domain;
 public class Room {
 
     private int roomNo;
-    private String roomType;
     private int price;
-    private int occupied;
+    private RoomType roomType;
+    private int occupiedBeds;
 
-    public Room(int roomNo, String roomType, int price, int occupied) {
+    //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
+    public enum RoomType {
+
+        SINGLE(1), DOUBLE(2), FAMILY(5);
+        private int roomSize;
+
+        private RoomType(int roomSize) {
+            this.roomSize = roomSize;
+        }
+    }
+
+    public Room(int roomNo, String type, int price, int occupiedBeds) {
         this.roomNo = roomNo;
-        this.roomType = roomType;
         this.price = price;
-        this.occupied = occupied;
+        this.occupiedBeds = occupiedBeds;
+        if (type.equals("Single")) {
+            roomType = RoomType.SINGLE;
+        }
+        if (type.equals("Double")) {
+            roomType = RoomType.DOUBLE;
+        }
+        if (type.equals("Family")) {
+            roomType = RoomType.FAMILY;
+        }
     }
 
     public int getRoomNo() {
@@ -33,11 +50,15 @@ public class Room {
         this.roomNo = roomNo;
     }
 
-    public String getRoomType() {
+    public RoomType getRoomType() {
         return roomType;
     }
+    
+    public int getRoomSize() {
+        return roomType.roomSize;
+    }
 
-    public void setRoomType(String roomType) {
+    public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
 
@@ -48,23 +69,47 @@ public class Room {
     public void setPrice(int price) {
         this.price = price;
     }
-    
-    public int getOccupied() {
-        return occupied;
+
+    public int getOccupiedBeds() {
+        return occupiedBeds;
     }
     
-    public void setOccupied(int occupied) {
-        this.occupied = occupied;
+    public int getEmptyBeds() {
+        return roomType.roomSize - occupiedBeds;
+    }
+
+    public void setOccupiedBeds(int occupied) {
+        this.occupiedBeds = occupied;
+    }
+
+    public void incrementOccupiedBeds() {
+        if (roomType.roomSize > occupiedBeds) {
+            occupiedBeds++;
+            System.out.println("Customer added to room +1");
+        }
+        else {
+            System.out.println("Room is full!");
+        }
+    }
+
+    public void decrementOccupiedBeds() {
+        if (occupiedBeds < 0) {
+            occupiedBeds--;
+            System.out.println("Customer removed from room -1");
+        }
     }
 
     @Override
     public String toString() {
-        String booked = "no";
-        if (occupied == 1) {
-            booked = "yes";
+        String booked = "";
+        if (occupiedBeds > 0) {
+            booked = "Yes";
+        }
+        else {
+            booked = "No";
         }
         String str = "";
-        str = "RoomNo: " +roomNo+ " Type: " + roomType + " Price($): " + price + " Occupied: " + booked + "\n";
+        str = "RoomNo: " + roomNo + " Type: " + roomType + " Price($): " + price + " Occupied: " + booked + " Available beds: " + (roomType.roomSize-occupiedBeds) + "/" + roomType.roomSize + "\n";
         return str;
     }
 
