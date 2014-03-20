@@ -11,8 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
@@ -58,15 +57,17 @@ public class Mapper {
         return rowsInserted == 1; //hvis dette passer returneres true ellers false  
     }
 
-    public Room getRoomsFromDB(Connection con) {
+    public ArrayList<Room> getRoomsFromDB(Connection con) {
         Room room = null;
-        String SQLString = "select * from Rooms";
+        ArrayList<Room> roomList = new ArrayList<>();
+        String SQLString = "select * from ROOMS";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 room = new Room(rs.getInt(1), rs.getString(2), rs.getInt(3));
+                roomList.add(room);
             }
         }
         catch (SQLException e) {
@@ -82,7 +83,7 @@ public class Mapper {
                 System.out.println(e.getMessage());
             }
         }
-        return room;
+        return roomList;
 
     }
 }

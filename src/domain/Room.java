@@ -3,58 +3,55 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domain;
 
-import java.util.ArrayList;
+
 
 /**
  *
  * @author Seb
  */
-public class Room
-{
+public class Room {
+
     private int roomNo;
     private String roomType;
     private int price;
-    
-    
-    
-    public Room(int roomNo, String roomType, int price)
-    {
+
+    public Room(int roomNo, String roomType, int price) {
         this.roomNo = roomNo;
         this.roomType = roomType;
         this.price = price;
     }
 
-    public int getRoomNo()
-    {
+    public int getRoomNo() {
         return roomNo;
     }
 
-    public void setRoomNo(int roomNo)
-    {
+    public void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
     }
-    
-    public String getRoomType()
-    {
+
+    public String getRoomType() {
         return roomType;
     }
-        
-    public void setRoomType(String roomType)
-    {
+
+    public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
 
-    public int getPrice()
-    {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price)
-    {
+    public void setPrice(int price) {
         this.price = price;
     }
-    
+
+    @Override
+    public String toString() {
+        String str = "";
+        str = "Room number: "+roomNo + "type: " + roomType + "Price($): "+price;
+        return str;
+    }
+
 }

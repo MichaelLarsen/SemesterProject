@@ -16,7 +16,7 @@ public class Control {
     private DBFacade DBFacade;
     private Customer currentCustomer;
     private ArrayList<Customer> customerList = new ArrayList<>();
-    private Room room;
+    private ArrayList<Room> roomList;
     
 
     public Control() {
@@ -30,9 +30,9 @@ public class Control {
         status = DBFacade.addCustomerToRoom(currentCustomer);
         return status;
     }
-    public String getRoomFromDB(){
-        room = DBFacade.getRoomFromDB();
-        return room.toString();
+    public ArrayList<Room> getRoomFromDB(){
+        roomList = DBFacade.getRoomFromDB();
+        return roomList;
     }
 }
 

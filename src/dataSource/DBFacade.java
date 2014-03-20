@@ -8,6 +8,7 @@ package dataSource;
 import domain.Customer;
 import domain.Room;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,7 +40,9 @@ public class DBFacade {
         return status;
     }
 
-    public Room getRoomFromDB() {
-        return mapper.getRoomsFromDB(con);
+    public ArrayList<Room> getRoomFromDB() {
+        ArrayList<Room> roomList;
+        roomList = mapper.getRoomsFromDB(con);
+        return roomList;
     }
 }
