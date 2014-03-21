@@ -93,7 +93,7 @@ public class Room {
     }
 
     public void decrementOccupiedBeds() {
-        if (occupiedBeds < 0) {
+        if (occupiedBeds > 0) {
             occupiedBeds--;
             System.out.println("Customer removed from room -1");
         }
@@ -109,7 +109,7 @@ public class Room {
             booked = "No";
         }
         String str = "";
-        str = "RoomNo: " + roomNo + " Type: " + roomType + " Price($): " + price + " Occupied: " + booked + " Available beds: " + (roomType.roomSize-occupiedBeds) + "/" + roomType.roomSize + "\n";
+        str = "RoomNo: " + roomNo + " Type: " + roomType + " Price($): " + price + " Occupied: " + booked + " Guests: " + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }
 

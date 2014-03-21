@@ -205,7 +205,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList customerJList;
     private javax.swing.JButton getCustomersButton;

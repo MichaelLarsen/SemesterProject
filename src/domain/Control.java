@@ -25,7 +25,7 @@ public class Control {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
-    
+
     public ArrayList<Customer> getCustomersFromDB() {
         customerList = DBFacade.getCustomersFromDB();
         return customerList;
@@ -35,16 +35,18 @@ public class Control {
         boolean status = false;
         boolean check = false;
         int oldRoomNo = customer.getRoomNo();
-        
+
 
         if (room.getEmptyBeds() > 0) {
-            while (!check) {
-                for (int i = 0; i < roomList.size(); i++) {
+            int i = 0;
+            while (!check && i < roomList.size()) {
+                {
                     if (oldRoomNo == roomList.get(i).getRoomNo()) {
                         roomList.get(i).decrementOccupiedBeds();
                         //UPDATE DATABASE
                         check = true;
                     }
+                    i++;
                 }
             }
             int newRoomNumber = room.getRoomNo();
