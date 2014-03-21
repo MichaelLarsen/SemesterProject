@@ -158,8 +158,8 @@ public class GUI extends javax.swing.JFrame {
             status = ctr.bookCustomerToRoom(room, customer);
             if (status) {
                 statusJLabel.setText("Customer booked room " + room.getRoomNo());
-                roomJList.setModel(roomModel);
                 customerJList.setModel(customerModel);
+                roomJList.setModel(roomModel);
             }
             else {
                 statusJLabel.setText("Room is occupied!");

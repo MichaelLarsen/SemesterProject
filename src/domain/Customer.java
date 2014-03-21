@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class Customer {
 
+    //Sebastian er en lort og er uenig!
     private int customerId;
     private String firstName;
     private String lastName;
@@ -21,6 +22,8 @@ public class Customer {
     private String city;
     private String country;
     private String email;
+    private int privatePhone;
+    private int workPhone;
     private String agency;
     private String checkInDate;
     private int numberOfNights;
@@ -28,7 +31,7 @@ public class Customer {
     //private boolean paid_deposit = false;
     //private double debt;
 
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, String agency, String checkInDate, int numberOfNights, int roomNo) {
+    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone, String agency, String checkInDate, int numberOfNights, int roomNo) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,12 +40,30 @@ public class Customer {
         this.city = city;
         this.country = country;
         this.email = email;
+        this.privatePhone = privatePhone;
+        this.workPhone = workPhone;
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.numberOfNights = numberOfNights;
         this.roomNo = roomNo;
         //this.paid_deposit = paid_deposit;
         //this.debt = debt;
+    }
+
+    public int getPrivatePhone() {
+        return privatePhone;
+    }
+
+    public void setPrivatePhone(int privatePhone) {
+        this.privatePhone = privatePhone;
+    }
+
+    public int getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(int workPhone) {
+        this.workPhone = workPhone;
     }
 
     public int getCustomerId() {
@@ -80,7 +101,6 @@ public class Customer {
 //    public void setDebt(double debt) {
 //        this.debt = debt;
 //    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -156,12 +176,15 @@ public class Customer {
     public void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
     }
-    
+
     @Override
     public String toString() {
         String str = "";
         String date = checkInDate;
-        str = "CustomerID: " + customerId + " Name: " + lastName + ", "+ firstName + " CheckIn: " + date.substring(0,11) + " NoOfNights: " + numberOfNights + " RoomNumber: " + roomNo + "\n";
+
+        str = "CustomerID: " + customerId + " Name: " + lastName + ", " + firstName 
+                + " CheckIn: " + date.substring(0, 11) + " NoOfNights: " 
+                + numberOfNights + " RoomNumber: " + roomNo + "\n";
         return str;
     }
 }

@@ -106,10 +106,12 @@ public class Mapper {
                                         rs.getString(6),
                                         rs.getString(7),
                                         rs.getString(8),
-                                        rs.getString(9),
-                                        rs.getString(10),
-                                        rs.getInt(11),
-                                        rs.getInt(12));
+                                        rs.getInt(9),
+                                        rs.getInt(10),
+                                        rs.getString(11),
+                                        rs.getString(12),
+                                        rs.getInt(13),
+                                        rs.getInt(14));
                 customerList.add(customer);
             }
         }

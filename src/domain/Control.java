@@ -36,22 +36,22 @@ public class Control {
         boolean check = false;
         int oldRoomNo = customer.getRoomNo();
 
-
         if (room.getEmptyBeds() > 0) {
             int i = 0;
-            while (!check && i < roomList.size()) {
-                {
-                    if (oldRoomNo == roomList.get(i).getRoomNo()) {
-                        roomList.get(i).decrementOccupiedBeds();
-                        //UPDATE DATABASE
-                        check = true;
-                    }
-                    i++;
+            while (!check && i < roomList.size() && oldRoomNo != 0) {
+
+                if (oldRoomNo == roomList.get(i).getRoomNo()) {
+                    roomList.get(i).decrementOccupiedBeds();
+                    //UPDATE DATABASE
+                    check = true;
                 }
+                i++;
             }
+
             int newRoomNumber = room.getRoomNo();
             customer.setRoomNo(newRoomNumber);
             room.incrementOccupiedBeds();
+            //UPDATE DATABASE
             status = true;
         }
         return status;
