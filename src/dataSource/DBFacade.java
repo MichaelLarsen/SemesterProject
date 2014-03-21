@@ -45,4 +45,12 @@ public class DBFacade {
         customerList = mapper.getCustomersFromDB(con);
         return customerList;
     }
+
+    public boolean updateCustomerDB(Customer customer) {
+        return mapper.updateCustomerDB(customer, con);
+    }
+
+    public boolean updateRoomDB(Room room) {
+        return mapper.updateRoomDB(room, con);
+    }
 }

@@ -14,6 +14,7 @@ public class Room {
     private int roomNo;
     private int price;
     private RoomType roomType;
+    private String roomTypeString;
     private int occupiedBeds;
 
     //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
@@ -31,6 +32,7 @@ public class Room {
         this.roomNo = roomNo;
         this.price = price;
         this.occupiedBeds = occupiedBeds;
+        this.roomTypeString = type;
         if (type.equals("Single")) {
             roomType = RoomType.SINGLE;
         }
@@ -52,6 +54,10 @@ public class Room {
 
     public RoomType getRoomType() {
         return roomType;
+    }
+    
+    public String getRoomTypeString() {
+        return roomTypeString;
     }
     
     public int getRoomSize() {
@@ -109,10 +115,9 @@ public class Room {
             booked = "No";
         }
         String str = "";
-        str = "RoomNo: " + roomNo + " Type: " + roomType + " Price($): " + price
-                + " Occupied: " + booked + " Guests: " + 
-                occupiedBeds + "/" + roomType.roomSize + "\n";
+        str = "RoomNo: " + roomNo + " Type: " + roomTypeString+ " Price ($): " + price
+                + " Occupied: " + booked + " Guests: " 
+                + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }
-
 }

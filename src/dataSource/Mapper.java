@@ -19,24 +19,24 @@ import java.util.ArrayList;
  */
 public class Mapper {
 
-    public boolean addCustomerToRoom(Customer currentCustomer, Connection con) {
+    public boolean addCustomerToRoom(Customer customer, Connection con) {
         int rowsInserted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "insert into Customers values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setInt(1, currentCustomer.getCustomerId());
-            statement.setString(2, currentCustomer.getFirstName());
-            statement.setString(3, currentCustomer.getLastName());
-            statement.setString(4, currentCustomer.getStreet());
-            statement.setString(5, currentCustomer.getZipcode());
-            statement.setString(6, currentCustomer.getCity());
-            statement.setString(7, currentCustomer.getCountry());
-            statement.setString(8, currentCustomer.getEmail());
-            statement.setString(9, currentCustomer.getAgency());
-            statement.setString(10, currentCustomer.getCheckInDate());
-            statement.setInt(11, currentCustomer.getNumberOfNights());
-            statement.setInt(12, currentCustomer.getRoomNo());
+            statement.setInt(1, customer.getCustomerId());
+            statement.setString(2, customer.getFirstName());
+            statement.setString(3, customer.getLastName());
+            statement.setString(4, customer.getStreet());
+            statement.setString(5, customer.getZipcode());
+            statement.setString(6, customer.getCity());
+            statement.setString(7, customer.getCountry());
+            statement.setString(8, customer.getEmail());
+            statement.setString(9, customer.getAgency());
+            statement.setDate(10, customer.getCheckInDate());
+            statement.setInt(11, customer.getNumberOfNights());
+            statement.setInt(12, customer.getRoomNo());
             rowsInserted = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
         }
         catch (SQLException e) {
@@ -65,10 +65,10 @@ public class Mapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                room = new Room(rs.getInt(1), 
-                                rs.getString(2), 
-                                rs.getInt(3),
-                                rs.getInt(4));
+                room = new Room(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getInt(3),
+                        rs.getInt(4));
                 roomList.add(room);
             }
         }
@@ -80,13 +80,13 @@ public class Mapper {
         {
             try {
                 statement.close();
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 System.out.println("Fail in mapper - getRoomsFromDB");
                 System.out.println(e.getMessage());
             }
         }
         return roomList;
-
     }
 
     public ArrayList<Customer> getCustomersFromDB(Connection con) {
@@ -98,20 +98,21 @@ public class Mapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(rs.getInt(1), 
-                                        rs.getString(2), 
-                                        rs.getString(3),
-                                        rs.getString(4),
-                                        rs.getString(5),
-                                        rs.getString(6),
-                                        rs.getString(7),
-                                        rs.getString(8),
-                                        rs.getInt(9),
-                                        rs.getInt(10),
-                                        rs.getString(11),
-                                        rs.getString(12),
-                                        rs.getInt(13),
-                                        rs.getInt(14));
+                customer = new Customer(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getInt(9),
+                        rs.getInt(10),
+                        rs.getString(11),
+                        rs.getDate(12),
+                        rs.getInt(13),
+                        rs.getInt(14));
                 customerList.add(customer);
             }
         }
@@ -123,12 +124,86 @@ public class Mapper {
         {
             try {
                 statement.close();
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 System.out.println("Fail in mapper - getCustomersFromDB");
                 System.out.println(e.getMessage());
             }
         }
         return customerList;
+    }
 
+    public boolean updateCustomerDB(Customer customer, Connection con) {
+        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
+        String SQLString = "update CUSTOMERS"
+                + " set first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country =?, email = ?, private_phone = ?, work_phone = ?,"
+                + " agency = ?, check_in_date = ?, no_of_nights = ?, room_no = ?"
+                + " where customer_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
+            statement.setString(3, customer.getStreet());
+            statement.setString(4, customer.getZipcode());
+            statement.setString(5, customer.getCity());
+            statement.setString(6, customer.getCountry());
+            statement.setString(7, customer.getEmail());
+            statement.setInt(8, customer.getPrivatePhone());
+            statement.setInt(9, customer.getWorkPhone());
+            statement.setString(10, customer.getAgency());
+            statement.setDate(11, customer.getCheckInDate());
+            statement.setInt(12, customer.getNumberOfNights());
+            statement.setInt(13, customer.getRoomNo());
+            statement.setInt(14, customer.getCustomerId());
+            rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in mapper - UpdateCustomerDB");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal køres efter catch
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in mapper - UpdateCustomerDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return rowsUpdated == 1; //hvis dette passer returneres true ellers false  
+    }
+
+    public boolean updateRoomDB(Room room, Connection con) {
+        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
+        String SQLString = "update ROOMS"
+                + " set room_type = ?, price = ?, occupied_beds = ?"
+                + " where room_no = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setString(1, room.getRoomTypeString());
+            statement.setInt(2, room.getPrice());
+            statement.setInt(3, room.getOccupiedBeds());
+            statement.setInt(4, room.getRoomNo());
+            
+            rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in mapper - UpdateRoomDB");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal køres efter catch
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in mapper - UpdateRoomDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return rowsUpdated == 1; //hvis dette passer returneres true ellers false  
     }
 }

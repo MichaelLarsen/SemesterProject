@@ -5,7 +5,7 @@
  */
 package domain;
 
-import java.util.Date;
+import java.sql.Date; // Bruges for at kunne sende date mellem SQL og Java
 
 /**
  *
@@ -13,7 +13,6 @@ import java.util.Date;
  */
 public class Customer {
 
-    //Sebastian er en lort og er uenig!
     private int customerId;
     private String firstName;
     private String lastName;
@@ -25,13 +24,11 @@ public class Customer {
     private int privatePhone;
     private int workPhone;
     private String agency;
-    private String checkInDate;
+    private Date checkInDate;
     private int numberOfNights;
     private int roomNo;
-    //private boolean paid_deposit = false;
-    //private double debt;
 
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone, String agency, String checkInDate, int numberOfNights, int roomNo) {
+    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone, String agency, Date checkInDate, int numberOfNights, int roomNo) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,24 +43,6 @@ public class Customer {
         this.checkInDate = checkInDate;
         this.numberOfNights = numberOfNights;
         this.roomNo = roomNo;
-        //this.paid_deposit = paid_deposit;
-        //this.debt = debt;
-    }
-
-    public int getPrivatePhone() {
-        return privatePhone;
-    }
-
-    public void setPrivatePhone(int privatePhone) {
-        this.privatePhone = privatePhone;
-    }
-
-    public int getWorkPhone() {
-        return workPhone;
-    }
-
-    public void setWorkPhone(int workPhone) {
-        this.workPhone = workPhone;
     }
 
     public int getCustomerId() {
@@ -77,34 +56,11 @@ public class Customer {
     public String getFirstName() {
         return firstName;
     }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-//    public boolean isPaid_deposit()
-//    {
-//        return paid_deposit;
-//    }
-//    public void setPaid_deposit(boolean paid_deposit)
-//    {
-//        this.paid_deposit = paid_deposit;
-//    }
-//    public double getDebt() {
-//        return debt;
-//    }
-//
-//    public void setDebt(double debt) {
-//        this.debt = debt;
-//    }
+    
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+    
     public String getLastName() {
         return lastName;
     }
@@ -119,6 +75,14 @@ public class Customer {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
     public String getCity() {
@@ -144,6 +108,22 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public int getPrivatePhone() {
+        return privatePhone;
+    }
+
+    public void setPrivatePhone(int privatePhone) {
+        this.privatePhone = privatePhone;
+    }
+
+    public int getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(int workPhone) {
+        this.workPhone = workPhone;
+    }
 
     public String getAgency() {
         return agency;
@@ -153,11 +133,11 @@ public class Customer {
         this.agency = agency;
     }
 
-    public String getCheckInDate() {
+    public Date getCheckInDate() {
         return checkInDate;
     }
-
-    public void setCheckInDate(String checkInDate) {
+    
+    public void setCheckInDate(Date checkInDate) {
         this.checkInDate = checkInDate;
     }
 
@@ -180,10 +160,8 @@ public class Customer {
     @Override
     public String toString() {
         String str = "";
-        String date = checkInDate;
-
         str = "CustomerID: " + customerId + " Name: " + lastName + ", " + firstName 
-                + " CheckIn: " + date.substring(0, 11) + " NoOfNights: " 
+                + " CheckIn: " + checkInDate + " NoOfNights: " 
                 + numberOfNights + " RoomNumber: " + roomNo + "\n";
         return str;
     }
