@@ -5,11 +5,9 @@
  */
 package domain;
 
-import java.sql.Date; // Bruges for at kunne sende date mellem SQL og Java
-
 /**
  *
- * @author Seb
+ * @author Sebastian, Michael og Andreas
  */
 public class Customer {
 
@@ -23,12 +21,8 @@ public class Customer {
     private String email;
     private int privatePhone;
     private int workPhone;
-    private String agency;
-    private Date checkInDate;
-    private int numberOfNights;
-    private int roomNo;
 
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone, String agency, Date checkInDate, int numberOfNights, int roomNo) {
+    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,10 +33,6 @@ public class Customer {
         this.email = email;
         this.privatePhone = privatePhone;
         this.workPhone = workPhone;
-        this.agency = agency;
-        this.checkInDate = checkInDate;
-        this.numberOfNights = numberOfNights;
-        this.roomNo = roomNo;
     }
 
     public int getCustomerId() {
@@ -125,44 +115,11 @@ public class Customer {
         this.workPhone = workPhone;
     }
 
-    public String getAgency() {
-        return agency;
-    }
-
-    public void setAgency(String agency) {
-        this.agency = agency;
-    }
-
-    public Date getCheckInDate() {
-        return checkInDate;
-    }
-    
-    public void setCheckInDate(Date checkInDate) {
-        this.checkInDate = checkInDate;
-    }
-
-    public int getNumberOfNights() {
-        return numberOfNights;
-    }
-
-    public void setNumberOfNights(int numberOfNights) {
-        this.numberOfNights = numberOfNights;
-    }
-
-    public int getRoomNo() {
-        return roomNo;
-    }
-
-    public void setRoomNo(int roomNo) {
-        this.roomNo = roomNo;
-    }
 
     @Override
     public String toString() {
         String str = "";
-        str = "CustomerID: " + customerId + " Name: " + lastName + ", " + firstName 
-                + " CheckIn: " + checkInDate + " NoOfNights: " 
-                + numberOfNights + " RoomNumber: " + roomNo + "\n";
+        str = "CustomerID: " + customerId + " Name: " + lastName + ", " + firstName + "\n";
         return str;
     }
 }

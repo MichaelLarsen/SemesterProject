@@ -5,24 +5,29 @@
  */
 package dataSource;
 
-import domain.Customer;
-import domain.Room;
+import domain.*;
 import java.sql.Connection;
 import java.util.ArrayList;
 
 /**
  *
- * @author Seb
+ * @author Sebastian, Michael og Andreas
  */
 public class DBFacade {
 
-    private Mapper mapper;
+    private CustomerMapper customerMapper;
+    private RoomMapper roomMapper;
+    private BookingMapper bookingMapper;
     private Connection con;
     // Singleton for at sikre at der kun er en forbindelse samt at give global adgang til domænet.
     private static DBFacade instance;
+    private UnitOfWork unitOfWork;
 
     private DBFacade() {
-        mapper = new Mapper();
+        unitOfWork = new UnitOfWork();
+        customerMapper = new CustomerMapper();
+        roomMapper = new RoomMapper();
+        bookingMapper = new BookingMapper();
         con = new DBConnector().getConnection(); // Forbindelsen frigivet når programmet bliver lukket af garbage collector
     }
 
@@ -36,21 +41,21 @@ public class DBFacade {
 
     public ArrayList<Room> getRoomFromDB() {
         ArrayList<Room> roomList;
-        roomList = mapper.getRoomsFromDB(con);
+        roomList = roomMapper.getRoomsFromDB(con);
         return roomList;
     }
 
     public ArrayList<Customer> getCustomersFromDB() {
         ArrayList<Customer> customerList;
-        customerList = mapper.getCustomersFromDB(con);
+        customerList = customerMapper.getCustomersFromDB(con);
         return customerList;
     }
 
-    public boolean updateCustomerDB(Customer customer) {
-        return mapper.updateCustomerDB(customer, con);
-    }
-
-    public boolean updateRoomDB(Room room) {
-        return mapper.updateRoomDB(room, con);
-    }
+//    public boolean updateCustomerDB(Customer customer) {
+//        return customerMapper.updateCustomerDB(customer, con);
+//    }
+//
+//    public boolean updateRoomDB(Room room) {
+//        return roomMapper.updateRoomDB(room, con);
+//    }
 }

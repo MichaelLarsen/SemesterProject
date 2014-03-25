@@ -12,7 +12,7 @@ import javax.swing.DefaultListModel;
 
 /**
  *
- * @author Gruppe 4: Andreas, Michael og Sebastian
+ * @author Sebastian, Michael og Andreas
  */
 public class GUI extends javax.swing.JFrame {
 
@@ -148,23 +148,23 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
-        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
-            statusJLabel.setText("You must select a room and a customer!");
-        }
-        else {
-            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
-            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
-            boolean status;
-            status = ctr.bookCustomerToRoom(room, customer);
-            if (status) {
-                statusJLabel.setText("Customer booked room " + room.getRoomNo());
-                customerJList.setModel(customerModel);
-                roomJList.setModel(roomModel);
-            }
-            else {
-                statusJLabel.setText("Room is occupied!");
-            }
-        }
+//        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
+//            statusJLabel.setText("You must select a room and a customer!");
+//        }
+//        else {
+//            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
+//            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+//            boolean status;
+//            status = ctr.bookCustomerToRoom(room, customer);
+//            if (status) {
+//                statusJLabel.setText("Customer booked room " + room.getRoomNo());
+//                customerJList.setModel(customerModel);
+//                roomJList.setModel(roomModel);
+//            }
+//            else {
+//                statusJLabel.setText("Room is occupied!");
+//            }
+//        }
     }//GEN-LAST:event_selectButtonActionPerformed
     
     /**

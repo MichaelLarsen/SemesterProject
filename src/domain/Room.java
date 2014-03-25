@@ -7,7 +7,7 @@ package domain;
 
 /**
  *
- * @author Seb
+ * @author Sebastian, Michael og Andreas
  */
 public class Room {
 
@@ -55,17 +55,13 @@ public class Room {
     public RoomType getRoomType() {
         return roomType;
     }
-    
+
     public String getRoomTypeString() {
         return roomTypeString;
     }
-    
+
     public int getRoomSize() {
         return roomType.roomSize;
-    }
-
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
     }
 
     public int getPrice() {
@@ -79,13 +75,13 @@ public class Room {
     public int getOccupiedBeds() {
         return occupiedBeds;
     }
-    
-    public int getEmptyBeds() {
-        return roomType.roomSize - occupiedBeds;
-    }
 
     public void setOccupiedBeds(int occupied) {
         this.occupiedBeds = occupied;
+    }
+
+    public int getEmptyBeds() {
+        return roomType.roomSize - occupiedBeds;
     }
 
     public void incrementOccupiedBeds() {
@@ -115,8 +111,8 @@ public class Room {
             booked = "No";
         }
         String str = "";
-        str = "RoomNo: " + roomNo + " Type: " + roomTypeString+ " Price ($): " + price
-                + " Occupied: " + booked + " Guests: " 
+        str = "RoomNo: " + roomNo + " Type: " + roomTypeString + " Price ($): " + price
+                + " Occupied: " + booked + " Guests: "
                 + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }

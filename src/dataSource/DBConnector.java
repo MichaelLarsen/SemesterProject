@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 
 /**
  *
- * @author ANDREAS!!! og lidt sebastian og michael
+ * @author * @author Sebastian, Michael og Andreas
  */
 public class DBConnector {
 

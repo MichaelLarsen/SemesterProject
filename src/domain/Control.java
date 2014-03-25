@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Gruppe 4: Andreas, Michael og Sebastian
+ * @author Sebastian, Michael og Andreas
  */
 public class Control {
 
@@ -33,40 +33,40 @@ public class Control {
         return customerList;
     }
 
-    public boolean bookCustomerToRoom(Room room, Customer customer) {
-        boolean status = false;
-        boolean check = false;
-        int oldRoomNo = customer.getRoomNo();
-
-        if (room.getEmptyBeds() > 0) {
-            int i = 0;
-            while (!check && i < roomList.size() && oldRoomNo != 0) {
-                if (oldRoomNo == roomList.get(i).getRoomNo()) {
-                    roomList.get(i).decrementOccupiedBeds();
-                    updateRoomDB(roomList.get(i));
-                    check = true;
-                }
-                i++;
-            }
-            int newRoomNumber = room.getRoomNo();
-            customer.setRoomNo(newRoomNumber);
-            room.incrementOccupiedBeds();
-            updateCustomerDB(customer);
-            updateRoomDB(room);
-            status = true;
-        }
-        return status;
-    }
-
-    public boolean updateCustomerDB(Customer customer) {
-        boolean updateSuccess;
-        updateSuccess = DBFacade.updateCustomerDB(customer);
-        return updateSuccess;
-    }
-
-    public boolean updateRoomDB(Room room) {
-        boolean updateSuccess;
-        updateSuccess = DBFacade.updateRoomDB(room);
-        return updateSuccess;
-    }
+//    public boolean bookCustomerToRoom(Room room, Customer customer) {
+//        boolean status = false;
+//        boolean check = false;
+//        int oldRoomNo = customer.getRoomNo();
+//
+//        if (room.getEmptyBeds() > 0) {
+//            int i = 0;
+//            while (!check && i < roomList.size() && oldRoomNo != 0) {
+//                if (oldRoomNo == roomList.get(i).getRoomNo()) {
+//                    roomList.get(i).decrementOccupiedBeds();
+//                    updateRoomDB(roomList.get(i));
+//                    check = true;
+//                }
+//                i++;
+//            }
+//            int newRoomNumber = room.getRoomNo();
+//            customer.setRoomNo(newRoomNumber);
+//            room.incrementOccupiedBeds();
+//            updateCustomerDB(customer);
+//            updateRoomDB(room);
+//            status = true;
+//        }
+//        return status;
+//    }
+//
+//    public boolean updateCustomerDB(Customer customer) {
+//        boolean updateSuccess;
+//        updateSuccess = DBFacade.updateCustomerDB(customer);
+//        return updateSuccess;
+//    }
+//
+//    public boolean updateRoomDB(Room room) {
+//        boolean updateSuccess;
+//        updateSuccess = DBFacade.updateRoomDB(room);
+//        return updateSuccess;
+//    }
 }
