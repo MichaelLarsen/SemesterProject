@@ -3,22 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domain;
 
 // Bruges for at kunne sende date mellem SQL og Java
 import java.sql.Date;
+import java.util.ArrayList;
+
 /**
  *
  * @author Sebastian, Michael og Andreas
  */
 public class Booking {
+
     private int bookingId;
     private int bookingOwner;
     private int roomNo;
     private String agency;
     private Date checkInDate;
     private int numberOfNights;
+    private ArrayList<Room> rooms;
+    private ArrayList<Customer> customers;
 
     public Booking(int bookingId, int bookingOwner, int roomNo, String agency, Date checkInDate, int numberOfNights) {
         this.bookingId = bookingId;
@@ -27,6 +31,30 @@ public class Booking {
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.numberOfNights = numberOfNights;
+        this.rooms = new ArrayList<>();
+        this.customers = new ArrayList<>();
+    }
+
+    public ArrayList<Room> getRoomsForBooking() {
+        return rooms;
+    }
+
+    public void addRoomForBooking(Room room) {
+        rooms.add(room);
+    }
+
+    public ArrayList<Customer> getCustomersForBooking() {
+        return customers;
+    }
+
+    public void addCustomerForBooking(Customer customer) {
+        customers.add(customer);
+    }
+    @Override
+    public String toString() {
+        String str = "";
+        str = "BookingID: " + bookingId + " RoomNumber: " + roomNo + " BookingOwner: " + bookingOwner + " date: " + checkInDate;
+        return str;
     }
 
     public int getBookingId() {

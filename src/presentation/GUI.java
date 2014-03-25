@@ -5,6 +5,7 @@
  */
 package presentation;
 
+import domain.Booking;
 import domain.Control;
 import domain.Customer;
 import domain.Room;
@@ -19,6 +20,7 @@ public class GUI extends javax.swing.JFrame {
     private Control ctr;
     private DefaultListModel<Customer> customerModel;
     private DefaultListModel<Room> roomModel;
+    private DefaultListModel<Booking> bookingModel;
 
     /**
      * Creates new form GUI
@@ -29,6 +31,30 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
         customerModel = new DefaultListModel<>();
         roomModel = new DefaultListModel<>();
+        bookingModel = new DefaultListModel<>();
+    }
+
+    public void refreshModel(DefaultListModel model) {
+
+        if (model.equals(customerModel)) {
+            customerModel.removeAllElements();
+            for (int i = 0; i < ctr.getCustomersFromDB().size(); i++) {
+                customerModel.addElement(ctr.getCustomersFromDB().get(i));
+            }
+        }
+        if (model.equals(roomModel)) {
+            roomModel.removeAllElements();
+            for (int i = 0; i < ctr.getRoomsFromDB().size(); i++) {
+                roomModel.addElement(ctr.getRoomsFromDB().get(i));
+            }
+        }
+        if (model.equals(bookingModel)) {
+            bookingModel.removeAllElements();
+            for (int i = 0; i < ctr.getBookingsFromDB().size(); i++) {
+                bookingModel.addElement(ctr.getBookingsFromDB().get(i));
+            }
+        }
+
     }
 
     /**
@@ -49,6 +75,9 @@ public class GUI extends javax.swing.JFrame {
         customerJList = new javax.swing.JList();
         selectButton = new javax.swing.JButton();
         statusJLabel = new javax.swing.JLabel();
+        getBookings = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        bookingJList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +108,15 @@ public class GUI extends javax.swing.JFrame {
 
         statusJLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        getBookings.setText("Get Bookings");
+        getBookings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getBookingsActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(bookingJList);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -94,19 +132,31 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(263, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(getBookings)
+                        .addGap(57, 57, 57))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(getBookings))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(getCustomersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(getCustomersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
@@ -132,18 +182,12 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 //Bruger jlist til at hente rum og derfor også kunne vælge rum i form af objekt.
     private void getRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getRoomButtonActionPerformed
-        roomModel.removeAllElements();
-        for (int i = 0; i < ctr.getRoomsFromDB().size(); i++) {
-            roomModel.addElement(ctr.getRoomsFromDB().get(i));
-        }
+        refreshModel(roomModel);
         roomJList.setModel(roomModel);
     }//GEN-LAST:event_getRoomButtonActionPerformed
 
     private void getCustomersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getCustomersButtonActionPerformed
-        customerModel.removeAllElements();
-        for (int i = 0; i < ctr.getCustomersFromDB().size(); i++) {
-            customerModel.addElement(ctr.getCustomersFromDB().get(i));
-        }
+        refreshModel(customerModel);
         customerJList.setModel(customerModel);
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
@@ -166,7 +210,12 @@ public class GUI extends javax.swing.JFrame {
 //            }
 //        }
     }//GEN-LAST:event_selectButtonActionPerformed
-    
+
+    private void getBookingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getBookingsActionPerformed
+        refreshModel(bookingModel);
+        bookingJList.setModel(bookingModel);
+    }//GEN-LAST:event_getBookingsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -206,12 +255,15 @@ public class GUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList bookingJList;
     private javax.swing.JList customerJList;
+    private javax.swing.JButton getBookings;
     private javax.swing.JButton getCustomersButton;
     private javax.swing.JButton getRoomButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList roomJList;
     private javax.swing.JButton selectButton;
     private javax.swing.JLabel statusJLabel;

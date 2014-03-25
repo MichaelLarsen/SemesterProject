@@ -5,6 +5,8 @@
  */
 package domain;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Sebastian, Michael og Andreas
@@ -21,6 +23,7 @@ public class Customer {
     private String email;
     private int privatePhone;
     private int workPhone;
+    private int roomNo;
 
     public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone) {
         this.customerId = customerId;
@@ -33,8 +36,8 @@ public class Customer {
         this.email = email;
         this.privatePhone = privatePhone;
         this.workPhone = workPhone;
-    }
 
+    }
     public int getCustomerId() {
         return customerId;
     }
@@ -46,11 +49,11 @@ public class Customer {
     public String getFirstName() {
         return firstName;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public String getLastName() {
         return lastName;
     }
@@ -98,7 +101,7 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public int getPrivatePhone() {
         return privatePhone;
     }
@@ -114,7 +117,14 @@ public class Customer {
     public void setWorkPhone(int workPhone) {
         this.workPhone = workPhone;
     }
-
+    
+    public void setRoomNo(int roomNo){
+        this.roomNo = roomNo;
+    }
+    
+    public int getRoomNo() {
+        return roomNo;
+    }
 
     @Override
     public String toString() {

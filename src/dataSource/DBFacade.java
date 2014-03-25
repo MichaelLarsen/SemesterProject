@@ -39,16 +39,19 @@ public class DBFacade {
     }
     // Singleton slutning
 
+    //returns arraylist of rooms
     public ArrayList<Room> getRoomFromDB() {
-        ArrayList<Room> roomList;
-        roomList = roomMapper.getRoomsFromDB(con);
-        return roomList;
+        return roomMapper.getRoomsFromDB(con);
     }
-
+    
+    //returns arraylist of customers
     public ArrayList<Customer> getCustomersFromDB() {
-        ArrayList<Customer> customerList;
-        customerList = customerMapper.getCustomersFromDB(con);
-        return customerList;
+        return customerMapper.getCustomersFromDB(con);
+    }
+    
+    //returns arraylist of bokings
+    public ArrayList<Booking> getBookingsFromDB() {
+        return bookingMapper.getBookingsFromDB(con);
     }
 
 //    public boolean updateCustomerDB(Customer customer) {
@@ -58,4 +61,6 @@ public class DBFacade {
 //    public boolean updateRoomDB(Room room) {
 //        return roomMapper.updateRoomDB(room, con);
 //    }
+
+    
 }

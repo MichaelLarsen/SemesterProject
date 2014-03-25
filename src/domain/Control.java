@@ -16,6 +16,7 @@ public class Control {
     private DBFacade DBFacade;
     private ArrayList<Customer> customerList;
     private ArrayList<Room> roomList;
+    private ArrayList<Booking> bookingList;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
@@ -31,6 +32,11 @@ public class Control {
     public ArrayList<Customer> getCustomersFromDB() {
         customerList = DBFacade.getCustomersFromDB();
         return customerList;
+    }
+    
+    public ArrayList<Booking> getBookingsFromDB() {
+        bookingList = DBFacade.getBookingsFromDB();
+        return bookingList;
     }
 
 //    public boolean bookCustomerToRoom(Room room, Customer customer) {
@@ -69,4 +75,5 @@ public class Control {
 //        updateSuccess = DBFacade.updateRoomDB(room);
 //        return updateSuccess;
 //    }
+
 }
