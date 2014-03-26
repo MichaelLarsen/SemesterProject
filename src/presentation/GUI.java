@@ -73,11 +73,14 @@ public class GUI extends javax.swing.JFrame {
         getCustomersButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         customerJList = new javax.swing.JList();
-        selectButton = new javax.swing.JButton();
+        bookRoomButton = new javax.swing.JButton();
         statusJLabel = new javax.swing.JLabel();
         getBookings = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         bookingJList = new javax.swing.JList();
+        addToRoomButton = new javax.swing.JButton();
+        removeGuestFromRoomButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,10 +102,10 @@ public class GUI extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(customerJList);
 
-        selectButton.setText("Select");
-        selectButton.addActionListener(new java.awt.event.ActionListener() {
+        bookRoomButton.setText("Book room");
+        bookRoomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectButtonActionPerformed(evt);
+                bookRoomButtonActionPerformed(evt);
             }
         });
 
@@ -117,29 +120,47 @@ public class GUI extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(bookingJList);
 
+        addToRoomButton.setText("Add to room");
+
+        removeGuestFromRoomButton.setText("Remove from room");
+
+        jButton1.setText("Delete booking");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(getCustomersButton)
-                    .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(selectButton)
-                        .addGap(31, 31, 31)
-                        .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(getBookings)
-                        .addGap(57, 57, 57))
+                        .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(getCustomersButton)
+                            .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
+                                .addComponent(addToRoomButton)
+                                .addGap(47, 47, 47)
+                                .addComponent(removeGuestFromRoomButton))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(getBookings)
+                                        .addGap(57, 57, 57))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(172, 172, 172))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,14 +178,15 @@ public class GUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(selectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addToRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeGuestFromRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -191,7 +213,15 @@ public class GUI extends javax.swing.JFrame {
         customerJList.setModel(customerModel);
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
-    private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
+    private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
+        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
+            statusJLabel.setText("You must select a room and a customer!");
+        }
+        Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
+        Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+        boolean bookingSuccess;
+        bookingSuccess = ctr.bookCustomerToRoom(room, customer)
+
 //        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
 //            statusJLabel.setText("You must select a room and a customer!");
 //        }
@@ -209,7 +239,7 @@ public class GUI extends javax.swing.JFrame {
 //                statusJLabel.setText("Room is occupied!");
 //            }
 //        }
-    }//GEN-LAST:event_selectButtonActionPerformed
+    }//GEN-LAST:event_bookRoomButtonActionPerformed
 
     private void getBookingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getBookingsActionPerformed
         refreshModel(bookingModel);
@@ -255,17 +285,20 @@ public class GUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addToRoomButton;
+    private javax.swing.JButton bookRoomButton;
     private javax.swing.JList bookingJList;
     private javax.swing.JList customerJList;
     private javax.swing.JButton getBookings;
     private javax.swing.JButton getCustomersButton;
     private javax.swing.JButton getRoomButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton removeGuestFromRoomButton;
     private javax.swing.JList roomJList;
-    private javax.swing.JButton selectButton;
     private javax.swing.JLabel statusJLabel;
     // End of variables declaration//GEN-END:variables
 }
