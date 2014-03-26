@@ -41,20 +41,22 @@ public class GUI extends javax.swing.JFrame {
             for (int i = 0; i < ctr.getCustomersFromDB().size(); i++) {
                 customerModel.addElement(ctr.getCustomersFromDB().get(i));
             }
+            customerJList.setModel(customerModel);
         }
         if (model.equals(roomModel)) {
             roomModel.removeAllElements();
             for (int i = 0; i < ctr.getRoomsFromDB().size(); i++) {
                 roomModel.addElement(ctr.getRoomsFromDB().get(i));
             }
+            roomJList.setModel(roomModel);
         }
         if (model.equals(bookingModel)) {
             bookingModel.removeAllElements();
             for (int i = 0; i < ctr.getBookingsFromDB().size(); i++) {
                 bookingModel.addElement(ctr.getBookingsFromDB().get(i));
             }
+            bookingJList.setModel(bookingModel);
         }
-
     }
 
     /**
@@ -205,45 +207,34 @@ public class GUI extends javax.swing.JFrame {
 //Bruger jlist til at hente rum og derfor også kunne vælge rum i form af objekt.
     private void getRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getRoomButtonActionPerformed
         refreshModel(roomModel);
-        roomJList.setModel(roomModel);
     }//GEN-LAST:event_getRoomButtonActionPerformed
 
     private void getCustomersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getCustomersButtonActionPerformed
         refreshModel(customerModel);
-        customerJList.setModel(customerModel);
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
     private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
         if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
             statusJLabel.setText("You must select a room and a customer!");
         }
-        Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
-        Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
-        boolean bookingSuccess;
-        bookingSuccess = ctr.bookCustomerToRoom(room, customer)
-
-//        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
-//            statusJLabel.setText("You must select a room and a customer!");
-//        }
-//        else {
-//            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
-//            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
-//            boolean status;
-//            status = ctr.bookCustomerToRoom(room, customer);
-//            if (status) {
-//                statusJLabel.setText("Customer booked room " + room.getRoomNo());
-//                customerJList.setModel(customerModel);
-//                roomJList.setModel(roomModel);
-//            }
-//            else {
-//                statusJLabel.setText("Room is occupied!");
-//            }
-//        }
+        else {
+            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
+            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+            boolean bookingSuccess;
+            bookingSuccess = ctr.bookRoom(room, customer);
+            if (bookingSuccess) {
+                statusJLabel.setText("Room booked by " + customer.getFirstName() + " " + customer.getLastName());
+                refreshModel(roomModel);
+                refreshModel(bookingModel);
+            }
+            else {
+                statusJLabel.setText("Room is occupied!");
+            }
+        }
     }//GEN-LAST:event_bookRoomButtonActionPerformed
 
     private void getBookingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getBookingsActionPerformed
         refreshModel(bookingModel);
-        bookingJList.setModel(bookingModel);
     }//GEN-LAST:event_getBookingsActionPerformed
 
     /**
