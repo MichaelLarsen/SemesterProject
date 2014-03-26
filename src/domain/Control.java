@@ -5,6 +5,7 @@
 package domain;
 
 import dataSource.DBFacade;
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +34,7 @@ public class Control {
         customerList = DBFacade.getCustomersFromDB();
         return customerList;
     }
-    
+
     public ArrayList<Booking> getBookingsFromDB() {
         bookingList = DBFacade.getBookingsFromDB();
         return bookingList;
@@ -75,5 +76,48 @@ public class Control {
 //        updateSuccess = DBFacade.updateRoomDB(room);
 //        return updateSuccess;
 //    }
+    public boolean bookRoom(Room room, Customer customer) {
+        boolean bookingSuccess = false;
+        
+        // Tjekker om rummet allerede er i bookinglisten,
+        // hvilket betyder at det er booket
+        for (int i = 0; i < bookingList.size(); i++) {
+            if (bookingList.get(i).getRoomNo() == room.getRoomNo()) {
+                bookingSuccess = false;
+                
 
+            }
+            else {
+                Booking newBooking = newBooking(room, customer);
+                bookingSuccess = DBFacade.bookRoom(newBooking);
+
+            }
+
+
+        }
+        return bookingSuccess;
+
+
+    }
+
+    public Booking newBooking(Room room, Customer customer) {
+        Date date = new Date(2014, 06, 22);
+       
+        Booking newBooking = new Booking(
+                getNewBookingId(),
+                customer.getCustomerId(),
+                room.getRoomNo(),
+                "",
+                date,
+                2
+                );
+        return newBooking;
+    }
+
+    public int getNewBookingId() {
+        int newBookingId = 0;
+        newBookingId = DBFacade.getNewBookingId();
+        return newBookingId;
+
+    }
 }

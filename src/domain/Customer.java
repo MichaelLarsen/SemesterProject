@@ -23,7 +23,7 @@ public class Customer {
     private String email;
     private int privatePhone;
     private int workPhone;
-    private int roomNo;
+ 
 
     public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone) {
         this.customerId = customerId;
@@ -118,13 +118,6 @@ public class Customer {
         this.workPhone = workPhone;
     }
     
-    public void setRoomNo(int roomNo){
-        this.roomNo = roomNo;
-    }
-    
-    public int getRoomNo() {
-        return roomNo;
-    }
 
     @Override
     public String toString() {

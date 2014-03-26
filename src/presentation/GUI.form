@@ -42,10 +42,10 @@
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="statusJLabel" min="-2" pref="269" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="statusJLabel" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="getCustomersButton" min="-2" max="-2" attributes="0"/>
                               <Component id="getRoomButton" alignment="0" min="-2" pref="94" max="-2" attributes="0"/>
@@ -63,7 +63,7 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane3" pref="275" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane3" pref="356" max="32767" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                           <Component id="getBookings" min="-2" max="-2" attributes="0"/>
@@ -108,7 +108,7 @@
                       <Component id="removeGuestFromRoomButton" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
                       <Component id="jButton1" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="44" max="32767" attributes="0"/>
+                  <EmptySpace pref="101" max="32767" attributes="0"/>
                   <Component id="statusJLabel" min="-2" pref="23" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

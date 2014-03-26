@@ -37,6 +37,12 @@ public class DBFacade {
         }
         return instance;
     }
+    
+    public boolean commitTransaction(){
+        
+        return unitOfWork.commitTransaction(con);
+        
+    }
     // Singleton slutning
 
     //returns arraylist of rooms
@@ -62,5 +68,16 @@ public class DBFacade {
 //        return roomMapper.updateRoomDB(room, con);
 //    }
 
+    public boolean bookRoom(Booking booking) {
+        return unitOfWork.bookRoom(booking);
+        
+       
+    }
+
+    public int getNewBookingId() {
+        return bookingMapper.getNewBookingId(con);
+    }
+
+    
     
 }

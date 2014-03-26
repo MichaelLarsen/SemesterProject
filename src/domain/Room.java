@@ -18,7 +18,6 @@ public class Room {
     private RoomType roomType;
     private String roomTypeString;
     private int occupiedBeds;
-    private ArrayList<Customer> roomGuestList;
 
     //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
     public enum RoomType {
@@ -32,11 +31,12 @@ public class Room {
     }
 
     public Room(int roomNo, String type, int price, int occupiedBeds) {
-        this.roomGuestList = new ArrayList<>();
+
         this.roomNo = roomNo;
         this.price = price;
         this.occupiedBeds = occupiedBeds;
         this.roomTypeString = type;
+
         if (type.equals("Single")) {
             roomType = RoomType.SINGLE;
         }
@@ -46,14 +46,6 @@ public class Room {
         if (type.equals("Family")) {
             roomType = RoomType.FAMILY;
         }
-    }
-    
-    public ArrayList<Customer> getCustomersFromRoom () {
-        return roomGuestList;
-    }
-    
-    public void addCustomerToRoom(Customer customer) {
-        roomGuestList.add(customer);
     }
 
     public int getRoomNo() {

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dataSource;
 
 import domain.Booking;
@@ -12,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class BookingMapper {
 
-   public ArrayList<Booking> getBookingsFromDB(Connection con) {
+    public ArrayList<Booking> getBookingsFromDB(Connection con) {
         Booking booking = null;
         ArrayList<Booking> bookingList = new ArrayList<>();
         String SQLString = "select * from BOOKINGS";
@@ -53,5 +54,32 @@ public class BookingMapper {
         }
         return bookingList;
     }
-    
+
+    public int getNewBookingId(Connection con) {
+        int nextBookingId = 0;
+
+        String SQLString = "select booking_id_seq.nextval from SYS.DUAL";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                nextBookingId = rs.getInt(1);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - getNewBookingId");
+            System.out.println(e.getMessage());
+        }
+        finally {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - getNewBookingId");
+                System.out.println(e.getMessage());
+            }
+        }
+        return nextBookingId;
+    }
 }

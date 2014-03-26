@@ -21,8 +21,7 @@ public class Booking {
     private String agency;
     private Date checkInDate;
     private int numberOfNights;
-    private ArrayList<Room> rooms;
-    private ArrayList<Customer> customers;
+    private ArrayList<Customer> roomGuestList;
 
     public Booking(int bookingId, int bookingOwner, int roomNo, String agency, Date checkInDate, int numberOfNights) {
         this.bookingId = bookingId;
@@ -31,25 +30,18 @@ public class Booking {
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.numberOfNights = numberOfNights;
-        this.rooms = new ArrayList<>();
-        this.customers = new ArrayList<>();
-    }
+        this.roomGuestList = new ArrayList<>();
 
-    public ArrayList<Room> getRoomsForBooking() {
-        return rooms;
-    }
-
-    public void addRoomForBooking(Room room) {
-        rooms.add(room);
     }
 
     public ArrayList<Customer> getCustomersForBooking() {
-        return customers;
+        return roomGuestList;
     }
 
     public void addCustomerForBooking(Customer customer) {
-        customers.add(customer);
+        roomGuestList.add(customer);
     }
+
     @Override
     public String toString() {
         String str = "";
