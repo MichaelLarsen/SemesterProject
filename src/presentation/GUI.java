@@ -225,6 +225,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_getCustomersButtonActionPerformed
 
     private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
+        statusJLabel.setText("");
         if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
             statusJLabel.setText("You must select a room and a customer!");
         }

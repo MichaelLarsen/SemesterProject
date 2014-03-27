@@ -32,7 +32,7 @@ public class UnitOfWork {
     }
 
     public boolean commitTransaction(Connection con) throws SQLException {
-        boolean commitSuccess = true;
+        boolean commitSuccess;
         con.setAutoCommit(false);
 
         BookingMapper bookingMapper = new BookingMapper();

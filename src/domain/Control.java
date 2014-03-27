@@ -93,27 +93,23 @@ public class Control {
 //    }
     public boolean bookRoom(Room room, Customer customer) {
         boolean bookingSuccess = false;
+        int i = 0;
 
         // Tjekker om rummet allerede er i bookinglisten,
         // hvilket betyder at det er booket
-        for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getRoomNo() == room.getRoomNo()) {
-                bookingSuccess = false;
-
-            }
-            else {
+        while (bookingSuccess == false && i < bookingList.size()) {
+            if (bookingList.get(i).getRoomNo() != room.getRoomNo()) {
                 Booking newBooking = newBooking(room, customer);
                 bookingSuccess = DBFacade.bookRoom(newBooking);
-
+                bookingList.add(newBooking);
             }
-
+            i++;     
         }
         return bookingSuccess;
-
     }
 
     public Booking newBooking(Room room, Customer customer) {
-        Date date = new Date(2014, 06, 22);
+        Date date = new Date(114, 06, 22);
 
         Booking newBooking = new Booking(
                 getNewBookingId(),

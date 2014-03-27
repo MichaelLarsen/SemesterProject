@@ -11,8 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -86,7 +84,7 @@ public class BookingMapper {
     public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
         String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = null;
+         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
@@ -96,7 +94,7 @@ public class BookingMapper {
                 statement.setString(4, newBookingList.get(i).getAgency());
                 statement.setDate(5, newBookingList.get(i).getCheckInDate());
                 statement.setInt(6, newBookingList.get(i).getNumberOfNights());
-                bookingAdded = statement.executeUpdate(); //bookingAdded bliver = 1, hvis Update går igennem
+                bookingAdded += statement.executeUpdate(); //bookingAdded bliver = 1, hvis Update går igennem
             }
         }
         catch (SQLException e) {
