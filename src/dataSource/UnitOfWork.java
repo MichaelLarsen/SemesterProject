@@ -42,6 +42,7 @@ public class UnitOfWork {
         commitSuccess = bookingMapper.addBooking(bookingList, con);
         if (!commitSuccess) {
             con.rollback();
+            System.out.println("Fejl i commitTransaction!");
             //kast en exception! fejl i commitTransaction
         }
         else {
