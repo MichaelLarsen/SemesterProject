@@ -33,9 +33,14 @@ public class GUI extends javax.swing.JFrame {
         customerModel = new DefaultListModel<>();
         roomModel = new DefaultListModel<>();
         bookingModel = new DefaultListModel<>();
+        newBookingModel = new DefaultListModel<>();
+
+        refreshModel(roomModel);
+        refreshModel(customerModel);
+        refreshModel(bookingModel);
     }
 
-    public void refreshModel(DefaultListModel model) {
+    private void refreshModel(DefaultListModel model) {
 
         if (model.equals(customerModel)) {
             customerModel.removeAllElements();
@@ -117,7 +122,7 @@ public class GUI extends javax.swing.JFrame {
 
         statusJLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        getBookings.setText("Get Bookings");
+        getBookings.setText("Get Bookings (don't use)");
         getBookings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getBookingsActionPerformed(evt);
@@ -245,7 +250,6 @@ public class GUI extends javax.swing.JFrame {
                 newBookingJList.setModel(newBookingModel);
                 statusJLabel.setText("Room booked by " + customer.getFirstName() + " " + customer.getLastName());
                 refreshModel(roomModel);
-                refreshModel(bookingModel);
             }
             else {
                 statusJLabel.setText("Room is occupied!");
