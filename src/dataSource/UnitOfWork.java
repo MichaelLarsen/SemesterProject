@@ -32,26 +32,27 @@ public class UnitOfWork {
     }
 
     public boolean commitTransaction(Connection con) throws SQLException {
-        boolean commitSuccess;
+        boolean commitSuccess = false;
         con.setAutoCommit(false);
 
         BookingMapper bookingMapper = new BookingMapper();
         CustomerMapper customerMapper = new CustomerMapper();
         RoomMapper roomMapper = new RoomMapper();
 
-        commitSuccess = bookingMapper.addBooking(newBookingList, con);
-        
-        if (!commitSuccess) {
-            con.rollback();
-            System.out.println("Fejl i commitTransaction!");
-            //kast en exception! fejl i commitTransaction
-        }
-        else {
-            con.commit();
-            System.out.println("Transactioner er commited!");
+        if (!newBookingList.isEmpty()) {
+            commitSuccess = bookingMapper.addBooking(newBookingList, con);
+            System.out.println("newBookingList size " + newBookingList.size());
+            if (!commitSuccess) {
+                con.rollback();
+                System.out.println("Fejl i commitTransaction!");
+                //kast en exception! fejl i commitTransaction
+            }
+            else {
+                con.commit();
+                newBookingList.clear();
+                System.out.println("Transactioner er commited!");
+            }
         }
         return commitSuccess;
-
     }
-
 }

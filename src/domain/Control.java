@@ -8,8 +8,6 @@ import dataSource.DBFacade;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,6 +19,7 @@ public class Control {
     private ArrayList<Customer> customerList;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
+    private ArrayList<Booking> newBookingList;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
@@ -29,15 +28,15 @@ public class Control {
     }
 
     public boolean commitTransaction()  {
-        boolean saved = false;
+        boolean commitSuccess = false;
         try {
-            saved = DBFacade.commitTransaction();
+            commitSuccess = DBFacade.commitTransaction();
         }
         catch (SQLException e) {
             System.out.println("Fejl ved at gemme transaction!");
             System.out.println(e.getMessage());
         }
-        return saved;
+        return commitSuccess;
     }
 
     public ArrayList<Room> getRoomsFromDB() {
@@ -91,7 +90,8 @@ public class Control {
 //        updateSuccess = DBFacade.updateRoomDB(room);
 //        return updateSuccess;
 //    }
-    public boolean bookRoom(Room room, Customer customer) {
+    public Booking bookRoom(Room room, Customer customer) {
+        Booking newBooking = null;
         boolean bookingSuccess = false;
         int i = 0;
 
@@ -99,13 +99,13 @@ public class Control {
         // hvilket betyder at det er booket
         while (bookingSuccess == false && i < bookingList.size()) {
             if (bookingList.get(i).getRoomNo() != room.getRoomNo()) {
-                Booking newBooking = newBooking(room, customer);
+                newBooking = newBooking(room, customer);
                 bookingSuccess = DBFacade.bookRoom(newBooking);
                 bookingList.add(newBooking);
             }
             i++;     
         }
-        return bookingSuccess;
+        return newBooking;
     }
 
     public Booking newBooking(Room room, Customer customer) {

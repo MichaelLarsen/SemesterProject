@@ -41,7 +41,6 @@ public class DBFacade {
     
     //Gemmer en transaction i database
     public boolean commitTransaction() throws SQLException{
-        
         return unitOfWork.commitTransaction(con);
     }
     // Singleton slutning
