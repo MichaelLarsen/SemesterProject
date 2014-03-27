@@ -115,8 +115,8 @@ public class Room {
             booked = "No";
         }
         String str = "";
-        str = "RoomNo: " + roomNo + " Type: " + roomTypeString + " Price ($): " + price
-                + " Booking: " + booked + " Guests: "
+        str = "RoomNo: " + roomNo + "       Type: " + roomTypeString + "        Price ($): " + price
+                + "     Booking: " + booked + "     Guests: "
                 + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }

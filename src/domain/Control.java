@@ -27,7 +27,7 @@ public class Control {
         roomList = new ArrayList<>();
     }
 
-    public boolean commitTransaction()  {
+    public boolean commitTransaction() {
         boolean commitSuccess = false;
         try {
             commitSuccess = DBFacade.commitTransaction();
@@ -92,18 +92,22 @@ public class Control {
 //    }
     public Booking bookRoom(Room room, Customer customer) {
         Booking newBooking = null;
-        boolean bookingSuccess = false;
+        boolean isDoubleBooking = false;
         int i = 0;
 
         // Tjekker om rummet allerede er i bookinglisten,
         // hvilket betyder at det er booket
-        while (bookingSuccess == false && i < bookingList.size()) {
-            if (bookingList.get(i).getRoomNo() != room.getRoomNo()) {
-                newBooking = newBooking(room, customer);
-                bookingSuccess = DBFacade.bookRoom(newBooking);
-                bookingList.add(newBooking);
+        while (isDoubleBooking == false && i < bookingList.size()) {
+            if (bookingList.get(i).getRoomNo() == room.getRoomNo()) {
+                isDoubleBooking = true;
             }
-            i++;     
+            i++;
+        }
+        if (isDoubleBooking == false) {
+            newBooking = newBooking(room, customer);
+            DBFacade.bookRoom(newBooking);
+            bookingList.add(newBooking);
+            System.out.println("bookingList size " + bookingList.size());
         }
         return newBooking;
     }

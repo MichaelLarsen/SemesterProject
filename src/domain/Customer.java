@@ -122,7 +122,7 @@ public class Customer {
     @Override
     public String toString() {
         String str = "";
-        str = "CustomerID: " + customerId + " Name: " + lastName + ", " + firstName + "\n";
+        str = "ID: " + customerId + "   " + firstName + " " + lastName + "\n";
         return str;
     }
 }

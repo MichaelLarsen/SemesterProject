@@ -45,7 +45,7 @@ public class Booking {
     @Override
     public String toString() {
         String str = "";
-        str = "BookingID: " + bookingId + " RoomNumber: " + roomNo + " BookingOwner: " + bookingOwner + " date: " + checkInDate;
+        str = "BookID: " + bookingId + "     RoomNo: " + roomNo + "     OwnerID: " + bookingOwner + "     Date: " + checkInDate;
         return str;
     }
 
