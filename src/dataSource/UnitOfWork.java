@@ -6,9 +6,8 @@
 package dataSource;
 
 import domain.Booking;
-import domain.Customer;
-import domain.Room;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -31,18 +30,25 @@ public class UnitOfWork {
         }
         return bookingSuccess;
     }
-    
-    public boolean commitTransaction(Connection con){
-        
+
+    public boolean commitTransaction(Connection con) throws SQLException {
+        boolean commitSuccess = true;
+        con.setAutoCommit(false);
+
         BookingMapper bookingMapper = new BookingMapper();
         CustomerMapper customerMapper = new CustomerMapper();
         RoomMapper roomMapper = new RoomMapper();
-        
-        bookingMapper.
-                
-                return true;
-                
-        
+
+        commitSuccess = bookingMapper.addBooking(bookingList, con);
+        if (!commitSuccess) {
+            con.rollback();
+            //kast en exception! fejl i commitTransaction
+        }
+        else {
+            con.commit();
+        }
+        return commitSuccess;
+
     }
-            
+
 }

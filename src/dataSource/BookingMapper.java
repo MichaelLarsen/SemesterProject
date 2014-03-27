@@ -82,4 +82,37 @@ public class BookingMapper {
         }
         return nextBookingId;
     }
+
+    public boolean addBooking(ArrayList<Booking> bookingList, Connection con) {
+        int bookingAdded = 0;
+        String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            for (int i = 0; i < bookingList.size(); i++) {
+                statement.setInt(1, bookingList.get(i).getBookingId());
+                statement.setInt(2, bookingList.get(i).getBookingOwner());
+                statement.setInt(3, bookingList.get(i).getRoomNo());
+                statement.setString(4, bookingList.get(i).getAgency());
+                statement.setDate(5, bookingList.get(i).getCheckInDate());
+                statement.setInt(6, bookingList.get(i).getNumberOfNights());
+                bookingAdded = statement.executeUpdate(); //bookingAdded bliver = 1, hvis Update går igennem
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - addBooking");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal lukke statement
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - addBooking");
+                System.out.println(e.getMessage());
+            }
+        }
+        return bookingAdded == bookingList.size();
+    }
 }
