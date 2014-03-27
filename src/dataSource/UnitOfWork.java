@@ -16,16 +16,16 @@ import java.util.ArrayList;
  */
 public class UnitOfWork {
 
-    private ArrayList<Booking> bookingList;
+    private ArrayList<Booking> newBookingList;
 
     public UnitOfWork() {
-        bookingList = new ArrayList<>();
+        newBookingList = new ArrayList<>();
     }
 
     public boolean bookRoom(Booking booking) {
         boolean bookingSuccess = false;
-        if (!bookingList.contains(booking)) {
-            bookingList.add(booking);
+        if (!newBookingList.contains(booking)) {
+            newBookingList.add(booking);
             bookingSuccess = true;
         }
         return bookingSuccess;
@@ -39,7 +39,8 @@ public class UnitOfWork {
         CustomerMapper customerMapper = new CustomerMapper();
         RoomMapper roomMapper = new RoomMapper();
 
-        commitSuccess = bookingMapper.addBooking(bookingList, con);
+        commitSuccess = bookingMapper.addBooking(newBookingList, con);
+        
         if (!commitSuccess) {
             con.rollback();
             System.out.println("Fejl i commitTransaction!");
@@ -47,6 +48,7 @@ public class UnitOfWork {
         }
         else {
             con.commit();
+            System.out.println("Transactioner er commited!");
         }
         return commitSuccess;
 

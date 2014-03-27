@@ -6,7 +6,10 @@ package domain;
 
 import dataSource.DBFacade;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,6 +26,18 @@ public class Control {
         DBFacade = DBFacade.getInstance();
         customerList = new ArrayList<>();
         roomList = new ArrayList<>();
+    }
+
+    public boolean commitTransaction()  {
+        boolean saved = false;
+        try {
+            saved = DBFacade.commitTransaction();
+        }
+        catch (SQLException e) {
+            System.out.println("Fejl ved at gemme transaction!");
+            System.out.println(e.getMessage());
+        }
+        return saved;
     }
 
     public ArrayList<Room> getRoomsFromDB() {
@@ -78,13 +93,12 @@ public class Control {
 //    }
     public boolean bookRoom(Room room, Customer customer) {
         boolean bookingSuccess = false;
-        
+
         // Tjekker om rummet allerede er i bookinglisten,
         // hvilket betyder at det er booket
         for (int i = 0; i < bookingList.size(); i++) {
             if (bookingList.get(i).getRoomNo() == room.getRoomNo()) {
                 bookingSuccess = false;
-                
 
             }
             else {
@@ -93,24 +107,22 @@ public class Control {
 
             }
 
-
         }
         return bookingSuccess;
-
 
     }
 
     public Booking newBooking(Room room, Customer customer) {
         Date date = new Date(2014, 06, 22);
-       
+
         Booking newBooking = new Booking(
                 getNewBookingId(),
                 customer.getCustomerId(),
                 room.getRoomNo(),
                 "",
                 date,
-                2
-                );
+                7
+        );
         return newBooking;
     }
 

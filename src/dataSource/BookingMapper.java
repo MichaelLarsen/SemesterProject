@@ -83,19 +83,19 @@ public class BookingMapper {
         return nextBookingId;
     }
 
-    public boolean addBooking(ArrayList<Booking> bookingList, Connection con) {
+    public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
         String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            for (int i = 0; i < bookingList.size(); i++) {
-                statement.setInt(1, bookingList.get(i).getBookingId());
-                statement.setInt(2, bookingList.get(i).getBookingOwner());
-                statement.setInt(3, bookingList.get(i).getRoomNo());
-                statement.setString(4, bookingList.get(i).getAgency());
-                statement.setDate(5, bookingList.get(i).getCheckInDate());
-                statement.setInt(6, bookingList.get(i).getNumberOfNights());
+            for (int i = 0; i < newBookingList.size(); i++) {
+                statement.setInt(1, newBookingList.get(i).getBookingId());
+                statement.setInt(2, newBookingList.get(i).getBookingOwner());
+                statement.setInt(3, newBookingList.get(i).getRoomNo());
+                statement.setString(4, newBookingList.get(i).getAgency());
+                statement.setDate(5, newBookingList.get(i).getCheckInDate());
+                statement.setInt(6, newBookingList.get(i).getNumberOfNights());
                 bookingAdded = statement.executeUpdate(); //bookingAdded bliver = 1, hvis Update går igennem
             }
         }
@@ -113,6 +113,6 @@ public class BookingMapper {
                 System.out.println(e.getMessage());
             }
         }
-        return bookingAdded == bookingList.size();
+        return bookingAdded == newBookingList.size();
     }
 }

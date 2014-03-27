@@ -7,6 +7,7 @@ package dataSource;
 
 import domain.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -38,10 +39,10 @@ public class DBFacade {
         return instance;
     }
     
-    public boolean commitTransaction(){
+    //Gemmer en transaction i database
+    public boolean commitTransaction() throws SQLException{
         
         return unitOfWork.commitTransaction(con);
-        
     }
     // Singleton slutning
 
@@ -55,7 +56,7 @@ public class DBFacade {
         return customerMapper.getCustomersFromDB(con);
     }
     
-    //returns arraylist of bokings
+    //returns arraylist of bookings
     public ArrayList<Booking> getBookingsFromDB() {
         return bookingMapper.getBookingsFromDB(con);
     }
