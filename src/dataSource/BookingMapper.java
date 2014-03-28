@@ -6,6 +6,7 @@
 package dataSource;
 
 import domain.Booking;
+import domain.Customer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,7 +85,7 @@ public class BookingMapper {
     public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
         String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
-         PreparedStatement statement = null;
+        PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
@@ -112,5 +113,51 @@ public class BookingMapper {
             }
         }
         return bookingAdded == newBookingList.size();
+    }
+
+    public ArrayList<Customer> getGuestsInRoom(Booking booking, Connection con) {
+        ArrayList<Customer> roomGuestList = new ArrayList<>();
+        Customer customer = null;
+        String SQLString = "SELECT * "
+                + "FROM CUSTOMERS "
+                + "JOIN ROOM_GUESTS "
+                + "ON CUSTOMERS.customer_id = ROOM_GUESTS.customer_id "
+                + "WHERE booking_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, booking.getBookingId());
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getInt(9),
+                        rs.getInt(10));
+                roomGuestList.add(customer);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - getGuestsInRoom");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - getGuestsInRoom");
+                System.out.println(e.getMessage());
+            }
+        }
+        return roomGuestList;
     }
 }

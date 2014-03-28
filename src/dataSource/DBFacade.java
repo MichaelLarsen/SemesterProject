@@ -64,9 +64,9 @@ public class DBFacade {
 //        return customerMapper.updateCustomerDB(customer, con);
 //    }
 //
-//    public boolean updateRoomDB(Room room) {
-//        return roomMapper.updateRoomDB(room, con);
-//    }
+    public boolean updateRoomDB(Room room) {
+        return unitOfWork.updateRoomDB(room);
+    }
 
     public boolean bookRoom(Booking booking) {
         return unitOfWork.bookRoom(booking);
@@ -76,6 +76,11 @@ public class DBFacade {
         return bookingMapper.getNewBookingId(con);
     }
 
-    
-    
+    public ArrayList<Customer> getGuestsInRoom(Booking booking) {
+        return bookingMapper.getGuestsInRoom(booking, con);
+    }
+
+    public boolean addGuestToRoom(RoomGuest roomguest) {
+        return unitOfWork.addGuestToRoom(roomguest);
+     }
 }

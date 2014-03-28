@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 package domain;
-
-import java.util.ArrayList;
-
 /**
  *
  * @author Sebastian, Michael og Andreas

@@ -5,6 +5,7 @@
  */
 package dataSource;
 
+import domain.Customer;
 import domain.Room;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,10 +28,12 @@ public class RoomMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                room = new Room(rs.getInt(1),
+                room = new Room(
+                        rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3),
-                        rs.getInt(4));
+                        rs.getInt(4),
+                        rs.getString(5));
                 roomList.add(room);
             }
         }
@@ -51,19 +54,22 @@ public class RoomMapper {
         return roomList;
     }
 
-    boolean updateRoomDB(Room room, Connection con) {
+    boolean updateRoomDB(ArrayList<Room> newRoomList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update ROOMS"
-                + " set room_type = ?, price = ?, occupied_beds = ?"
+                + " set room_type = ?, price = ?, occupied_beds = ?, is_booked = ?"
                 + " where room_no = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setString(1, room.getRoomTypeString());
-            statement.setInt(2, room.getPrice());
-            statement.setInt(3, room.getOccupiedBeds());
-            statement.setInt(4, room.getRoomNo());
-            
+            for (int i = 0; i < newRoomList.size(); i++) {
+                statement.setString(1, newRoomList.get(i).getRoomTypeString());
+                statement.setInt(2, newRoomList.get(i).getPrice());
+                statement.setInt(3, newRoomList.get(i).getOccupiedBeds());
+                statement.setString(4, newRoomList.get(i).getIsBookedString());
+                statement.setInt(5, newRoomList.get(i).getRoomNo());
+            }
+
             rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
         }
         catch (SQLException e) {

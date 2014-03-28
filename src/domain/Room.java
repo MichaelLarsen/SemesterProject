@@ -17,10 +17,8 @@ public class Room {
     private int price;
     private RoomType roomType;
     private String roomTypeString;
+    private String isBookedString;
     private int occupiedBeds;
-    private IsBooked isBooked;
-
-    private enum IsBooked {Yes, No}
 
     //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
     private enum RoomType {
@@ -33,20 +31,21 @@ public class Room {
         }
     }
 
-    public Room(int roomNo, String type, int price, int occupiedBeds) {
+    public Room(int roomNo, String type, int price, int occupiedBeds, String booked) {
 
         this.roomNo = roomNo;
         this.price = price;
         this.occupiedBeds = occupiedBeds;
         this.roomTypeString = type;
+        this.isBookedString = booked;
 
-        if (type.equals("Single")) {
+        if (type.equals("SINGLE")) {
             roomType = RoomType.SINGLE;
         }
-        if (type.equals("Double")) {
+        if (type.equals("DOUBLE")) {
             roomType = RoomType.DOUBLE;
         }
-        if (type.equals("Family")) {
+        if (type.equals("FAMILY")) {
             roomType = RoomType.FAMILY;
         }
     }
@@ -63,16 +62,16 @@ public class Room {
         return roomType;
     }
 
-    public IsBooked getIsBooked() {
-        return isBooked;
-    }
-    
-    public void setIsBooked(IsBooked isBooked){
-        this.isBooked = isBooked;
-    }
-
     public String getRoomTypeString() {
         return roomTypeString;
+    }
+    
+    public void setIsBookedString(String str){
+        this.isBookedString = str;
+    }
+    
+    public String getIsBookedString(){
+        return isBookedString;
     }
 
     public int getRoomSize() {
@@ -118,10 +117,10 @@ public class Room {
 
     @Override
     public String toString() {
-        String booked = "";
         String str = "";
+
         str = "RoomNo: " + roomNo + "       Type: " + roomTypeString + "        Price ($): " + price
-                + "     Booked: " + isBooked + "     Guests: "
+                + "     Booked: " + isBookedString + "     Guests: "
                 + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }
