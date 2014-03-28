@@ -18,9 +18,12 @@ public class Room {
     private RoomType roomType;
     private String roomTypeString;
     private int occupiedBeds;
+    private IsBooked isBooked;
+
+    private enum IsBooked {Yes, No}
 
     //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
-    public enum RoomType {
+    private enum RoomType {
 
         SINGLE(1), DOUBLE(2), FAMILY(5);
         private int roomSize;
@@ -58,6 +61,14 @@ public class Room {
 
     public RoomType getRoomType() {
         return roomType;
+    }
+
+    public IsBooked getIsBooked() {
+        return isBooked;
+    }
+    
+    public void setIsBooked(IsBooked isBooked){
+        this.isBooked = isBooked;
     }
 
     public String getRoomTypeString() {
@@ -108,15 +119,9 @@ public class Room {
     @Override
     public String toString() {
         String booked = "";
-        if (occupiedBeds > 0) {
-            booked = "Yes";
-        }
-        else {
-            booked = "No";
-        }
         String str = "";
         str = "RoomNo: " + roomNo + "       Type: " + roomTypeString + "        Price ($): " + price
-                + "     Booking: " + booked + "     Guests: "
+                + "     Booked: " + isBooked + "     Guests: "
                 + occupiedBeds + "/" + roomType.roomSize + "\n";
         return str;
     }

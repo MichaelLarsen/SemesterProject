@@ -105,6 +105,7 @@ public class Control {
         }
         if (isDoubleBooking == false) {
             newBooking = newBooking(room, customer);
+            room.setIsBooked(Yes);
             DBFacade.bookRoom(newBooking);
             bookingList.add(newBooking);
             System.out.println("bookingList size " + bookingList.size());
