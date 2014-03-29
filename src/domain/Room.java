@@ -90,10 +90,6 @@ public class Room {
         return occupiedBeds;
     }
 
-    public void setOccupiedBeds(int occupied) {
-        this.occupiedBeds = occupied;
-    }
-
     public int getEmptyBeds() {
         return roomType.roomSize - occupiedBeds;
     }

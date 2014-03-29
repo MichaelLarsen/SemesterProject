@@ -59,8 +59,6 @@
                                   <Component id="bookRoomButton" min="-2" pref="129" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="addGuestToRoomButton" min="-2" pref="130" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="removeGuestFromRoomButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jScrollPane1" alignment="0" pref="550" max="32767" attributes="0"/>
                               <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
@@ -125,7 +123,6 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="bookRoomButton" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
                               <Component id="addGuestToRoomButton" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
-                              <Component id="removeGuestFromRoomButton" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -224,11 +221,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addGuestToRoomButtonActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="removeGuestFromRoomButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Remove from room"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>

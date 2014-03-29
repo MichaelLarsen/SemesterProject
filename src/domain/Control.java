@@ -52,7 +52,7 @@ public class Control {
         bookingList = DBFacade.getBookingsFromDB();
         return bookingList;
     }
-    
+
     public boolean addGuestToRoom(Customer customer, Room room) {
         boolean addGuestSuccess = false;
         boolean guestExists = false;
@@ -68,66 +68,24 @@ public class Control {
         }
         if (!guestExists) {
             for (int i = 0; i < bookingList.size(); i++) {
-                 if (bookingList.get(i).getRoomNo() == room.getRoomNo() && room.getEmptyBeds() > 0) {
-                    RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(),bookingList.get(i).getBookingId());
+                if (bookingList.get(i).getRoomNo() == room.getRoomNo() && room.getEmptyBeds() > 0) {
+                    RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), bookingList.get(i).getBookingId());
                     bookingList.get(i).addCustomerForBooking(customer); //Tilføjer customer til listen i den specifikke booking
                     addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+                    room.incrementOccupiedBeds();
+                    updateRoomDB(room);
                 }
             }
         }
         return addGuestSuccess;
     }
-//        for (int i = 0; i < tempGuestInBooking.size(); i++) {
-//            
-//        }
-//            if (tempGuestInBooking.get(i).getCustomerId() == customer.getCustomerId()) {
-//                if (room.getRoomNo()) {
-//                    
-//                }
-//            }
-//            if (bookingList.get(i).getRoomNo() == room.getRoomNo() && room.getEmptyBeds() > 0) {
-//                RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(),bookingList.get(i).getBookingId());
-//                bookingList.get(i).addCustomerForBooking(customer);
-//                
-//                addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
-//            }
-//        }
 
-//    public boolean bookCustomerToRoom(Room room, Customer customer) {
-//        boolean status = false;
-//        boolean check = false;
-//
-//        if (room.getEmptyBeds() > 0) {
-//            int i = 0;
-//            while (!check && i < roomList.size() && oldRoomNo != 0) {
-//                if (oldRoomNo == roomList.get(i).getRoomNo()) {
-//                    roomList.get(i).decrementOccupiedBeds();
-//                    updateRoomDB(roomList.get(i));
-//                    check = true;
-//                }
-//                i++;
-//            }
-//            int newRoomNumber = room.getRoomNo();
-//            customer.setRoomNo(newRoomNumber);
-//            room.incrementOccupiedBeds();
-//            updateCustomerDB(customer);
-//            updateRoomDB(room);
-//            status = true;
-//        }
-//        return status;
-//    }
-//
-//    public boolean updateCustomerDB(Customer customer) {
-//        boolean updateSuccess;
-//        updateSuccess = DBFacade.updateCustomerDB(customer);
-//        return updateSuccess;
-//    }
-//
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateRoomDB(room);
         return updateSuccess;
     }
+
     public Booking bookRoom(Room room, Customer customer) {
         Booking newBooking = null;
         boolean isDoubleBooking = false;
