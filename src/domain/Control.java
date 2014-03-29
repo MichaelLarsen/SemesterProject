@@ -61,7 +61,6 @@ public class Control {
         for (int i = 0; i < bookingList.size(); i++) {
             if (!bookingList.get(i).getCustomersForBooking().isEmpty()) {
                 tempGuestInBooking = bookingList.get(i).getCustomersForBooking();
-                System.out.println("size: " + bookingList.get(i).getCustomersForBooking().size());
                 for (int j = 0; j < tempGuestInBooking.size(); j++) {
                     if (tempGuestInBooking.get(j).getCustomerId() == customer.getCustomerId()) {
                         guestExists = true;
