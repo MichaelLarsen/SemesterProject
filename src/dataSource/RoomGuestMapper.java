@@ -31,7 +31,7 @@ public class RoomGuestMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in BookingMapper - addBooking");
+            System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
             System.out.println(e.getMessage());
         }
         finally // Skal lukke statement
@@ -40,11 +40,43 @@ public class RoomGuestMapper {
                 statement.close(); //lukker statements
             }
             catch (SQLException e) {
-                System.out.println("Fail in BookingMapper - addBooking");
+                System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
                 System.out.println(e.getMessage());
             }
         }
         return guestAdded == newGuestInRoomList.size();
+    }
+
+    public boolean updateGuestInRoom(ArrayList<RoomGuest> updateGuestInRoomList, Connection con) {
+       int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
+        String SQLString = "update ROOM_GUESTS"
+                + " set booking_id = ?"
+                + " where customer_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            for (int i = 0; i < updateGuestInRoomList.size(); i++) {
+                statement.setInt(1, updateGuestInRoomList.get(i).getBookingId());
+                statement.setInt(2, updateGuestInRoomList.get(i).getCustomerId());
+            }
+
+            rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateGuestInRoomList.size(), hvis Update går igennem
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in RoomGuestMapper - updateGuestInRoom");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal køres efter catch
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in RoomGuestMapper - updateGuestInRoom");
+                System.out.println(e.getMessage());
+            }
+        }
+        return rowsUpdated == updateGuestInRoomList.size(); //hvis dette passer returneres true ellers false  
     }
     
 }

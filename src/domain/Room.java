@@ -89,6 +89,10 @@ public class Room {
     public int getOccupiedBeds() {
         return occupiedBeds;
     }
+    
+    public void setOccupiedBeds(int occupiedBeds) {
+        this.occupiedBeds = occupiedBeds;
+    }
 
     public int getEmptyBeds() {
         return roomType.roomSize - occupiedBeds;
@@ -96,7 +100,7 @@ public class Room {
 
     public void incrementOccupiedBeds() {
         if (roomType.roomSize > occupiedBeds) {
-            occupiedBeds++;
+            occupiedBeds = occupiedBeds + 1;
             System.out.println("Customer added to room +1");
         }
         else {
@@ -106,7 +110,7 @@ public class Room {
 
     public void decrementOccupiedBeds() {
         if (occupiedBeds > 0) {
-            occupiedBeds--;
+            occupiedBeds = occupiedBeds - 1;
             System.out.println("Customer removed from room -1");
         }
     }

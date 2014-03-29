@@ -38,9 +38,9 @@ public class DBFacade {
         }
         return instance;
     }
-    
+
     //Gemmer en transaction i database
-    public boolean commitTransaction() throws SQLException{
+    public boolean commitTransaction() throws SQLException {
         return unitOfWork.commitTransaction(con);
     }
     // Singleton slutning
@@ -49,12 +49,12 @@ public class DBFacade {
     public ArrayList<Room> getRoomFromDB() {
         return roomMapper.getRoomsFromDB(con);
     }
-    
+
     //returns arraylist of customers
     public ArrayList<Customer> getCustomersFromDB() {
         return customerMapper.getCustomersFromDB(con);
     }
-    
+
     //returns arraylist of bookings
     public ArrayList<Booking> getBookingsFromDB() {
         return bookingMapper.getBookingsFromDB(con);
@@ -66,6 +66,14 @@ public class DBFacade {
 //
     public boolean updateRoomDB(Room room) {
         return unitOfWork.updateRoomDB(room);
+    }
+
+    public boolean updateBookingDB(Booking booking) {
+        return unitOfWork.updateBookingDB(booking);
+    }
+    
+    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+        return unitOfWork.updateGuestsInRoomDB(roomGuest);
     }
 
     public boolean bookRoom(Booking booking) {
@@ -82,5 +90,5 @@ public class DBFacade {
 
     public boolean addGuestToRoom(RoomGuest roomguest) {
         return unitOfWork.addGuestToRoom(roomguest);
-     }
+    }
 }

@@ -59,10 +59,13 @@ public class Control {
         ArrayList<Customer> tempGuestInBooking;
         // TODO: Fix metoden!! kan den ikke være mindre?
         for (int i = 0; i < bookingList.size(); i++) {
-            tempGuestInBooking = bookingList.get(i).getCustomersForBooking();
-            for (int j = 0; j < tempGuestInBooking.size(); j++) {
-                if (tempGuestInBooking.get(i).getCustomerId() == customer.getCustomerId()) {
-                    guestExists = true;
+            if (!bookingList.get(i).getCustomersForBooking().isEmpty()) {
+                tempGuestInBooking = bookingList.get(i).getCustomersForBooking();
+                System.out.println("size: " + bookingList.get(i).getCustomersForBooking().size());
+                for (int j = 0; j < tempGuestInBooking.size(); j++) {
+                    if (tempGuestInBooking.get(j).getCustomerId() == customer.getCustomerId()) {
+                        guestExists = true;
+                    }
                 }
             }
         }
@@ -73,9 +76,9 @@ public class Control {
                     bookingList.get(i).addCustomerForBooking(customer); //Tilføjer customer til listen i den specifikke booking
                     addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
                     room.incrementOccupiedBeds();
-                    updateRoomDB(room);
                 }
             }
+            updateRoomDB(room);
         }
         return addGuestSuccess;
     }
@@ -83,6 +86,18 @@ public class Control {
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateRoomDB(room);
+        return updateSuccess;
+    }
+
+    private boolean updateBookingDB(Booking booking) {
+        boolean updateSuccess;
+        updateSuccess = DBFacade.updateBookingDB(booking);
+        return updateSuccess;
+    }
+
+    private boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+        boolean updateSuccess;
+        updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);
         return updateSuccess;
     }
 
@@ -130,7 +145,6 @@ public class Control {
         int newBookingId = 0;
         newBookingId = DBFacade.getNewBookingId();
         return newBookingId;
-
     }
 
     public ArrayList<Customer> getGuestsInRoom(Booking booking) {

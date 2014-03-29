@@ -23,6 +23,7 @@ public class GUI extends javax.swing.JFrame {
     private DefaultListModel<Booking> bookingModel;
     private DefaultListModel<Booking> newBookingModel;
     private DefaultListModel infoBookingModel;
+    private DefaultListModel addedGuestsModel;
 
     /**
      * Creates new form GUI
@@ -36,7 +37,8 @@ public class GUI extends javax.swing.JFrame {
         bookingModel = new DefaultListModel<>();
         newBookingModel = new DefaultListModel<>();
         infoBookingModel = new DefaultListModel<>();
-
+        addedGuestsModel = new DefaultListModel<>();
+        
         refreshModel(roomModel);
         refreshModel(customerModel);
         refreshModel(bookingModel);
@@ -95,6 +97,8 @@ public class GUI extends javax.swing.JFrame {
         bookingJList = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         bookingInfoJList = new javax.swing.JList();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        addedGuestsJList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,7 +129,7 @@ public class GUI extends javax.swing.JFrame {
 
         statusJLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        getBookings.setText("Get Bookings (don't use)");
+        getBookings.setText("Get Bookings");
         getBookings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getBookingsActionPerformed(evt);
@@ -164,6 +168,8 @@ public class GUI extends javax.swing.JFrame {
         });
         jScrollPane5.setViewportView(bookingInfoJList);
 
+        jScrollPane6.setViewportView(addedGuestsJList);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -175,15 +181,20 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(statusJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(getCustomersButton)
-                            .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(addGuestToRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(addGuestToRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane6))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2))
+                            .addComponent(jScrollPane2)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(getCustomersButton)
+                                    .addComponent(getRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -233,10 +244,13 @@ public class GUI extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(saveBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -302,6 +316,7 @@ public class GUI extends javax.swing.JFrame {
         }
         refreshModel(bookingModel);
         refreshModel(roomModel);
+        addedGuestsModel.clear();
     }//GEN-LAST:event_saveBookingButtonActionPerformed
 
     private void bookingInfoJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookingInfoJListMouseClicked
@@ -326,10 +341,12 @@ public class GUI extends javax.swing.JFrame {
         
         addGuestSuccess = ctr.addGuestToRoom(customer, room);
         if (addGuestSuccess) {
-            statusJLabel.setText("Guest added!");
+            addedGuestsModel.addElement(customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + room.getRoomNo());
+            addedGuestsJList.setModel(addedGuestsModel);
+            statusJLabel.setText(customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + room.getRoomNo());
         }
         else{
-            statusJLabel.setText("Failed to add guest");
+            statusJLabel.setText("Failed to add " + customer.getFirstName() + " " + customer.getLastName());
         }
 
     }//GEN-LAST:event_addGuestToRoomButtonActionPerformed
@@ -374,6 +391,7 @@ public class GUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addGuestToRoomButton;
+    private javax.swing.JList addedGuestsJList;
     private javax.swing.JButton bookRoomButton;
     private javax.swing.JList bookingInfoJList;
     private javax.swing.JList bookingJList;
@@ -388,6 +406,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JList newBookingJList;
     private javax.swing.JList roomJList;
     private javax.swing.JButton saveBookingButton;

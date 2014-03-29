@@ -95,7 +95,7 @@ public class BookingMapper {
                 statement.setString(4, newBookingList.get(i).getAgency());
                 statement.setDate(5, newBookingList.get(i).getCheckInDate());
                 statement.setInt(6, newBookingList.get(i).getNumberOfNights());
-                bookingAdded += statement.executeUpdate(); //bookingAdded bliver = 1, hvis Update går igennem
+                bookingAdded += statement.executeUpdate(); //bookingAdded bliver = newBookingList.size(), hvis Update går igennem
             }
         }
         catch (SQLException e) {
@@ -159,5 +159,41 @@ public class BookingMapper {
             }
         }
         return roomGuestList;
+    }
+
+    public boolean updateBooking(ArrayList<Booking> updateBookingList, Connection con) {
+        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
+        String SQLString = "update BOOKINGS"
+                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, no_of_nights = ?"
+                + " where booking_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            for (int i = 0; i < updateBookingList.size(); i++) {
+                statement.setInt(1, updateBookingList.get(i).getBookingOwner());
+                statement.setInt(2, updateBookingList.get(i).getRoomNo());
+                statement.setString(3, updateBookingList.get(i).getAgency());
+                statement.setDate(4, updateBookingList.get(i).getCheckInDate());
+                statement.setInt(5, updateBookingList.get(i).getNumberOfNights());
+                statement.setInt(6, updateBookingList.get(i).getBookingId());
+            }
+
+            rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - updateBookingDB");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal køres efter catch
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - updateBookingDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return rowsUpdated == updateBookingList.size(); //hvis dette passer returneres true ellers false  
     }
 }

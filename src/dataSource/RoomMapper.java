@@ -54,7 +54,7 @@ public class RoomMapper {
         return roomList;
     }
 
-    boolean updateRoomDB(ArrayList<Room> newRoomList, Connection con) {
+    public boolean updateRoomDB(ArrayList<Room> newRoomList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update ROOMS"
                 + " set room_type = ?, price = ?, occupied_beds = ?, is_booked = ?"
@@ -70,7 +70,7 @@ public class RoomMapper {
                 statement.setInt(5, newRoomList.get(i).getRoomNo());
             }
 
-            rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+            rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = newRoomList.size(), hvis Update går igennem
         }
         catch (SQLException e) {
             System.out.println("Fail in RoomMapper - UpdateRoomDB");
@@ -86,6 +86,6 @@ public class RoomMapper {
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == 1; //hvis dette passer returneres true ellers false  
+        return rowsUpdated == newRoomList.size(); //hvis dette passer returneres true ellers false  
     }
 }

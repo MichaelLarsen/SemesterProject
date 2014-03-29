@@ -19,13 +19,17 @@ import java.util.ArrayList;
 public class UnitOfWork {
 
     private ArrayList<Booking> newBookingList;
-    private ArrayList<Room> newRoomList;
+    private ArrayList<Booking> updateBookingList;
+    private ArrayList<Room> updateRoomList;
     private ArrayList<RoomGuest> newGuestInRoomList;
+    private ArrayList<RoomGuest> updateGuestInRoomList;
 
     public UnitOfWork() {
         newBookingList = new ArrayList<>();
-        newRoomList = new ArrayList<>();
+        updateRoomList = new ArrayList<>();
         newGuestInRoomList = new ArrayList<>();
+        updateBookingList = new ArrayList<>();
+        updateGuestInRoomList = new ArrayList<>();
     }
 
     public boolean bookRoom(Booking booking) {
@@ -37,7 +41,7 @@ public class UnitOfWork {
         return bookingSuccess;
     }
 
-    boolean addGuestToRoom(RoomGuest roomguest) {
+    public boolean addGuestToRoom(RoomGuest roomguest) {
         boolean addGuestSuccess = false;
         if (!newGuestInRoomList.contains(roomguest)) {
             newGuestInRoomList.add(roomguest);
@@ -48,8 +52,26 @@ public class UnitOfWork {
 
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess = false;
-        if (!newRoomList.contains(room)) {
-            newRoomList.add(room);
+        if (!updateRoomList.contains(room)) {
+            updateRoomList.add(room);
+            updateSuccess = true;
+        }
+        return updateSuccess;
+    }
+
+    boolean updateBookingDB(Booking booking) {
+        boolean updateSuccess = false;
+        if (!updateBookingList.contains(booking)) {
+            updateBookingList.add(booking);
+            updateSuccess = true;
+        }
+        return updateSuccess;
+    }
+
+    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+        boolean updateSuccess = false;
+        if (!updateGuestInRoomList.contains(roomGuest)) {
+            updateGuestInRoomList.add(roomGuest);
             updateSuccess = true;
         }
         return updateSuccess;
@@ -66,16 +88,23 @@ public class UnitOfWork {
         if (!newBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
         }
-        if (!newRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && roomMapper.updateRoomDB(newRoomList, con);
+        if (!updateRoomList.isEmpty()) {
+            commitSuccess = commitSuccess && roomMapper.updateRoomDB(updateRoomList, con);
 
         }
         if (!newGuestInRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomGuestMapper.addGuestToRoom(newGuestInRoomList, con);
         }
+        if (!updateBookingList.isEmpty()) {
+            commitSuccess = commitSuccess && bookingMapper.updateBooking(updateBookingList, con);
+        }
+        if (!updateGuestInRoomList.isEmpty()) {
+            commitSuccess = commitSuccess && roomGuestMapper.updateGuestInRoom(updateGuestInRoomList, con);
+        }
+        System.out.println("updateBookingList size " + updateBookingList.size());
         System.out.println("newBookingList size " + newBookingList.size());
-        System.out.println("newRoomList size " + newRoomList.size());
-        System.out.println("newGuestInRoomList size " + newRoomList.size());
+        System.out.println("newRoomList size " + updateRoomList.size());
+        System.out.println("newGuestInRoomList size " + updateRoomList.size());
         if (!commitSuccess) {
             con.rollback();
             System.out.println("Fejl i commitTransaction!");
@@ -86,7 +115,6 @@ public class UnitOfWork {
             newBookingList.clear();
             System.out.println("Transactioner er commited!");
         }
-
         return commitSuccess;
     }
 }
