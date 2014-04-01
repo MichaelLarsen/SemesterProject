@@ -19,19 +19,37 @@ public class Booking {
     private String agency;
     private Date checkInDate;
     private Date checkOutDate;
-    private Room room;
-    private Customer bookingOwner;
+    private int roomNo;
+    private int bookingOwnerId;
+    private int occupiedBeds;
     private ArrayList<Customer> roomGuestList;
 
-    public Booking(int bookingId, Customer bookingOwner, Room room, String agency, Date checkInDate, Date checkOutDate) {
+    public Booking(int bookingId, int bookingOwnerId, int roomNo, String agency, Date checkInDate, Date checkOutDate, int occupiedBeds) {
         this.bookingId = bookingId;
-        this.bookingOwner = bookingOwner;
-        this.room = room;
+        this.bookingOwnerId = bookingOwnerId;
+        this.roomNo = roomNo;
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        this.occupiedBeds = occupiedBeds;
         this.roomGuestList = new ArrayList<>();
 
+    }
+
+    public int getRoomNo() {
+        return roomNo;
+    }
+
+    public void setRoomNo(int roomNo) {
+        this.roomNo = roomNo;
+    }
+
+    public int getBookingOwnerId() {
+        return bookingOwnerId;
+    }
+
+    public void setBookingOwnerId(int bookingOwnerId) {
+        this.bookingOwnerId = bookingOwnerId;
     }
 
     public ArrayList<Customer> getCustomersForBooking() {
@@ -43,17 +61,14 @@ public class Booking {
     }
     
     public int getOccupiedBeds(){
-        return roomGuestList.size();
+        return occupiedBeds;
     }
-    
-    public int getRoomSize() {
-        return room.getRoomSize();
-    }
+   
 
     @Override
     public String toString() {
-        String str = "BookID: " + bookingId + "     RoomNo: " + room.getRoomNo() + "     OwnerID: " + bookingOwner.getCustomerId() 
-                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate + "   Guests: " + getOccupiedBeds() + "/" + getRoomSize();
+        String str = "BookID: " + bookingId + "     RoomNo: " + roomNo + "     OwnerID: " + bookingOwnerId 
+                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate + "   Guests: " + occupiedBeds;
         return str;
     }
 
@@ -63,22 +78,6 @@ public class Booking {
 
     public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
-    }
-
-    public Customer getBookingOwner() {
-        return bookingOwner;
-    }
-
-    public void setBookingOwner(Customer bookingOwner) {
-        this.bookingOwner = bookingOwner;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
     }
 
     public String getAgency() {

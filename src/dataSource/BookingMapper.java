@@ -30,16 +30,14 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                int customerId = rs.getInt(2);
-                int roomNo = rs.getInt(3);
-
                 booking = new Booking(
                         rs.getInt(1),
                         rs.getInt(2),
                         rs.getInt(3),
                         rs.getString(4),
                         rs.getDate(5),
-                        rs.getDate(6));
+                        rs.getDate(6),
+                        rs.getInt(7));
                 bookingList.add(booking);
             }
         }
@@ -90,17 +88,18 @@ public class BookingMapper {
 
     public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
-        String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
+        String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
                 statement.setInt(1, newBookingList.get(i).getBookingId());
-                statement.setInt(2, newBookingList.get(i).getBookingOwner().getCustomerId());
-                statement.setInt(3, newBookingList.get(i).getRoom().getRoomNo());
+                statement.setInt(2, newBookingList.get(i).getBookingOwnerId());
+                statement.setInt(3, newBookingList.get(i).getRoomNo());
                 statement.setString(4, newBookingList.get(i).getAgency());
                 statement.setDate(5, new java.sql.Date(newBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(6, new java.sql.Date(newBookingList.get(i).getCheckOutDate().getTime()));
+                statement.setInt(7, newBookingList.get(i).getOccupiedBeds());
                 bookingAdded += statement.executeUpdate(); //bookingAdded bliver = newBookingList.size(), hvis Update går igennem
             }
         }
@@ -170,17 +169,18 @@ public class BookingMapper {
     public boolean updateBooking(ArrayList<Booking> updateBookingList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update BOOKINGS"
-                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, check_out_date = ?"
+                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, check_out_date = ?, occupied_beds = ?"
                 + " where booking_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < updateBookingList.size(); i++) {
-                statement.setInt(1, updateBookingList.get(i).getBookingOwner().getCustomerId());
-                statement.setInt(2, updateBookingList.get(i).getRoom().getRoomNo());
+                statement.setInt(1, updateBookingList.get(i).getBookingOwnerId());
+                statement.setInt(2, updateBookingList.get(i).getRoomNo());
                 statement.setString(3, updateBookingList.get(i).getAgency());
                 statement.setDate(4, new java.sql.Date(updateBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(5, new java.sql.Date(updateBookingList.get(i).getCheckOutDate().getTime()));
+                statement.setInt(5, updateBookingList.get(i).getOccupiedBeds());
                 statement.setInt(6, updateBookingList.get(i).getBookingId());
             }
 

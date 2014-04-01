@@ -23,7 +23,7 @@ public class Control {
     public Control() {
         DBFacade = DBFacade.getInstance();
         customerList = new ArrayList<>();
-        roomList = new ArrayList<>();
+        roomList = getRoomsFromDB();
     }
 
     public boolean commitTransaction() {
@@ -38,7 +38,7 @@ public class Control {
         return commitSuccess;
     }
 
-    public ArrayList<Room> getRoomsFromDB() {
+    public final ArrayList<Room> getRoomsFromDB() {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
@@ -99,44 +99,15 @@ public class Control {
         return updateSuccess;
     }
 
-//    public Booking bookRoom(Room room, Customer customer) {
-//        Booking newBooking = null;
-//        boolean isDoubleBooking = false;
-//        int i = 0;
-//
-//        // Tjekker om rummet allerede er i bookinglisten,
-//        // hvilket betyder at det er booket
-//        while (isDoubleBooking == false && i < bookingList.size()) {
-//            if (bookingList.get(i).getRoomNo() == room.getRoomNo()) {
-//                isDoubleBooking = true;
-//            }
-//            i++;
-//        }
-//        if (isDoubleBooking == false) {
-//            newBooking = newBooking(room, customer);
-//            //OBS
-//            room.setIsBookedString("YES");
-//            updateRoomDB(room);
-//            //OBS
-//            DBFacade.bookRoom(newBooking);
-//            bookingList.add(newBooking);
-//            System.out.println("bookingList size " + bookingList.size());
-//        }
-//        return newBooking;
-//    }
-    public Booking newBooking(Room room, Customer customer) {
-        Date date = new Date(114, 06, 22);
-        Date date1 = new Date(114, 06, 29);
-
-        Booking newBooking = new Booking(
-                getNewBookingId(),
-                customer,
-                room,
-                "",
-                date,
-                date1
-        );
+    public Booking bookRoom(Room room, Customer customer, Date checkIn, Date checkOut) {
+        Boolean bookingAddedSuccess = false;
+        Booking newBooking = new Booking(getNewBookingId(), customer.getCustomerId(), room.getRoomNo(), "", checkIn, checkOut, 0);
+        bookingAddedSuccess = DBFacade.bookRoom(newBooking);
+        if (bookingAddedSuccess == true) {
+            bookingList.add(newBooking);
         return newBooking;
+        }
+        return null;
     }
 
     public int getNewBookingId() {
@@ -152,13 +123,14 @@ public class Control {
     public ArrayList<Room> getAvailableRoomsDB(Date checkInDate, Date checkOutDate) {
         Date bookingStartDate;
         Date bookingEndDate;
-        Room room;        
+        Room room;
         ArrayList<Room> availableRoomList = new ArrayList<>();
-        roomList = getRoomsFromDB();
+
         for (int i = 0; i < roomList.size(); i++) {
             room = roomList.get(i);
+            boolean doubleBooking = false;
             for (int j = 0; j < bookingList.size(); j++) {
-                if ((bookingList.get(j).getRoom().equals(room))) {
+                if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
                     bookingStartDate = bookingList.get(j).getCheckInDate();
                     bookingEndDate = bookingList.get(j).getCheckOutDate();
                     //Januar starter på 00, så 03 er fx april.
@@ -167,27 +139,44 @@ public class Control {
                     if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                             || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
                             || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+                        doubleBooking = false;
                         availableRoomList.add(room);
                         System.out.println("Sådan - ledigt!");
                     }
                     else {
+                        doubleBooking = true;
                         System.out.println("Doublebooking!");
                     }
                 }
             }
+            if (doubleBooking == false && !availableRoomList.contains(room)) {
+                availableRoomList.add(room);
+            }
         }
         return availableRoomList;
     }
+
+    public boolean checkForDoubleBooking(Room room, Date checkInDate, Date checkOutDate) {
+        boolean doubleBooking = false;
+        for (int j = 0; j < bookingList.size(); j++) {
+            if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
+                Date bookingStartDate = bookingList.get(j).getCheckInDate();
+                Date bookingEndDate = bookingList.get(j).getCheckOutDate();
+                //Januar starter på 00, så 03 er fx april.
+                System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+                System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+                if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
+                        || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
+                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+                    doubleBooking = false;
+                    System.out.println("Sådan - ledigt!");
+                }
+                else {
+                    doubleBooking = true;
+                    System.out.println("Doublebooking!");
+                }
+            }
+        }
+        return doubleBooking;
+    }
 }
-
-//        if ((checkInDate.equals((bookingStartDate)) || (checkOutDate.equals(bookingEndDate))) 
-//                || (checkInDate.after(bookingStartDate) && checkInDate.before(bookingEndDate)) 
-//                || (checkOutDate.after(bookingStartDate) && checkOutDate.before(bookingEndDate))
-//                || (checkInDate.before(bookingStartDate) && checkOutDate.after(bookingEndDate))) {
-//            System.out.println("Doublebooking!");
-//        }
-//        else
-//        {
-//            System.out.println("Sådan!");
-//        }
-
