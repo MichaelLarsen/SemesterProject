@@ -5,8 +5,6 @@
  */
 package domain;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Sebastian, Michael og Andreas
@@ -17,8 +15,6 @@ public class Room {
     private int price;
     private RoomType roomType;
     private String roomTypeString;
-    private String isBookedString;
-    private int occupiedBeds;
 
     //her oprettes en enumeration, som definerer mulige rum og rumstørrelser
     private enum RoomType {
@@ -31,14 +27,11 @@ public class Room {
         }
     }
 
-    public Room(int roomNo, String type, int price, int occupiedBeds, String booked) {
+    public Room(int roomNo, String type, int price) {
 
         this.roomNo = roomNo;
         this.price = price;
-        this.occupiedBeds = occupiedBeds;
         this.roomTypeString = type;
-        this.isBookedString = booked;
-
         if (type.equals("SINGLE")) {
             roomType = RoomType.SINGLE;
         }
@@ -65,14 +58,6 @@ public class Room {
     public String getRoomTypeString() {
         return roomTypeString;
     }
-    
-    public void setIsBookedString(String str){
-        this.isBookedString = str;
-    }
-    
-    public String getIsBookedString(){
-        return isBookedString;
-    }
 
     public int getRoomSize() {
         return roomType.roomSize;
@@ -86,42 +71,9 @@ public class Room {
         this.price = price;
     }
 
-    public int getOccupiedBeds() {
-        return occupiedBeds;
-    }
-    
-    public void setOccupiedBeds(int occupiedBeds) {
-        this.occupiedBeds = occupiedBeds;
-    }
-
-    public int getEmptyBeds() {
-        return roomType.roomSize - occupiedBeds;
-    }
-
-    public void incrementOccupiedBeds() {
-        if (roomType.roomSize > occupiedBeds) {
-            occupiedBeds = occupiedBeds + 1;
-            System.out.println("Customer added to room +1");
-        }
-        else {
-            System.out.println("Room is full!");
-        }
-    }
-
-    public void decrementOccupiedBeds() {
-        if (occupiedBeds > 0) {
-            occupiedBeds = occupiedBeds - 1;
-            System.out.println("Customer removed from room -1");
-        }
-    }
-
     @Override
     public String toString() {
-        String str = "";
-
-        str = "RoomNo: " + roomNo + "       Type: " + roomTypeString + "        Price ($): " + price
-                + "     Booked: " + isBookedString + "     Guests: "
-                + occupiedBeds + "/" + roomType.roomSize + "\n";
+        String str = "RoomNo: " + roomNo + "       Type: " + roomTypeString + "        Price ($): " + price;
         return str;
     }
 }

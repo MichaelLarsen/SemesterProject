@@ -5,7 +5,6 @@
  */
 package dataSource;
 
-import domain.Customer;
 import domain.Room;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,9 +30,7 @@ public class RoomMapper {
                 room = new Room(
                         rs.getInt(1),
                         rs.getString(2),
-                        rs.getInt(3),
-                        rs.getInt(4),
-                        rs.getString(5));
+                        rs.getInt(3));
                 roomList.add(room);
             }
         }
@@ -57,7 +54,7 @@ public class RoomMapper {
     public boolean updateRoomDB(ArrayList<Room> newRoomList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update ROOMS"
-                + " set room_type = ?, price = ?, occupied_beds = ?, is_booked = ?"
+                + " set room_type = ?, price = ?"
                 + " where room_no = ?";
         PreparedStatement statement = null;
         try {
@@ -65,9 +62,7 @@ public class RoomMapper {
             for (int i = 0; i < newRoomList.size(); i++) {
                 statement.setString(1, newRoomList.get(i).getRoomTypeString());
                 statement.setInt(2, newRoomList.get(i).getPrice());
-                statement.setInt(3, newRoomList.get(i).getOccupiedBeds());
-                statement.setString(4, newRoomList.get(i).getIsBookedString());
-                statement.setInt(5, newRoomList.get(i).getRoomNo());
+                statement.setInt(3, newRoomList.get(i).getRoomNo());
             }
 
             rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = newRoomList.size(), hvis Update går igennem

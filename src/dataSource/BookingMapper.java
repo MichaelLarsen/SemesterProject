@@ -7,7 +7,9 @@ package dataSource;
 
 import domain.Booking;
 import domain.Customer;
+import domain.Room;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,12 +30,16 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                booking = new Booking(rs.getInt(1),
+                int customerId = rs.getInt(2);
+                int roomNo = rs.getInt(3);
+
+                booking = new Booking(
+                        rs.getInt(1),
                         rs.getInt(2),
                         rs.getInt(3),
                         rs.getString(4),
                         rs.getDate(5),
-                        rs.getInt(6));
+                        rs.getDate(6));
                 bookingList.add(booking);
             }
         }
@@ -90,11 +96,11 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
                 statement.setInt(1, newBookingList.get(i).getBookingId());
-                statement.setInt(2, newBookingList.get(i).getBookingOwner());
-                statement.setInt(3, newBookingList.get(i).getRoomNo());
+                statement.setInt(2, newBookingList.get(i).getBookingOwner().getCustomerId());
+                statement.setInt(3, newBookingList.get(i).getRoom().getRoomNo());
                 statement.setString(4, newBookingList.get(i).getAgency());
-                statement.setDate(5, newBookingList.get(i).getCheckInDate());
-                statement.setInt(6, newBookingList.get(i).getNumberOfNights());
+                statement.setDate(5, new java.sql.Date(newBookingList.get(i).getCheckInDate().getTime()));
+                statement.setDate(6, new java.sql.Date(newBookingList.get(i).getCheckOutDate().getTime()));
                 bookingAdded += statement.executeUpdate(); //bookingAdded bliver = newBookingList.size(), hvis Update går igennem
             }
         }
@@ -164,17 +170,17 @@ public class BookingMapper {
     public boolean updateBooking(ArrayList<Booking> updateBookingList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update BOOKINGS"
-                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, no_of_nights = ?"
+                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, check_out_date = ?"
                 + " where booking_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < updateBookingList.size(); i++) {
-                statement.setInt(1, updateBookingList.get(i).getBookingOwner());
-                statement.setInt(2, updateBookingList.get(i).getRoomNo());
+                statement.setInt(1, updateBookingList.get(i).getBookingOwner().getCustomerId());
+                statement.setInt(2, updateBookingList.get(i).getRoom().getRoomNo());
                 statement.setString(3, updateBookingList.get(i).getAgency());
-                statement.setDate(4, updateBookingList.get(i).getCheckInDate());
-                statement.setInt(5, updateBookingList.get(i).getNumberOfNights());
+                statement.setDate(4, new java.sql.Date(updateBookingList.get(i).getCheckInDate().getTime()));
+                statement.setDate(5, new java.sql.Date(updateBookingList.get(i).getCheckOutDate().getTime()));
                 statement.setInt(6, updateBookingList.get(i).getBookingId());
             }
 
@@ -196,4 +202,73 @@ public class BookingMapper {
         }
         return rowsUpdated == updateBookingList.size(); //hvis dette passer returneres true ellers false  
     }
+
+//    private Customer getCustomerForBookingDB(int customerId, Connection con) {
+//        Customer customer = null;
+//        String SQLString = "select * from CUSTOMERS where customer_id = " + customerId;
+//        PreparedStatement statement = null;
+//        try {
+//            statement = con.prepareStatement(SQLString);
+//            ResultSet rs = statement.executeQuery();
+//            if (rs.next()) {
+//                customer = new Customer(
+//                        rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getString(5),
+//                        rs.getString(6),
+//                        rs.getString(7),
+//                        rs.getString(8),
+//                        rs.getInt(9),
+//                        rs.getInt(10));
+//            }
+//        }
+//        catch (SQLException e) {
+//            System.out.println("Fail in BookingMapper - getCustomerForBookingDB");
+//            System.out.println(e.getMessage());
+//        }
+//        finally // must close statement
+//        {
+//            try {
+//                statement.close();
+//            }
+//            catch (SQLException e) {
+//                System.out.println("Fail in BookingMapper - getCustomerForBookingDB");
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        return customer;
+//    }
+
+//    private Room getRoomForBookingDB(int roomNo, Connection con) {
+//        Room room = null;
+//        String SQLString = "select * from ROOMS where room_no = " + roomNo;
+//        PreparedStatement statement = null;
+//        try {
+//            statement = con.prepareStatement(SQLString);
+//            ResultSet rs = statement.executeQuery();
+//            if (rs.next()) {
+//                room = new Room(
+//                        rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getInt(3));
+//            }
+//        }
+//        catch (SQLException e) {
+//            System.out.println("Fail in BookingMapper - getRoomForBookingDB");
+//            System.out.println(e.getMessage());
+//        }
+//        finally // must close statement
+//        {
+//            try {
+//                statement.close();
+//            }
+//            catch (SQLException e) {
+//                System.out.println("Fail in BookingMapper - getRoomForBookingDB");
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        return room;
+//    }
 }

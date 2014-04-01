@@ -6,7 +6,7 @@
 package domain;
 
 // Bruges for at kunne sende date mellem SQL og Java
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 
 /**
@@ -16,20 +16,20 @@ import java.util.ArrayList;
 public class Booking {
 
     private int bookingId;
-    private int bookingOwner;
-    private int roomNo;
     private String agency;
     private Date checkInDate;
-    private int numberOfNights;
+    private Date checkOutDate;
+    private Room room;
+    private Customer bookingOwner;
     private ArrayList<Customer> roomGuestList;
 
-    public Booking(int bookingId, int bookingOwner, int roomNo, String agency, Date checkInDate, int numberOfNights) {
+    public Booking(int bookingId, Customer bookingOwner, Room room, String agency, Date checkInDate, Date checkOutDate) {
         this.bookingId = bookingId;
         this.bookingOwner = bookingOwner;
-        this.roomNo = roomNo;
+        this.room = room;
         this.agency = agency;
         this.checkInDate = checkInDate;
-        this.numberOfNights = numberOfNights;
+        this.checkOutDate = checkOutDate;
         this.roomGuestList = new ArrayList<>();
 
     }
@@ -41,11 +41,19 @@ public class Booking {
     public void addCustomerForBooking(Customer customer) {
         roomGuestList.add(customer);
     }
+    
+    public int getOccupiedBeds(){
+        return roomGuestList.size();
+    }
+    
+    public int getRoomSize() {
+        return room.getRoomSize();
+    }
 
     @Override
     public String toString() {
-        String str = "";
-        str = "BookID: " + bookingId + "     RoomNo: " + roomNo + "     OwnerID: " + bookingOwner + "     Date: " + checkInDate;
+        String str = "BookID: " + bookingId + "     RoomNo: " + room.getRoomNo() + "     OwnerID: " + bookingOwner.getCustomerId() 
+                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate + "   Guests: " + getOccupiedBeds() + "/" + getRoomSize();
         return str;
     }
 
@@ -57,20 +65,20 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public int getBookingOwner() {
+    public Customer getBookingOwner() {
         return bookingOwner;
     }
 
-    public void setBookingOwner(int bookingOwner) {
+    public void setBookingOwner(Customer bookingOwner) {
         this.bookingOwner = bookingOwner;
     }
 
-    public int getRoomNo() {
-        return roomNo;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setRoomNo(int roomNo) {
-        this.roomNo = roomNo;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public String getAgency() {
@@ -89,11 +97,28 @@ public class Booking {
         this.checkInDate = checkInDate;
     }
 
-    public int getNumberOfNights() {
-        return numberOfNights;
+    public Date getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public void setNumberOfNights(int numberOfNights) {
-        this.numberOfNights = numberOfNights;
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
+
+//    public void incrementOccupiedBeds() {
+//        if (room.getRoomSize() > occupiedBeds) {
+//            occupiedBeds = occupiedBeds + 1;
+//            System.out.println("Customer added to room +1");
+//        }
+//        else {
+//            System.out.println("Room is full!");
+//        }
+//    }
+//
+//    public void decrementOccupiedBeds() {
+//        if (occupiedBeds > 0) {
+//            occupiedBeds = occupiedBeds - 1;
+//            System.out.println("Customer removed from room -1");
+//        }
+//    }
 }
