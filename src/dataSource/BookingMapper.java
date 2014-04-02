@@ -7,9 +7,7 @@ package dataSource;
 
 import domain.Booking;
 import domain.Customer;
-import domain.Room;
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

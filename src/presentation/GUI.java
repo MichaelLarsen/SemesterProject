@@ -41,7 +41,7 @@ public class GUI extends javax.swing.JFrame {
         addedGuestsModel = new DefaultListModel<>();
 
 //        refreshModel(roomModel);
-//        refreshModel(customerModel);
+        refreshModel(customerModel);
         refreshModel(bookingModel);
     }
 
