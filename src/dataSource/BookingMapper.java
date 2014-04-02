@@ -47,6 +47,7 @@ public class BookingMapper {
         {
             try {
                 statement.close();
+                con.close();
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - getBookingsFromDB");
