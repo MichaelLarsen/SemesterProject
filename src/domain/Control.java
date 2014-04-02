@@ -100,14 +100,19 @@ public class Control {
     }
 
     public Booking bookRoom(Room room, Customer customer, Date checkIn, Date checkOut) {
-        Boolean bookingAddedSuccess = false;
-        Booking newBooking = new Booking(getNewBookingId(), customer.getCustomerId(), room.getRoomNo(), "", checkIn, checkOut, 0);
-        bookingAddedSuccess = DBFacade.bookRoom(newBooking);
-        if (bookingAddedSuccess == true) {
-            bookingList.add(newBooking);
-        return newBooking;
+        Boolean bookingAddedSuccess;
+        boolean doubleBooking;
+        Booking newBooking = null;
+
+        doubleBooking = checkForDoubleBooking(room, checkIn, checkOut);
+        if (doubleBooking == false) {
+            newBooking = new Booking(getNewBookingId(), customer.getCustomerId(), room.getRoomNo(), "", checkIn, checkOut);
+            bookingAddedSuccess = DBFacade.bookRoom(newBooking);
+            if (bookingAddedSuccess == true && !bookingList.contains(newBooking)) {
+                bookingList.add(newBooking);
+            }
         }
-        return null;
+        return newBooking;
     }
 
     public int getNewBookingId() {
@@ -134,18 +139,18 @@ public class Control {
                     bookingStartDate = bookingList.get(j).getCheckInDate();
                     bookingEndDate = bookingList.get(j).getCheckOutDate();
                     //Januar starter på 00, så 03 er fx april.
-                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+//                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+//                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
                     if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                             || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
                             || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
                         doubleBooking = false;
                         availableRoomList.add(room);
-                        System.out.println("Sådan - ledigt!");
+//                        System.out.println("Sådan - ledigt!");
                     }
                     else {
                         doubleBooking = true;
-                        System.out.println("Doublebooking!");
+//                        System.out.println("Doublebooking!");
                     }
                 }
             }
@@ -163,20 +168,47 @@ public class Control {
                 Date bookingStartDate = bookingList.get(j).getCheckInDate();
                 Date bookingEndDate = bookingList.get(j).getCheckOutDate();
                 //Januar starter på 00, så 03 er fx april.
-                System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-                System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+//                System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+//                System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
                 if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                         || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
                         || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
                     doubleBooking = false;
-                    System.out.println("Sådan - ledigt!");
+//                    System.out.println("Sådan - ledigt!");
                 }
                 else {
                     doubleBooking = true;
-                    System.out.println("Doublebooking!");
+//                    System.out.println("Doublebooking!");
                 }
             }
         }
         return doubleBooking;
+    }
+
+    public boolean addGuestToRoom(Customer customer, Booking booking) {
+        boolean addGuestSuccess = false;
+        boolean doubleBooking = true;
+
+        // TODO: kan man refakturere hele metoden så den bliver simplere?
+        for (int i = 0; i < bookingList.size(); i++) {
+            if (bookingList.get(i).getCustomersForBooking().contains(customer)) {   // checker om kunden allerede er gæst på en anden booking
+                for (int j = 0; j < roomList.size(); j++) {
+                    if (bookingList.get(i).getRoomNo() == roomList.get(j).getRoomNo()) {
+                        doubleBooking = checkForDoubleBooking(roomList.get(j), booking.getCheckInDate(), booking.getCheckOutDate());  // Hvis kunden findes på en anden booking, checker vi her om de 2 bookinger overlapper
+                    }
+                }
+            }
+        }
+        if (doubleBooking == false) {
+            for (int i = 0; i < roomList.size(); i++) {
+                if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
+                    if (roomList.get(i).getRoomSize() > booking.getOccupiedBeds() && !booking.getCustomersForBooking().contains(customer)) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset
+                        RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
+                        addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+                    }
+                }
+            }
+        }
+        return addGuestSuccess;
     }
 }

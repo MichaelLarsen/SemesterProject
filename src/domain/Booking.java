@@ -21,17 +21,15 @@ public class Booking {
     private Date checkOutDate;
     private int roomNo;
     private int bookingOwnerId;
-    private int occupiedBeds;
     private ArrayList<Customer> roomGuestList;
 
-    public Booking(int bookingId, int bookingOwnerId, int roomNo, String agency, Date checkInDate, Date checkOutDate, int occupiedBeds) {
+    public Booking(int bookingId, int bookingOwnerId, int roomNo, String agency, Date checkInDate, Date checkOutDate) {
         this.bookingId = bookingId;
         this.bookingOwnerId = bookingOwnerId;
         this.roomNo = roomNo;
         this.agency = agency;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.occupiedBeds = occupiedBeds;
         this.roomGuestList = new ArrayList<>();
 
     }
@@ -61,14 +59,13 @@ public class Booking {
     }
     
     public int getOccupiedBeds(){
-        return occupiedBeds;
+        return roomGuestList.size();
     }
-   
-
+    
     @Override
     public String toString() {
         String str = "BookID: " + bookingId + "     RoomNo: " + roomNo + "     OwnerID: " + bookingOwnerId 
-                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate + "   Guests: " + occupiedBeds;
+                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate + "   Guests: " + getOccupiedBeds();
         return str;
     }
 

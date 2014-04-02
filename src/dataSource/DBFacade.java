@@ -20,6 +20,7 @@ public class DBFacade {
     private RoomMapper roomMapper;
     private BookingMapper bookingMapper;
     private Connection con;
+
     // Singleton for at sikre at der kun er en forbindelse samt at give global adgang til domænet.
     private static DBFacade instance;
     private UnitOfWork unitOfWork;
@@ -29,7 +30,7 @@ public class DBFacade {
         customerMapper = new CustomerMapper();
         roomMapper = new RoomMapper();
         bookingMapper = new BookingMapper();
-        con = new DBConnector().getConnection(); // Forbindelsen frigivet når programmet bliver lukket af garbage collector
+        con = null;
     }
 
     public static DBFacade getInstance() {
@@ -39,34 +40,111 @@ public class DBFacade {
         return instance;
     }
 
-    //Gemmer en transaction i database
-    public boolean commitTransaction() throws SQLException {
-        boolean commitSucces;
-        commitSucces = unitOfWork.commitTransaction(con);
-        con.close();
-        return commitSucces;
+    private Connection openConnection() {
+        if (con == null) {
+            try {
+                con = new DBConnector().getConnection();
+            }
+            catch (Exception e) {
+                System.out.println("Fail in establishing connection - DBFacade");
+                System.out.println(e.getMessage());
+            }
+        }
+        return con;
     }
-    // Singleton slutning
+
+    private void closeConnection(Connection con) {
+        try {
+            con.close();
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in closing connection - DBFacade");
+            System.out.println(e.getMessage());
+        }
+    }
 
     //returns arraylist of rooms
     public ArrayList<Room> getRoomFromDB() {
-        return roomMapper.getRoomsFromDB(con);
+        con = null;
+        ArrayList<Room> tempRoomList;
+        try {
+            con = openConnection();
+            tempRoomList = roomMapper.getRoomsFromDB(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return tempRoomList;
     }
 
     //returns arraylist of customers
     public ArrayList<Customer> getCustomersFromDB() {
-        return customerMapper.getCustomersFromDB(con);
+        con = null;
+        ArrayList<Customer> tempCustomerList;
+        try {
+            con = openConnection();
+            tempCustomerList = customerMapper.getCustomersFromDB(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return tempCustomerList;
     }
 
     //returns arraylist of bookings
     public ArrayList<Booking> getBookingsFromDB() {
-        return bookingMapper.getBookingsFromDB(con);
+        con = null;
+        ArrayList<Booking> tempBookingList;
+        try {
+            con = openConnection();
+            tempBookingList = bookingMapper.getBookingsFromDB(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return tempBookingList;
     }
 
-//    public boolean updateCustomerDB(Customer customer) {
-//        return customerMapper.updateCustomerDB(customer, con);
-//    }
-//
+    public int getNewBookingId() {
+        con = null;
+        int newBookingId;
+        try {
+            con = openConnection();
+            newBookingId = bookingMapper.getNewBookingId(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return newBookingId;
+    }
+
+    public ArrayList<Customer> getGuestsInRoom(Booking booking) {
+        con = null;
+        ArrayList<Customer> roomGuestList;
+        try {
+            con = openConnection();
+            roomGuestList = bookingMapper.getGuestsInBooking(booking, con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return roomGuestList;
+    }
+
+    //Gemmer en transaction i database
+    public boolean commitTransaction() throws SQLException {
+        boolean commitSuccess;
+        con = null;
+        try {
+            con = openConnection();
+            commitSuccess = unitOfWork.commitTransaction(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return commitSuccess;
+    }
+    
     public boolean updateRoomDB(Room room) {
         return unitOfWork.updateRoomDB(room);
     }
@@ -74,7 +152,7 @@ public class DBFacade {
     public boolean updateBookingDB(Booking booking) {
         return unitOfWork.updateBookingDB(booking);
     }
-    
+
     public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
         return unitOfWork.updateGuestsInRoomDB(roomGuest);
     }
@@ -83,15 +161,8 @@ public class DBFacade {
         return unitOfWork.bookRoom(booking);
     }
 
-    public int getNewBookingId() {
-        return bookingMapper.getNewBookingId(con);
-    }
-
-    public ArrayList<Customer> getGuestsInRoom(Booking booking) {
-        return bookingMapper.getGuestsInRoom(booking, con);
-    }
-
     public boolean addGuestToRoom(RoomGuest roomguest) {
         return unitOfWork.addGuestToRoom(roomguest);
     }
+
 }
