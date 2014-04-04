@@ -77,7 +77,7 @@ public class GUI extends javax.swing.JFrame {
             for (int i = 0; i < bookingList.size(); i++) {
                 bookingModel.addElement(bookingList.get(i));
             }
-            System.out.println(bookingList);
+//            System.out.println(bookingList);
             bookingJList.setModel(bookingModel);
         }
     }
@@ -345,7 +345,24 @@ public class GUI extends javax.swing.JFrame {
 
     private void addGuestToRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToRoomButtonActionPerformed
         boolean addGuestSuccess;
+
         if (newBookingJList.getSelectedValue() == null) {
+            if (bookingJList.getSelectedValue() != null && customerJList.getSelectedValue() != null) {
+                Customer customer = (Customer) customerJList.getSelectedValue();
+                Booking booking = (Booking) bookingJList.getSelectedValue();
+                addGuestSuccess = ctr.addGuestToRoom(customer, booking);
+                if (addGuestSuccess) {
+                    addedGuestsModel.addElement(customer.getFirstName() + " " + customer.getLastName() + " Room no: " + booking.getRoomNo());
+                    addedGuestsJList.setModel(addedGuestsModel);
+                    statusJLabel.setText(customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + booking.getRoomNo());
+                }
+                else {
+                    statusJLabel.setText("Failed to add " + customer.getFirstName() + " " + customer.getLastName() + " to room " + booking.getRoomNo());
+                }
+            }
+            else {
+                statusJLabel.setText("You must select a booking and a customer!");
+            }
         }
 
         if (newBookingJList.getSelectedValue() != null) {
@@ -356,27 +373,12 @@ public class GUI extends javax.swing.JFrame {
                 if (commitSuccess) {
                     newBookingModel.clear();
                     refreshModel(bookingModel);
+                    refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
                     statusJLabel.setText("Booking er gemt!");
                 }
                 else {
                     statusJLabel.setText("Fejl ved gem af booking!");
                 }
-            }
-        }
-        if (bookingJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
-            statusJLabel.setText("You must select a booking and a customer!");
-        }
-        else {
-            Customer customer = (Customer) customerJList.getSelectedValue();
-            Booking booking = (Booking) bookingJList.getSelectedValue();
-            addGuestSuccess = ctr.addGuestToRoom(customer, booking);
-            if (addGuestSuccess) {
-                addedGuestsModel.addElement(customer.getFirstName() + " " + customer.getLastName() + " Room no: " + booking.getRoomNo());
-                addedGuestsJList.setModel(roomModel);
-                statusJLabel.setText(customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + booking.getRoomNo());
-            }
-            else {
-                statusJLabel.setText("Failed to add " + customer.getFirstName() + " " + customer.getLastName() + " to room " + booking.getRoomNo());
             }
         }
     }//GEN-LAST:event_addGuestToRoomButtonActionPerformed

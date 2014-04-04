@@ -19,17 +19,22 @@ public class Control {
     private ArrayList<Customer> customerList;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
+    ArrayList<RoomGuest> tempRoomGuestList;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
         customerList = new ArrayList<>();
         roomList = getRoomsFromDB();
+        tempRoomGuestList = new ArrayList<>();
     }
 
     public boolean commitTransaction() {
         boolean commitSuccess = false;
         try {
             commitSuccess = DBFacade.commitTransaction();
+            if (commitSuccess) {
+                clearTempRoomGuestList();
+            }
         }
         catch (SQLException e) {
             System.out.println("Fejl ved at gemme transaction!");
@@ -187,28 +192,46 @@ public class Control {
 
     public boolean addGuestToRoom(Customer customer, Booking booking) {
         boolean addGuestSuccess = false;
-        boolean doubleBooking = true;
+        boolean doubleBooking = false;
+        boolean tempRoomGuestListCheck = false;
+        for (int i = 0; i < tempRoomGuestList.size(); i++) {
+            if (tempRoomGuestList.get(i).getCustomerId() == customer.getCustomerId()) {
+                tempRoomGuestListCheck = true;
+            }
+        }
+        if (tempRoomGuestListCheck == false) {
+            RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
+            System.out.println("roomguest is" + roomGuest);
+            // TODO: kan man refakturere hele metoden så den bliver simplere?
+            for (int i = 0; i < bookingList.size(); i++) {
+                if (bookingList.get(i).getCustomersForBooking().contains(customer)) {   // checker om kunden allerede er gæst på en anden booking
 
-        // TODO: kan man refakturere hele metoden så den bliver simplere?
-        for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getCustomersForBooking().contains(customer)) {   // checker om kunden allerede er gæst på en anden booking
-                for (int j = 0; j < roomList.size(); j++) {
-                    if (bookingList.get(i).getRoomNo() == roomList.get(j).getRoomNo()) {
-                        doubleBooking = checkForDoubleBooking(roomList.get(j), booking.getCheckInDate(), booking.getCheckOutDate());  // Hvis kunden findes på en anden booking, checker vi her om de 2 bookinger overlapper
+                    for (int j = 0; j < roomList.size(); j++) {
+                        if (bookingList.get(i).getRoomNo() == roomList.get(j).getRoomNo()) {
+                            doubleBooking = checkForDoubleBooking(roomList.get(j), booking.getCheckInDate(), booking.getCheckOutDate());  // Hvis kunden findes på en anden booking, checker vi her om de 2 bookinger overlapper
+                        }
                     }
                 }
             }
-        }
-        if (doubleBooking == false) {
-            for (int i = 0; i < roomList.size(); i++) {
-                if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
-                    if (roomList.get(i).getRoomSize() > booking.getOccupiedBeds() && !booking.getCustomersForBooking().contains(customer)) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset
-                        RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
-                        addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+            if (doubleBooking == false) {
+
+                for (int i = 0; i < roomList.size(); i++) {
+                    if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
+                        if (tempRoomGuestList.size() + booking.getOccupiedBeds() < roomList.get(i).getRoomSize() && !booking.getCustomersForBooking().contains(customer)) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset                      
+                            tempRoomGuestList.add(roomGuest);
+                            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+                            System.out.println("Guest in room is" + roomGuest.getCustomerId());
+                        }
                     }
                 }
             }
         }
         return addGuestSuccess;
+
+
+    }
+
+    public void clearTempRoomGuestList() {
+        tempRoomGuestList.clear();
     }
 }
