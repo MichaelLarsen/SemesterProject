@@ -45,12 +45,15 @@ public class GUI extends javax.swing.JFrame {
         refreshModel(customerModel);
         refreshModel(bookingModel);
     }
+//med en model kan man sende ligeså mange dates med som man vil
 
     private void refreshModel(DefaultListModel model, Date... dates) {
         if (model.equals(customerModel)) {
+            ArrayList<Customer> customerList;
+            customerList = ctr.getCustomersFromDB();
             customerModel.removeAllElements();
-            for (int i = 0; i < ctr.getCustomersFromDB().size(); i++) {
-                customerModel.addElement(ctr.getCustomersFromDB().get(i));
+            for (int i = 0; i < customerList.size(); i++) {
+                customerModel.addElement(customerList.get(i));
             }
             customerJList.setModel(customerModel);
         }
@@ -61,18 +64,20 @@ public class GUI extends javax.swing.JFrame {
                 ArrayList<Room> roomList;
                 roomList = ctr.getAvailableRoomsDB(date1, date2);
                 roomModel.removeAllElements();
-                for (int i = 0; i < ctr.getAvailableRoomsDB(date2, date2).size(); i++) {
-                    roomModel.addElement(ctr.getAvailableRoomsDB(date2, date2).get(i));
+                for (int i = 0; i < roomList.size(); i++) {
+                    roomModel.addElement(roomList.get(i));
                 }
                 roomJList.setModel(roomModel);
             }
         }
         if (model.equals(bookingModel)) {
+            ArrayList<Booking> bookingList;
+            bookingList = ctr.getBookingsFromDB();
             bookingModel.removeAllElements();
-            for (int i = 0; i < ctr.getBookingsFromDB().size(); i++) {
-                bookingModel.addElement(ctr.getBookingsFromDB().get(i));
+            for (int i = 0; i < bookingList.size(); i++) {
+                bookingModel.addElement(bookingList.get(i));
             }
-            System.out.println(ctr.getBookingsFromDB());
+            System.out.println(bookingList);
             bookingJList.setModel(bookingModel);
         }
     }
@@ -313,12 +318,6 @@ public class GUI extends javax.swing.JFrame {
         }
         bookingInfoJList.setModel(infoBookingModel);
 
-//        infoBookingModel.clear();
-//        Booking booking = (Booking) bookingJList.getSelectedValue();
-//        for (int i = 0; i < ctr.getGuestsInRoom(booking).size(); i++) {
-//            infoBookingModel.addElement(ctr.getGuestsInRoom(booking).get(i));
-//        }
-//        bookingInfoJList.setModel(infoBookingModel);
     }//GEN-LAST:event_bookingJListMouseClicked
 
     private void saveBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBookingButtonActionPerformed
@@ -331,7 +330,7 @@ public class GUI extends javax.swing.JFrame {
                     newBookingModel.clear();
                     statusJLabel.setText("Booking er gemt!");
                     refreshModel(bookingModel);
-//        refreshModel(roomModel);
+                    refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
                     addedGuestsModel.clear();
                 }
                 else {
@@ -347,7 +346,6 @@ public class GUI extends javax.swing.JFrame {
     private void addGuestToRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToRoomButtonActionPerformed
         boolean addGuestSuccess;
         if (newBookingJList.getSelectedValue() == null) {
-
         }
 
         if (newBookingJList.getSelectedValue() != null) {
@@ -405,7 +403,6 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_bookRoomButtonActionPerformed
 
     private void checkInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkInActionPerformed
-
     }//GEN-LAST:event_checkInActionPerformed
 
     private void checkAvailabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAvailabilityButtonActionPerformed
