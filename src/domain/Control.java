@@ -172,24 +172,38 @@ public class Control {
         }
         //Tjekker om kunden allerede er på den valgte booking
         for (int i = 0; i < booking.getCustomersForBooking().size(); i++) {
+            System.out.println("check er false");
             if (booking.getCustomersForBooking().get(i).getCustomerId() == customer.getCustomerId()) {
                 check = true;
+                System.out.println("check er true");
             }
         }
-        if (check) {
-            
-        }
-        //Tjekker om kunden er blevet tilføjet tidligere
-        for (int i = 0; i < tempRoomGuestList.size(); i++) {
-            if (tempRoomGuestList.get(i).getCustomerId() == customer.getCustomerId()) {
-                check = true;
+        if (check == false) {
+            System.out.println("inde i if - check=false");
+            RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
+            doubleBooking = checkCustomerForDoubleBooking(roomGuest, booking.getCheckInDate(), booking.getCheckOutDate());
+            System.out.println("doublebooking er "+doubleBooking);
+            if (doubleBooking == false) {
+                System.out.println("inde i if - doublebooking=false");
+                for (int i = 0; i < roomList.size(); i++) {
+                    if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
+                        if (tempRoomGuestList.size() + booking.getOccupiedBeds() < roomList.get(i).getRoomSize()) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset                      
+                            tempRoomGuestList.add(roomGuest);
+                            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+                            System.out.println("Guest added " + roomGuest.getCustomerId());
+                        }
+                    }
+                }
             }
         }
-        
-        
-        
-        
-        
+//
+//        //Tjekker om kunden er blevet tilføjet tidligere
+//        for (int i = 0; i < tempRoomGuestList.size(); i++) {
+//            if (tempRoomGuestList.get(i).getCustomerId() == customer.getCustomerId()) {
+//                check = true;
+//            }
+//        }
+
 //        if (check == false) {
 //            System.out.println("check er false!");
 //            // TODO: kan man refakturere hele metoden så den bliver simplere?
@@ -224,5 +238,25 @@ public class Control {
 
     public void clearTempRoomGuestList() {
         tempRoomGuestList.clear();
+    }
+
+    private boolean checkCustomerForDoubleBooking(RoomGuest roomGuest, Date checkInDate, Date checkOutDate) {
+        boolean doubleBooking = false;
+        for (int i = 0; i < bookingList.size(); i++) {
+            if (bookingList.get(i).getBookingId() == roomGuest.getBookingId()) {
+                Date bookingStartDate = bookingList.get(i).getCheckInDate();
+                Date bookingEndDate = bookingList.get(i).getCheckOutDate();
+
+                if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
+                        || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
+                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+                    doubleBooking = false;
+                }
+                else {
+                    doubleBooking = true;
+                }
+            }
+        }
+        return doubleBooking;
     }
 }
