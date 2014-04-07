@@ -28,13 +28,7 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                booking = new Booking(
-                        rs.getInt(1),
-                        rs.getInt(2),
-                        rs.getInt(3),
-                        rs.getString(4),
-                        rs.getDate(5),
-                        rs.getDate(6));
+                booking = new Booking(rs);
                 bookingList.add(booking);
             }
         }
@@ -90,7 +84,7 @@ public class BookingMapper {
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
-                statement.setInt(1, newBookingList.get(i).getBookingId());
+                statement.setInt(1, getNewBookingId(con));
                 statement.setInt(2, newBookingList.get(i).getBookingOwnerId());
                 statement.setInt(3, newBookingList.get(i).getRoomNo());
                 statement.setString(4, newBookingList.get(i).getAgency());

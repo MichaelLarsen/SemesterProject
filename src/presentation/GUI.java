@@ -99,7 +99,6 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         customerJList = new javax.swing.JList();
         bookRoomButton = new javax.swing.JButton();
-        statusJLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         saveBookingButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -131,8 +130,6 @@ public class GUI extends javax.swing.JFrame {
                 bookRoomButtonActionPerformed(evt);
             }
         });
-
-        statusJLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton1.setText("Delete booking");
 
@@ -195,33 +192,29 @@ public class GUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(bookRoomButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(addGuestToRoomButton)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(statusJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(bookRoomButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(addGuestToRoomButton)
-                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(saveBookingButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(38, 38, 38))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(38, 38, 38)
-                                .addComponent(saveBookingButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)
-                                .addGap(28, 28, 28))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 18, Short.MAX_VALUE)))))
-                .addContainerGap())
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(28, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +243,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(checkAvailabilityButton))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -265,7 +258,7 @@ public class GUI extends javax.swing.JFrame {
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -280,9 +273,7 @@ public class GUI extends javax.swing.JFrame {
                         .addGap(231, 231, 231)
                         .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(statusJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(45, 45, 45))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -297,7 +288,7 @@ public class GUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -322,24 +313,21 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBookingButtonActionPerformed
         boolean commitSuccess;
-        if (newBookingModel.size() > 0) {
-            int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
-            if (reply == jOptionPane.YES_OPTION) {
-                commitSuccess = ctr.commitTransaction();
-                if (commitSuccess) {
-                    newBookingModel.clear();
-                    statusJLabel.setText("Booking er gemt!");
-                    refreshModel(bookingModel);
-                    refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
-                    addedGuestsModel.clear();
-                }
-                else {
-                    statusJLabel.setText("Fejl ved gem af booking!");
-                }
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            commitSuccess = ctr.commitTransaction();
+            if (commitSuccess) {
+                newBookingModel.clear();
+                jOptionPane.showMessageDialog(this, "Booking er gemt!");
+                refreshModel(bookingModel);
+                refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
+                addedGuestsModel.clear();
+                ctr.clearTempRoomGuestList();
             }
-        }
-        else {
-            statusJLabel.setText("You must first create a new booking to save!");
+            else {
+                jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
+                addedGuestsModel.clear();
+            }
         }
     }//GEN-LAST:event_saveBookingButtonActionPerformed
 
@@ -354,14 +342,14 @@ public class GUI extends javax.swing.JFrame {
                 if (addGuestSuccess) {
                     addedGuestsModel.addElement(customer.getFirstName() + " " + customer.getLastName() + " Room no: " + booking.getRoomNo());
                     addedGuestsJList.setModel(addedGuestsModel);
-                    statusJLabel.setText(customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + booking.getRoomNo());
+                    jOptionPane.showMessageDialog(this, customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + booking.getRoomNo());
                 }
                 else {
-                    statusJLabel.setText("Failed to add " + customer.getFirstName() + " " + customer.getLastName() + " to room " + booking.getRoomNo());
+                    jOptionPane.showMessageDialog(this, "Invalid action!", "Warning!", jOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
-                statusJLabel.setText("You must select a booking and a customer!");
+                jOptionPane.showMessageDialog(this, "You must select a booking and a customer!");
             }
         }
 
@@ -374,10 +362,10 @@ public class GUI extends javax.swing.JFrame {
                     newBookingModel.clear();
                     refreshModel(bookingModel);
                     refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
-                    statusJLabel.setText("Booking er gemt!");
+                    jOptionPane.showMessageDialog(this, "Booking saved!");
                 }
                 else {
-                    statusJLabel.setText("Fejl ved gem af booking!");
+                    jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!","Saving error!",jOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -385,9 +373,8 @@ public class GUI extends javax.swing.JFrame {
 
     private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
         Booking newBooking = null;
-        statusJLabel.setText("");
         if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
-            statusJLabel.setText("You must select a room and a customer!");
+            jOptionPane.showMessageDialog(this, "You must select a room and a customer!");
         }
         else {
             Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
@@ -396,10 +383,10 @@ public class GUI extends javax.swing.JFrame {
             if (newBooking != null) {
                 newBookingModel.addElement(newBooking);
                 newBookingJList.setModel(newBookingModel);
-                statusJLabel.setText("Room booked by " + customer.getFirstName() + " " + customer.getLastName());
+                jOptionPane.showMessageDialog(this, "Room booked by " + customer.getFirstName() + " " + customer.getLastName());
             }
             else {
-                statusJLabel.setText("Room is already booked for that period!");
+                jOptionPane.showMessageDialog(this, "Room is already booked for that period!","Doublebooking",jOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_bookRoomButtonActionPerformed
@@ -416,7 +403,7 @@ public class GUI extends javax.swing.JFrame {
             Date checkInDate = checkIn.getDate();
             Date checkOutDate = checkOut.getDate();
             if (checkInDate.after(checkOutDate)) {
-                jOptionPane.showMessageDialog(this, "The dates are invalid!");
+                jOptionPane.showMessageDialog(this, "The dates are invalid!","Invalid",jOptionPane.ERROR_MESSAGE);
             }
             else {
                 refreshModel(roomModel, checkInDate, checkOutDate);
@@ -490,6 +477,5 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JList newBookingJList;
     private javax.swing.JList roomJList;
     private javax.swing.JButton saveBookingButton;
-    private javax.swing.JLabel statusJLabel;
     // End of variables declaration//GEN-END:variables
 }
