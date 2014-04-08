@@ -191,4 +191,37 @@ public class BookingMapper {
         }
         return rowsUpdated == updateBookingList.size(); //hvis dette passer returneres true ellers false  
     }
+
+    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer, Connection con) {
+        Booking booking = null;
+        ArrayList<Booking> tempBookingList = new ArrayList<>();
+        String SQLString = "select * from bookings b "
+                + "join room_guests rg on rg.booking_id = b.booking_id "
+                + "where customer_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, customer.getCustomerId());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                booking = new Booking(rs);
+                tempBookingList.add(booking);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - getCustomerBookingsFromDB");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - getCustomerBookingsFromDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return tempBookingList;
+    }
 }

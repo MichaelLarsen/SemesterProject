@@ -20,13 +20,12 @@ public class DBFacade {
     private RoomMapper roomMapper;
     private BookingMapper bookingMapper;
     private Connection con;
+    private UnitOfWork unitOfWork = new UnitOfWork();
 
     // Singleton for at sikre at der kun er en forbindelse samt at give global adgang til domænet.
     private static DBFacade instance;
-    private UnitOfWork unitOfWork;
 
     private DBFacade() {
-        unitOfWork = new UnitOfWork();
         customerMapper = new CustomerMapper();
         roomMapper = new RoomMapper();
         bookingMapper = new BookingMapper();
@@ -105,20 +104,20 @@ public class DBFacade {
         return tempBookingList;
     }
 
-    public int getNewBookingId() {
+    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer) {
         con = null;
-        int newBookingId;
+        ArrayList<Booking> tempBookingList;
         try {
             con = openConnection();
-            newBookingId = bookingMapper.getNewBookingId(con);
+            tempBookingList = bookingMapper.getCustomerBookingsFromDB(customer, con);
         }
         finally {
             closeConnection(con);
         }
-        return newBookingId;
+        return tempBookingList;
     }
 
-    public ArrayList<Customer> getGuestsInRoom(Booking booking) {
+    public ArrayList<Customer> getGuestsInRoomFromDB(Booking booking) {
         con = null;
         ArrayList<Customer> roomGuestList;
         try {
@@ -131,38 +130,59 @@ public class DBFacade {
         return roomGuestList;
     }
 
+    public void openNewTransaction() {
+        unitOfWork = new UnitOfWork();
+    }
+
     //Gemmer en transaction i database
     public boolean commitTransaction() throws SQLException {
-        boolean commitSuccess;
-        con = null;
-        try {
-            con = openConnection();
-            commitSuccess = unitOfWork.commitTransaction(con);
-        }
-        finally {
-            closeConnection(con);
+        boolean commitSuccess = false;
+        if (unitOfWork != null) {
+            con = null;
+            try {
+                con = openConnection();
+                commitSuccess = unitOfWork.commitTransaction(con);
+            }
+            finally {
+                closeConnection(con);
+            }
+            unitOfWork = null;
         }
         return commitSuccess;
     }
-    
+
     public boolean updateRoomDB(Room room) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
         return unitOfWork.updateRoomDB(room);
     }
 
     public boolean updateBookingDB(Booking booking) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
         return unitOfWork.updateBookingDB(booking);
     }
 
     public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
         return unitOfWork.updateGuestsInRoomDB(roomGuest);
     }
 
     public boolean bookRoom(Booking booking) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
         return unitOfWork.bookRoom(booking);
     }
 
     public boolean addGuestToRoom(RoomGuest roomguest) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
         return unitOfWork.addGuestToRoom(roomguest);
     }
-
 }

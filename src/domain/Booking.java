@@ -25,9 +25,8 @@ public class Booking {
     private int bookingOwnerId;
     private ArrayList<Customer> guestsInBooking;
 
-       public Booking(ResultSet rs) {
+    public Booking(ResultSet rs) {
         super();
-        
         try {
             this.bookingId = rs.getInt("Booking_Id");
             this.bookingOwnerId = rs.getInt("Booking_Owner");
@@ -40,9 +39,9 @@ public class Booking {
         catch (SQLException e) {
             System.out.println("Fail in BookingMapper - Booking");
             System.out.println(e.getMessage());
-        }       
+        }
     }
-    
+
     public Booking(int bookingOwnerId, int roomNo, String agency, Date checkInDate, Date checkOutDate) {
         this.bookingOwnerId = bookingOwnerId;
         this.roomNo = roomNo;
@@ -50,7 +49,7 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }
-    
+
     public int getRoomNo() {
         return roomNo;
     }
@@ -74,14 +73,14 @@ public class Booking {
     public void addCustomerForBooking(Customer customer) {
         guestsInBooking.add(customer);
     }
-    
-    public int getOccupiedBeds(){
+
+    public int getOccupiedBeds() {
         return guestsInBooking.size();
     }
-    
+
     @Override
     public String toString() {
-        String str = "BookingId:    " + bookingId +"    RoomNo: " + roomNo + "     OwnerID: " + bookingOwnerId 
+        String str = "BookingId:    " + bookingId + "    RoomNo: " + roomNo + "     OwnerID: " + bookingOwnerId
                 + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate;
         return str;
     }

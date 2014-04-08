@@ -19,13 +19,11 @@ public class Control {
     private ArrayList<Customer> customerList;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
-    private ArrayList<RoomGuest> tempRoomGuestList;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
         customerList = new ArrayList<>();
         roomList = getRoomsFromDB();
-        tempRoomGuestList = new ArrayList<>();
     }
 
     public boolean commitTransaction() {
@@ -33,7 +31,7 @@ public class Control {
         try {
             commitSuccess = DBFacade.commitTransaction();
             if (commitSuccess) {
-                clearTempRoomGuestList();
+//                clearTempRoomGuestList();
             }
         }
         catch (SQLException e) {
@@ -92,14 +90,8 @@ public class Control {
         return newBooking;
     }
 
-    public int getNewBookingId() {
-        int newBookingId = 0;
-        newBookingId = DBFacade.getNewBookingId();
-        return newBookingId;
-    }
-
     public ArrayList<Customer> getGuestsInRoom(Booking booking) {
-        return DBFacade.getGuestsInRoom(booking);
+        return DBFacade.getGuestsInRoomFromDB(booking);
     }
 
     public ArrayList<Room> getAvailableRoomsDB(Date checkInDate, Date checkOutDate) {
@@ -163,39 +155,68 @@ public class Control {
     }
 
     public boolean addGuestToRoom(Customer customer, Booking booking) {
+        ArrayList<Booking> tempBookingList;
+        tempBookingList = DBFacade.getCustomerBookingsFromDB(customer); //henter evt. bookings hvori kunden allerede indgår
+
         boolean addGuestSuccess = false;
         boolean doubleBooking = false;
-        boolean check = false;
-        ArrayList<Customer> guestsInBooking = DBFacade.getGuestsInRoom(booking);
-        for (int i = 0; i < guestsInBooking.size(); i++) {
-            booking.addCustomerForBooking(guestsInBooking.get(i));
+
+        if (!tempBookingList.isEmpty()) {   //checker om kunden allerede bor på andre bookinger i samme periode
+            doubleBooking = checkCustomerForDoubleBooking(tempBookingList, booking);
         }
-        //Tjekker om kunden allerede er på den valgte booking
-        for (int i = 0; i < booking.getCustomersForBooking().size(); i++) {
-            System.out.println("check er false");
-            if (booking.getCustomersForBooking().get(i).getCustomerId() == customer.getCustomerId()) {
-                check = true;
-                System.out.println("check er true");
-            }
-        }
-        if (check == false) {
-            System.out.println("inde i if - check=false");
+        if (doubleBooking == false) {
             RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
-            doubleBooking = checkCustomerForDoubleBooking(roomGuest, booking.getCheckInDate(), booking.getCheckOutDate());
-            System.out.println("doublebooking er "+doubleBooking);
-            if (doubleBooking == false) {
-                System.out.println("inde i if - doublebooking=false");
-                for (int i = 0; i < roomList.size(); i++) {
-                    if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
-                        if (tempRoomGuestList.size() + booking.getOccupiedBeds() < roomList.get(i).getRoomSize()) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset                      
-                            tempRoomGuestList.add(roomGuest);
-                            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
-                            System.out.println("Guest added " + roomGuest.getCustomerId());
-                        }
-                    }
+            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+        }
+        return addGuestSuccess;
+    }
+
+    public boolean checkRoomAvailability(Booking booking, int arraySize) {
+        boolean available = false;
+        ArrayList<Customer> tempRoomGuestList = DBFacade.getGuestsInRoomFromDB(booking);  // vi henter en liste over allerede eksisterende kunder på bookingen
+        for (int i = 0; i < roomList.size(); i++) {
+            if (roomList.get(i).getRoomNo() == booking.getRoomNo()) {
+                if (roomList.get(i).getRoomSize() > arraySize + tempRoomGuestList.size()) {   // vi checker at antallet af folk vi vil tilføje (arraySize) + antallet af folk allerede i bookingen (tempRoomGuestList) ikke overstiger getRoomSize.
+                    available = true;
                 }
             }
         }
+        return available;
+    }
+
+//        boolean addGuestSuccess = false;
+//        boolean doubleBooking = false;
+//        boolean check = false;
+//        ArrayList<Customer> guestsInBooking = DBFacade.getGuestsInRoomFromDB(booking);
+//        for (int i = 0; i < guestsInBooking.size(); i++) {
+//            booking.addCustomerForBooking(guestsInBooking.get(i));
+//        }
+//        //Tjekker om kunden allerede er på den valgte booking
+//        for (int i = 0; i < booking.getCustomersForBooking().size(); i++) {
+//            System.out.println("check er false");
+//            if (booking.getCustomersForBooking().get(i).getCustomerId() == customer.getCustomerId()) {
+//                check = true;
+//                System.out.println("check er true");
+//            }
+//        }
+//        if (check == false) {
+//            System.out.println("inde i if - check = false");
+//            RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
+//            doubleBooking = checkCustomerForDoubleBooking(roomGuest, booking.getCheckInDate(), booking.getCheckOutDate());
+//            System.out.println("doublebooking er "+doubleBooking);
+//            if (doubleBooking == false) {
+//                System.out.println("inde i if - doublebooking=false");
+//                for (int i = 0; i < roomList.size(); i++) {
+//                    if (booking.getRoomNo() == roomList.get(i).getRoomNo()) {
+//                        if (tempRoomGuestList.size() + booking.getOccupiedBeds() < roomList.get(i).getRoomSize()) {    // checker at værelset ikke er fyldt, og at kunden ikke allerede er gæst på værelset                      
+//                            tempRoomGuestList.add(roomGuest);
+//                            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+//                            System.out.println("Guest added " + roomGuest.getCustomerId());
+//                        }
+//                    }
+//                }
+//            }
+//        }
 //
 //        //Tjekker om kunden er blevet tilføjet tidligere
 //        for (int i = 0; i < tempRoomGuestList.size(); i++) {
@@ -203,7 +224,6 @@ public class Control {
 //                check = true;
 //            }
 //        }
-
 //        if (check == false) {
 //            System.out.println("check er false!");
 //            // TODO: kan man refakturere hele metoden så den bliver simplere?
@@ -233,29 +253,29 @@ public class Control {
 //                }
 //            }
 //        }
-        return addGuestSuccess;
+//            return addGuestSuccess;
+//        }
+    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer) {
+        return DBFacade.getCustomerBookingsFromDB(customer);
     }
 
-    public void clearTempRoomGuestList() {
-        tempRoomGuestList.clear();
-    }
-
-    private boolean checkCustomerForDoubleBooking(RoomGuest roomGuest, Date checkInDate, Date checkOutDate) {
+    private boolean checkCustomerForDoubleBooking(ArrayList<Booking> oldBookingList, Booking newBooking) {
         boolean doubleBooking = false;
-        for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getBookingId() == roomGuest.getBookingId()) {
-                Date bookingStartDate = bookingList.get(i).getCheckInDate();
-                Date bookingEndDate = bookingList.get(i).getCheckOutDate();
-
-                if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
-                        || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
-                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
-                    doubleBooking = false;
-                }
-                else {
-                    doubleBooking = true;
-                }
+        Date newCheckInDate = newBooking.getCheckInDate();
+        Date newCheckOutDate = newBooking.getCheckOutDate();
+        int i = 0;
+        while (doubleBooking == false && oldBookingList.size() > i) {
+            Date oldCheckInDate = oldBookingList.get(i).getCheckInDate();
+            Date oldCheckOutDate = oldBookingList.get(i).getCheckOutDate();
+            if ((newCheckInDate.before(oldCheckInDate) && newCheckOutDate.before(oldCheckInDate))
+                    || (newCheckInDate.after(oldCheckOutDate) && newCheckOutDate.after(oldCheckOutDate))
+                    || newCheckInDate.equals(oldCheckOutDate) || newCheckOutDate.equals(oldCheckInDate)) {
+                doubleBooking = false;
             }
+            else {
+                doubleBooking = true;
+            }
+            i++;
         }
         return doubleBooking;
     }
