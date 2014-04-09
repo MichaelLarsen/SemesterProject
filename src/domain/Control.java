@@ -279,4 +279,8 @@ public class Control {
         }
         return doubleBooking;
     }
+
+    public void createCustomer(Customer customer) {
+        
+    }
 }

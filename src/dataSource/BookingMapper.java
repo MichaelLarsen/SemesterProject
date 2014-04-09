@@ -125,17 +125,7 @@ public class BookingMapper {
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getInt(9),
-                        rs.getInt(10));
+                customer = new Customer(rs);
                 roomGuestList.add(customer);
             }
         }

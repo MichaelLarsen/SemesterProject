@@ -4,6 +4,11 @@
  * and open the template in the editor.
  */
 package domain;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.UIManager;
+
 /**
  *
  * @author Sebastian, Michael og Andreas
@@ -18,12 +23,30 @@ public class Customer {
     private String city;
     private String country;
     private String email;
-    private int privatePhone;
-    private int workPhone;
- 
+    private int phone1;
+    private int phone2;
 
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int privatePhone, int workPhone) {
-        this.customerId = customerId;
+    public Customer(ResultSet rs) {
+        super();
+        try {
+            this.customerId = rs.getInt("customer_id");
+            this.firstName = rs.getString("first_name");
+            this.lastName = rs.getString("last_name");;
+            this.street = rs.getString("street");
+            this.zipcode = rs.getString("zipcode");
+            this.city = rs.getString("city");
+            this.country = rs.getString("country");
+            this.email = rs.getString("email");
+            this.phone1 = rs.getInt("phone_1");
+            this.phone2 = rs.getInt("phone_2");
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in CustomerMapper/Customer - Customer");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Customer(String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
@@ -31,10 +54,10 @@ public class Customer {
         this.city = city;
         this.country = country;
         this.email = email;
-        this.privatePhone = privatePhone;
-        this.workPhone = workPhone;
-
+        this.phone1 = phone1;
+        this.phone2 = phone2;
     }
+
     public int getCustomerId() {
         return customerId;
     }
@@ -100,21 +123,20 @@ public class Customer {
     }
 
     public int getPrivatePhone() {
-        return privatePhone;
+        return phone1;
     }
 
     public void setPrivatePhone(int privatePhone) {
-        this.privatePhone = privatePhone;
+        this.phone1 = privatePhone;
     }
 
     public int getWorkPhone() {
-        return workPhone;
+        return phone2;
     }
 
     public void setWorkPhone(int workPhone) {
-        this.workPhone = workPhone;
+        this.phone2 = workPhone;
     }
-    
 
     @Override
     public String toString() {

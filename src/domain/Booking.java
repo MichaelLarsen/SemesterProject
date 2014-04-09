@@ -28,16 +28,16 @@ public class Booking {
     public Booking(ResultSet rs) {
         super();
         try {
-            this.bookingId = rs.getInt("Booking_Id");
-            this.bookingOwnerId = rs.getInt("Booking_Owner");
-            this.roomNo = rs.getInt("Room_No");
-            this.agency = rs.getString("Agency");
-            this.checkInDate = rs.getDate("Check_In_Date");
-            this.checkOutDate = rs.getDate("Check_Out_Date");
+            this.bookingId = rs.getInt("booking_id");
+            this.bookingOwnerId = rs.getInt("booking_owner");
+            this.roomNo = rs.getInt("room_no");
+            this.agency = rs.getString("agency");
+            this.checkInDate = rs.getDate("check_in_date");
+            this.checkOutDate = rs.getDate("check_out_date");
             this.guestsInBooking = new ArrayList<>();
         }
         catch (SQLException e) {
-            System.out.println("Fail in BookingMapper - Booking");
+            System.out.println("Fail in BookingMapper/Booking - Booking");
             System.out.println(e.getMessage());
         }
     }
