@@ -122,19 +122,19 @@ public class Customer {
         this.email = email;
     }
 
-    public int getPrivatePhone() {
+    public int getPhone1() {
         return phone1;
     }
 
-    public void setPrivatePhone(int privatePhone) {
+    public void setPhone1(int privatePhone) {
         this.phone1 = privatePhone;
     }
 
-    public int getWorkPhone() {
+    public int getPhone2() {
         return phone2;
     }
 
-    public void setWorkPhone(int workPhone) {
+    public void setPhone2(int workPhone) {
         this.phone2 = workPhone;
     }
 

@@ -185,4 +185,11 @@ public class DBFacade {
         }
         return unitOfWork.addGuestToRoom(roomguest);
     }
+
+    public boolean createCustomer(Customer customer) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
+        return unitOfWork.createCustomer(customer, con);
+    }
 }

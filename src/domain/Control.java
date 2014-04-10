@@ -280,7 +280,7 @@ public class Control {
         return doubleBooking;
     }
 
-    public void createCustomer(Customer customer) {
-        
+    public boolean createCustomer(Customer customer) {
+        return DBFacade.createCustomer(customer);
     }
 }

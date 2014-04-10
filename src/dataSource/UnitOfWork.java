@@ -6,6 +6,7 @@
 package dataSource;
 
 import domain.Booking;
+import domain.Customer;
 import domain.Room;
 import domain.RoomGuest;
 import java.sql.Connection;
@@ -23,6 +24,7 @@ public class UnitOfWork {
     private ArrayList<Room> updateRoomList;
     private ArrayList<RoomGuest> newGuestInRoomList;
     private ArrayList<RoomGuest> updateGuestInRoomList;
+    private ArrayList<Customer> newCustomerList;
 
     public UnitOfWork() {
         newBookingList = new ArrayList<>();
@@ -30,8 +32,18 @@ public class UnitOfWork {
         newGuestInRoomList = new ArrayList<>();
         updateBookingList = new ArrayList<>();
         updateGuestInRoomList = new ArrayList<>();
+        newCustomerList = new ArrayList<>();
     }
 
+    public boolean createCustomer(Customer customer, Connection con) {
+        boolean createCustomerSuccess = false;
+        if (!newCustomerList.contains(customer)) {
+            newCustomerList.add(customer);
+            createCustomerSuccess = true;
+        }
+        return createCustomerSuccess;
+    }
+    
     public boolean bookRoom(Booking booking) {
         boolean bookingSuccess = false;
         if (!newBookingList.contains(booking)) {
@@ -85,12 +97,14 @@ public class UnitOfWork {
         CustomerMapper customerMapper = new CustomerMapper();
         RoomMapper roomMapper = new RoomMapper();
         RoomGuestMapper roomGuestMapper = new RoomGuestMapper();
+        if (!newCustomerList.isEmpty()) {
+            commitSuccess = commitSuccess && customerMapper.createCustomer(newCustomerList, con);
+        }
         if (!newBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
         }
         if (!updateRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomMapper.updateRoomDB(updateRoomList, con);
-
         }
         if (!newGuestInRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomGuestMapper.addGuestToRoom(newGuestInRoomList, con);
@@ -101,10 +115,6 @@ public class UnitOfWork {
         if (!updateGuestInRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomGuestMapper.updateGuestInRoom(updateGuestInRoomList, con);
         }
-        System.out.println("updateBookingList size " + updateBookingList.size());
-        System.out.println("newBookingList size " + newBookingList.size());
-        System.out.println("newRoomList size " + updateRoomList.size());
-        System.out.println("newGuestInRoomList size " + updateRoomList.size());
         if (!commitSuccess) {
             con.rollback();
             System.out.println("Fejl i commitTransaction!");
@@ -117,4 +127,6 @@ public class UnitOfWork {
         }
         return commitSuccess;
     }
+
+    
 }

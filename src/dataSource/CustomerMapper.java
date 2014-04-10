@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dataSource;
 
 import domain.Customer;
@@ -18,27 +17,30 @@ import java.util.ArrayList;
  * @author Sebastian, Michael og Andreas
  */
 public class CustomerMapper {
-    
-    public boolean addCustomerToRoom(Customer customer, Connection con) {
-        int rowsInserted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "insert into Customers values (?,?,?,?,?,?,?,?,?,?)";
+
+    public boolean createCustomer(ArrayList<Customer> newCustomerList, Connection con) {
+        int customerCreated = 0;
+        String SQLString = "insert into CUSTOMERS values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setInt(1, customer.getCustomerId());
-            statement.setString(2, customer.getFirstName());
-            statement.setString(3, customer.getLastName());
-            statement.setString(4, customer.getStreet());
-            statement.setString(5, customer.getZipcode());
-            statement.setString(6, customer.getCity());
-            statement.setString(7, customer.getCountry());
-            statement.setString(8, customer.getEmail());
-            statement.setInt(9, customer.getPrivatePhone());
-            statement.setInt(10, customer.getWorkPhone());
-            rowsInserted = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+            for (int i = 0; i < newCustomerList.size(); i++) {
+                statement.setInt(1, getNewCustomerId(con));
+                statement.setString(2, newCustomerList.get(i).getFirstName());
+                statement.setString(3, newCustomerList.get(i).getLastName());
+                statement.setString(4, newCustomerList.get(i).getStreet());
+                statement.setString(5, newCustomerList.get(i).getZipcode());
+                statement.setString(6, newCustomerList.get(i).getCity());
+                statement.setString(7, newCustomerList.get(i).getCountry());
+                statement.setString(8, newCustomerList.get(i).getEmail());
+                statement.setInt(9, newCustomerList.get(i).getPhone1());
+                statement.setInt(10, newCustomerList.get(i).getPhone2());
+                
+                customerCreated += statement.executeUpdate(); // customerCreated bliver = newCustomerList.size(), hvis Update går igennem
+            }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - addCustomerToRoom");
+            System.out.println("Fail in CustomerMapper - createCustomer");
             System.out.println(e.getMessage());
         }
         finally // Skal lukke statement
@@ -47,17 +49,46 @@ public class CustomerMapper {
                 statement.close(); //lukker statements
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - addCustomerToRoom");
+                System.out.println("Fail in CustomerMapper - createCustomer");
                 System.out.println(e.getMessage());
             }
         }
-        return rowsInserted == 1; //hvis dette passer returneres true ellers false  
+        return customerCreated == newCustomerList.size();
     }
 
+    public int getNewCustomerId(Connection con) {
+        int nextCustomerId = 0;
+
+        String SQLString = "select customer_id_seq.nextval from SYS.DUAL";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                nextCustomerId = rs.getInt(1);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in CustomerMapper - getNewCustomerId");
+            System.out.println(e.getMessage());
+        }
+        finally {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in CustomerMapper - getNewCustomerId");
+                System.out.println(e.getMessage());
+            }
+        }
+        return nextCustomerId;
+    }
+    
     public ArrayList<Customer> getCustomersFromDB(Connection con) {
         Customer customer = null;
         ArrayList<Customer> customerList = new ArrayList<>();
-        String SQLString = "select * from CUSTOMERS";
+        String SQLString = "select * from CUSTOMERS "
+                + "order by customer_id desc";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -100,8 +131,8 @@ public class CustomerMapper {
             statement.setString(5, customer.getCity());
             statement.setString(6, customer.getCountry());
             statement.setString(7, customer.getEmail());
-            statement.setInt(8, customer.getPrivatePhone());
-            statement.setInt(9, customer.getWorkPhone());
+            statement.setInt(8, customer.getPhone1());
+            statement.setInt(9, customer.getPhone2());
             statement.setInt(10, customer.getCustomerId());
             rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
         }
@@ -121,5 +152,5 @@ public class CustomerMapper {
         }
         return rowsUpdated == 1; //hvis dette passer returneres true ellers false
     }
-    
+
 }

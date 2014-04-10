@@ -9,6 +9,7 @@ import domain.Booking;
 import domain.Control;
 import domain.Customer;
 import domain.Room;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,10 +49,11 @@ public class GUI extends javax.swing.JFrame {
 //        refreshModel(roomModel);
         refreshModel(customerModel);
         refreshModel(bookingModel);
+        startGuestTable();
         refreshGuestTable(guestTableModel);
     }
 
-    private void refreshGuestTable(DefaultTableModel guestTableModel) {
+    private void startGuestTable() {
         guestTableModel.setColumnCount(0);
         guestTableModel.addColumn("Customer ID");
         guestTableModel.addColumn("First name");
@@ -63,10 +65,13 @@ public class GUI extends javax.swing.JFrame {
         guestTableModel.addColumn("E-mail");
         guestTableModel.addColumn("Phone #1");
         guestTableModel.addColumn("Phone #2");
+    }
 
+    private void refreshGuestTable(DefaultTableModel guestTableModel) {
+        guestTableModel.setRowCount(0);
         ArrayList<Customer> guestList;
         guestList = ctr.getCustomersFromDB();
-
+        
         for (Customer customer : guestList) {
             Object[] guestInfoArray = new Object[10];
 
@@ -78,8 +83,8 @@ public class GUI extends javax.swing.JFrame {
             guestInfoArray[5] = customer.getCity();
             guestInfoArray[6] = customer.getCountry();
             guestInfoArray[7] = customer.getEmail();
-            guestInfoArray[8] = customer.getPrivatePhone();
-            guestInfoArray[9] = customer.getWorkPhone();
+            guestInfoArray[8] = customer.getPhone1();
+            guestInfoArray[9] = customer.getPhone2();
             guestTableModel.addRow(guestInfoArray);
         }
         guestTable.setModel(guestTableModel);
@@ -180,20 +185,21 @@ public class GUI extends javax.swing.JFrame {
         countryTextField = new javax.swing.JTextField();
         emailTextField = new javax.swing.JTextField();
         phone2TextField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        firstNameLabel = new javax.swing.JLabel();
+        lastNameLabel = new javax.swing.JLabel();
+        streetLabel = new javax.swing.JLabel();
+        addressLabel = new javax.swing.JLabel();
+        zipcodeLabel = new javax.swing.JLabel();
+        cityLabel = new javax.swing.JLabel();
+        countryLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
+        phone1Label = new javax.swing.JLabel();
+        phone2Label = new javax.swing.JLabel();
+        newGuestLabel = new javax.swing.JLabel();
+        createNewGuestButton = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         guestTable = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -459,32 +465,32 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("First name");
+        firstNameLabel.setText("First name *");
 
-        jLabel4.setText("Family name");
+        lastNameLabel.setText("Family name *");
 
-        jLabel5.setText("Street");
+        streetLabel.setText("Street *");
 
-        jLabel6.setText("Address:");
+        addressLabel.setText("Address:");
 
-        jLabel7.setText("zipcode");
+        zipcodeLabel.setText("Zipcode *");
 
-        jLabel8.setText("City");
+        cityLabel.setText("City *");
 
-        jLabel9.setText("Country");
+        countryLabel.setText("Country *");
 
-        jLabel10.setText("E-mail");
+        emailLabel.setText("E-mail *");
 
-        jLabel11.setText("Phone #1");
+        phone1Label.setText("Phone #1 *");
 
-        jLabel12.setText("Phone #2");
+        phone2Label.setText("Phone #2");
 
-        jLabel13.setText("New guest:");
+        newGuestLabel.setText("New guest:");
 
-        jButton2.setText("Create new guest");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        createNewGuestButton.setText("Create new guest");
+        createNewGuestButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                createNewGuestButtonActionPerformed(evt);
             }
         });
 
@@ -506,12 +512,21 @@ public class GUI extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane7.setViewportView(guestTable);
+
+        jLabel3.setText("* mandatory");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -520,38 +535,38 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel11)
+                    .addComponent(addressLabel)
+                    .addComponent(countryLabel)
+                    .addComponent(phone1Label)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel3))
+                            .addComponent(lastNameLabel)
+                            .addComponent(firstNameLabel))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(firstNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                             .addComponent(lastNameTextField)))
-                    .addComponent(jLabel12)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel10))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(phone2Label)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(createNewGuestButton)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(countryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                                    .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(phone1TextField)
-                                    .addComponent(phone2TextField)
-                                    .addComponent(emailTextField))
-                                .addComponent(cityTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(streetTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
+                                .addComponent(streetLabel)
+                                .addComponent(zipcodeLabel)
+                                .addComponent(cityLabel)
+                                .addComponent(emailLabel))
+                            .addGap(40, 40, 40)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(phone1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(phone2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(newGuestLabel)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(103, 103, 103))
         );
@@ -559,51 +574,53 @@ public class GUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
+                        .addComponent(newGuestLabel)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
+                            .addComponent(firstNameLabel)
                             .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
+                            .addComponent(lastNameLabel)
                             .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(36, 36, 36)
-                        .addComponent(jLabel6)
+                        .addComponent(addressLabel)
                         .addGap(12, 12, 12)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(streetLabel))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
+                            .addComponent(zipcodeLabel))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
+                            .addComponent(cityLabel)
                             .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
+                            .addComponent(countryLabel)
                             .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
+                            .addComponent(phone1Label)
                             .addComponent(phone1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel12)
+                            .addComponent(phone2Label)
                             .addComponent(phone2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(emailLabel)
+                            .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3))
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addComponent(jButton2)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addGap(9, 9, 9)
+                .addComponent(createNewGuestButton)
+                .addContainerGap(206, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Customers", jPanel4);
@@ -770,22 +787,79 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String firstName = firstNameTextField.getText();
-        String lastName = lastNameTextField.getText();
-        String street = streetTextField.getText();
-        String zipcode = zipcodeTextField.getText();
-        String city = cityTextField.getText();
-        String country = countryTextField.getText();
-        String email = emailTextField.getText();
-        int phone1 = Integer.parseInt(phone1TextField.getText());
-        int phone2 = Integer.parseInt(phone2TextField.getText());
+    private void createNewGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewGuestButtonActionPerformed
+        String firstName = "";
+        String lastName = "";
+        String street = "";
+        String zipcode = "";
+        String city = "";
+        String country = "";
+        String email = "";
+        int phone1 = 0;
+        int phone2 = 0;
 
-        Customer customer = new Customer(firstName, lastName, street, zipcode, city, country, email, phone1, phone2);
-        ctr.createCustomer(customer);
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if (!firstNameTextField.getText().isEmpty()) {
+            firstName = firstNameTextField.getText();
+        }
+        else {
+            firstNameLabel.setForeground(Color.red);
+        }
+        if (!lastNameTextField.getText().isEmpty()) {
+            lastName = lastNameTextField.getText();
+        }
+        else {
+            lastNameLabel.setForeground(Color.red);
+        }
+        if (!streetTextField.getText().isEmpty()) {
+            street = streetTextField.getText();
+        }
+        else {
+            streetLabel.setForeground(Color.red);
+        }
+        if (!zipcodeTextField.getText().isEmpty()) {
+            zipcode = zipcodeTextField.getText();
+        }
+        else {
+            zipcodeLabel.setForeground(Color.red);
+        }
+        if (!cityTextField.getText().isEmpty()) {
+            city = cityTextField.getText();
+        }
+        else {
+            cityLabel.setForeground(Color.red);
+        }
+        if (!countryTextField.getText().isEmpty()) {
+            country = countryTextField.getText();
+        }
+        else {
+            countryLabel.setForeground(Color.red);
+        }
+        if (!emailTextField.getText().isEmpty()) {
+            email = emailTextField.getText();
+        }
+        else {
+            emailLabel.setForeground(Color.red);
+        }
+        if (!phone1TextField.getText().isEmpty()) {
+            phone1 = Integer.parseInt(phone1TextField.getText());
+        }
+        else {
+            phone1Label.setForeground(Color.red);
+        }
+        if (!phone2TextField.getText().isEmpty()) {
+            phone2 = Integer.parseInt(phone2TextField.getText());
+        }
+
+        if (!(firstName.isEmpty() || lastName.isEmpty() || street.isEmpty() || zipcode.isEmpty() || city.isEmpty() || country.isEmpty() || email.isEmpty() || phone1 == 0)) {
+            Customer customer = new Customer(firstName, lastName, street, zipcode, city, country, email, phone1, phone2);
+            ctr.createCustomer(customer);
+            ctr.commitTransaction();
+            refreshGuestTable(guestTableModel);
+        }
+    }//GEN-LAST:event_createNewGuestButtonActionPerformed
 
     private void phone1TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone1TextFieldKeyTyped
+        phone1Label.setForeground(Color.black);
         char c = evt.getKeyChar();
         if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {   // Vi tillader at der indtastes tal fra 0-9 og DELETE og BACKSPACE. Indtaster man andre tegn får man en fejl-lyd.
             getToolkit().beep();
@@ -794,6 +868,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_phone1TextFieldKeyTyped
 
     private void phone2TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone2TextFieldKeyTyped
+        phone2Label.setForeground(Color.black);
         char c = evt.getKeyChar();
         if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
             getToolkit().beep();
@@ -802,60 +877,75 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_phone2TextFieldKeyTyped
 
     private void firstNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameTextFieldKeyTyped
+        firstNameLabel.setForeground(Color.black);
+        int strLength = firstNameTextField.getText().length();
+        firstNameTextField.setForeground(Color.BLACK);
         char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+        if (strLength == 20 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE )) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_firstNameTextFieldKeyTyped
 
     private void lastNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lastNameTextFieldKeyTyped
+        lastNameLabel.setForeground(Color.black);
+        int strLength = lastNameTextField.getText().length();
         char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_lastNameTextFieldKeyTyped
 
-    private void streetTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_streetTextFieldKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_streetTextFieldKeyTyped
-
     private void zipcodeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zipcodeTextFieldKeyTyped
+        zipcodeLabel.setForeground(Color.black);
+        int strLength = zipcodeTextField.getText().length();
         char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+        if (strLength == 10 || !(Character.isAlphabetic(c) || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_zipcodeTextFieldKeyTyped
 
     private void cityTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cityTextFieldKeyTyped
+        cityLabel.setForeground(Color.black);
+        int strLength = cityTextField.getText().length();
         char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_cityTextFieldKeyTyped
 
     private void countryTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_countryTextFieldKeyTyped
+        countryLabel.setForeground(Color.black);
+        int strLength = countryTextField.getText().length();
         char c = evt.getKeyChar();
-        if (!(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_countryTextFieldKeyTyped
 
     private void emailTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailTextFieldKeyTyped
+        emailLabel.setForeground(Color.black);
+        int strLength = emailTextField.getText().length();
         char c = evt.getKeyChar();
-        if (c == KeyEvent.VK_SPACE) {
+        if (strLength == 70 || c == KeyEvent.VK_SPACE) {
             getToolkit().beep();
             evt.consume();
         }
     }//GEN-LAST:event_emailTextFieldKeyTyped
+
+    private void streetTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_streetTextFieldKeyTyped
+        streetLabel.setForeground(Color.black);
+        int strLength = emailTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 100 || c == KeyEvent.VK_SPACE) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_streetTextFieldKeyTyped
 
     /**
      * @param args the command line arguments
@@ -907,34 +997,29 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton BookingDetailButton;
     private javax.swing.JButton addGuestToRoomButton;
     private javax.swing.JList addedGuestsJList;
+    private javax.swing.JLabel addressLabel;
     private javax.swing.JButton bookRoomButton;
     private javax.swing.JList bookingInfoJList;
     private javax.swing.JList bookingJList;
     private javax.swing.JButton checkAvailabilityButton;
     private org.jdesktop.swingx.JXDatePicker checkIn;
     private org.jdesktop.swingx.JXDatePicker checkOut;
+    private javax.swing.JLabel cityLabel;
     private javax.swing.JTextField cityTextField;
+    private javax.swing.JLabel countryLabel;
     private javax.swing.JTextField countryTextField;
+    private javax.swing.JButton createNewGuestButton;
     private javax.swing.JList customerJList;
     private javax.swing.JList customerJList2;
+    private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField emailTextField;
+    private javax.swing.JLabel firstNameLabel;
     private javax.swing.JTextField firstNameTextField;
     private javax.swing.JTable guestTable;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JOptionPane jOptionPane;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -948,14 +1033,20 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lastNameLabel;
     private javax.swing.JTextField lastNameTextField;
     private javax.swing.JList newBookingJList;
+    private javax.swing.JLabel newGuestLabel;
+    private javax.swing.JLabel phone1Label;
     private javax.swing.JTextField phone1TextField;
+    private javax.swing.JLabel phone2Label;
     private javax.swing.JTextField phone2TextField;
     private javax.swing.JList roomJList;
     private javax.swing.JButton saveBookingButton;
     private javax.swing.JButton saveNewGuestsButton;
+    private javax.swing.JLabel streetLabel;
     private javax.swing.JTextField streetTextField;
+    private javax.swing.JLabel zipcodeLabel;
     private javax.swing.JTextField zipcodeTextField;
     // End of variables declaration//GEN-END:variables
 }
