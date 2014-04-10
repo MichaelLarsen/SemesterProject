@@ -165,7 +165,6 @@ public class GUI extends javax.swing.JFrame {
         String firstName = "", lastName = "", street = "", zipcode = "", city = "", country = "", email = "";
         int customerId = 0, phone1 = 0, phone2 = 0;
 
-
         if (!firstNameTextField.getText().isEmpty()) {
             firstName = firstNameTextField.getText();
         }
@@ -230,6 +229,7 @@ public class GUI extends javax.swing.JFrame {
             }
             ctr.commitTransaction();
             refreshGuestTable(guestTableModel);
+            refreshModel(customerModel);
         }
         return actionSuccess;
     }
@@ -260,7 +260,6 @@ public class GUI extends javax.swing.JFrame {
         checkOut = new org.jdesktop.swingx.JXDatePicker();
         jLabel2 = new javax.swing.JLabel();
         checkAvailabilityButton = new javax.swing.JButton();
-        BookingDetailButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         bookingJList = new javax.swing.JList();
         jPanel3 = new javax.swing.JPanel();
@@ -352,13 +351,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        BookingDetailButton.setText("Booking details");
-        BookingDetailButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BookingDetailButtonActionPerformed(evt);
-            }
-        });
-
         bookingJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Bookings"));
         bookingJList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -381,16 +373,13 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(53, 53, 53)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(saveBookingButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)))
-                        .addGap(18, 18, 18)
-                        .addComponent(BookingDetailButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(saveBookingButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1))))
+                .addContainerGap(123, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,15 +419,9 @@ public class GUI extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(138, 138, 138)
-                                        .addComponent(BookingDetailButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(saveBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))))
@@ -484,7 +467,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addGuestToRoomButton)
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -586,7 +569,7 @@ public class GUI extends javax.swing.JFrame {
 
         phone2Label.setText("Phone #2");
 
-        newGuestLabel.setText("New guest:");
+        newGuestLabel.setText("Register new guest:");
 
         createGuestButton.setText("Create guest");
         createGuestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -634,60 +617,61 @@ public class GUI extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addressLabel)
-                            .addComponent(countryLabel)
-                            .addComponent(phone1Label)
-                            .addComponent(phone2Label)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(addressLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phone1Label, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phone2Label, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mandatoryLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(newGuestLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(lastNameLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(lastNameTextField))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(streetLabel)
                                     .addComponent(zipcodeLabel)
                                     .addComponent(cityLabel)
-                                    .addComponent(emailLabel))
-                                .addGap(40, 40, 40)
+                                    .addComponent(emailLabel)
+                                    .addComponent(firstNameLabel))
+                                .addGap(27, 27, 27)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(emailTextField)
                                     .addComponent(phone2TextField)
                                     .addComponent(phone1TextField)
                                     .addComponent(countryTextField)
                                     .addComponent(cityTextField)
                                     .addComponent(streetTextField)
-                                    .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(mandatoryLabel)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lastNameLabel)
-                                    .addComponent(firstNameLabel)
-                                    .addComponent(newGuestLabel))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lastNameTextField)
                                     .addComponent(firstNameTextField)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addGap(18, 18, 18)
-                        .addComponent(clearCustomerFieldsButton))
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(saveChangesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                                        .addGap(63, 63, 63)))))
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editCustomerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(saveChangesButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 878, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editCustomerButton))
-                .addContainerGap())
+                        .addGap(110, 110, 110)
+                        .addComponent(clearCustomerFieldsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(41, 41, 41)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(newGuestLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -732,18 +716,15 @@ public class GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(mandatoryLabel))
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(createGuestButton)
-                            .addComponent(clearCustomerFieldsButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(saveChangesButton))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(editCustomerButton)))
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createGuestButton)
+                    .addComponent(editCustomerButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(saveChangesButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clearCustomerFieldsButton)
+                .addContainerGap(154, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Customers", jPanel4);
@@ -753,7 +734,7 @@ public class GUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1202, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -885,10 +866,6 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bookRoomButtonActionPerformed
 
-    private void BookingDetailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookingDetailButtonActionPerformed
-        bookingJList.setEnabled(false);
-    }//GEN-LAST:event_BookingDetailButtonActionPerformed
-
     private void checkOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutActionPerformed
         roomModel.clear();
     }//GEN-LAST:event_checkOutActionPerformed
@@ -1004,7 +981,7 @@ public class GUI extends javax.swing.JFrame {
         streetLabel.setForeground(Color.black);
         int strLength = emailTextField.getText().length();
         char c = evt.getKeyChar();
-        if (strLength == 100 || c == KeyEvent.VK_SPACE) {
+        if (strLength == 100) {
             getToolkit().beep();
             evt.consume();
         }
@@ -1039,7 +1016,10 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_editCustomerButtonActionPerformed
 
     private void clearCustomerFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearCustomerFieldsButtonActionPerformed
-        // TODO add your handling code here:
+        clearCustomerFields();
+        createGuestButton.setEnabled(true);
+        customerIdLabel.setText("");
+        newGuestLabel.setText("Register new guest:");
     }//GEN-LAST:event_clearCustomerFieldsButtonActionPerformed
 
     private void saveChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveChangesButtonActionPerformed
@@ -1049,7 +1029,7 @@ public class GUI extends javax.swing.JFrame {
             clearCustomerFields();
             createGuestButton.setEnabled(true);
             customerIdLabel.setText("");
-            newGuestLabel.setText("New guest:");
+            newGuestLabel.setText("Register new guest:");
         }
         else {
             jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
@@ -1103,7 +1083,6 @@ public class GUI extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BookingDetailButton;
     private javax.swing.JButton addGuestToRoomButton;
     private javax.swing.JList addedGuestsJList;
     private javax.swing.JLabel addressLabel;

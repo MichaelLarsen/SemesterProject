@@ -203,14 +203,14 @@ public class DBFacade {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.createCustomer(customer, con);
+        return unitOfWork.createCustomer(customer);
     }
 
     public boolean updateCustomerDB(Customer customer) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.updateCustomerDB(customer, con);
+        return unitOfWork.updateCustomerDB(customer);
     }
 
 }

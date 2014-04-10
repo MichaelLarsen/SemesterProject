@@ -15,8 +15,8 @@ import java.sql.DriverManager;
 public class DBConnector {
 
     // Group 4 logins: SEM2_GR04 / SEM2_TEST_GR04
-    private static String id = "SEM2_TEST_GR04";
-    private static String pw = "SEM2_TEST_GR04";
+    private static String id = "SEM2_GR04";
+    private static String pw = "SEM2_GR04";
 
     public Connection getConnection() {
         Connection con = null;

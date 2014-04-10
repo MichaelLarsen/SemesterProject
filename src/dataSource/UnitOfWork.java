@@ -37,7 +37,7 @@ public class UnitOfWork {
         dirtyCustomerList = new ArrayList<>();
     }
 
-    public boolean createCustomer(Customer customer, Connection con) {
+    public boolean createCustomer(Customer customer) {
         boolean createCustomerSuccess = false;
         if (!newCustomerList.contains(customer)) {
             newCustomerList.add(customer);
@@ -46,7 +46,7 @@ public class UnitOfWork {
         return createCustomerSuccess;
     }
 
-    public boolean updateCustomerDB(Customer customer, Connection con) {
+    public boolean updateCustomerDB(Customer customer) {
         boolean updateCustomerSuccess = false;
         if (!dirtyCustomerList.contains(customer)) {
             dirtyCustomerList.add(customer);

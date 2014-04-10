@@ -174,6 +174,7 @@ public class CustomerMapper {
                 statement.setInt(10, customer.getCustomerId());
                 rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
             }
+            
         }
         catch (SQLException e) {
             System.out.println("Fail in CustomerMapper - UpdateCustomerDB");

@@ -28,7 +28,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jTabbedPane1" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="1202" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -66,20 +66,16 @@
                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane4" min="-2" pref="290" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jScrollPane3" min="-2" pref="290" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="saveBookingButton" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jScrollPane3" min="-2" pref="290" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="saveBookingButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="BookingDetailButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="123" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
@@ -129,18 +125,9 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jScrollPane4" min="-2" pref="120" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace pref="21" max="32767" attributes="0"/>
-                                              <Component id="jScrollPane3" min="-2" pref="398" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="138" max="-2" attributes="0"/>
-                                              <Component id="BookingDetailButton" min="-2" pref="43" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <EmptySpace pref="21" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane3" min="-2" pref="398" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="saveBookingButton" min="-2" pref="43" max="-2" attributes="0"/>
                                           <Component id="jButton1" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
@@ -279,14 +266,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkAvailabilityButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="BookingDetailButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Booking details"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BookingDetailButtonActionPerformed"/>
-              </Events>
-            </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane3">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -335,7 +314,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="addGuestToRoomButton" min="-2" max="-2" attributes="0"/>
                           <Component id="jScrollPane8" min="-2" pref="290" max="-2" attributes="0"/>
@@ -479,74 +458,75 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="phone1Label" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="phone2Label" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="mandatoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="newGuestLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="customerIdLabel" min="-2" pref="95" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lastNameLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="lastNameTextField" max="32767" attributes="0"/>
+                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="streetLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="zipcodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="emailLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="firstNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="createGuestButton" max="32767" attributes="0"/>
                                           <Component id="emailTextField" alignment="0" max="32767" attributes="0"/>
                                           <Component id="phone2TextField" alignment="0" max="32767" attributes="0"/>
                                           <Component id="phone1TextField" alignment="0" max="32767" attributes="0"/>
                                           <Component id="countryTextField" alignment="0" max="32767" attributes="0"/>
                                           <Component id="cityTextField" alignment="0" max="32767" attributes="0"/>
                                           <Component id="streetTextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="zipcodeTextField" alignment="0" min="-2" pref="56" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Component id="mandatoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lastNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="firstNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="newGuestLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lastNameTextField" max="32767" attributes="0"/>
                                           <Component id="firstNameTextField" max="32767" attributes="0"/>
                                           <Group type="102" attributes="0">
-                                              <Component id="customerIdLabel" min="-2" pref="95" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="zipcodeTextField" alignment="0" min="-2" pref="56" max="-2" attributes="0"/>
+                                                  <Component id="createGuestButton" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="saveChangesButton" alignment="0" pref="137" max="32767" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="clearCustomerFieldsButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jScrollPane7" min="-2" pref="837" max="-2" attributes="0"/>
+                                  <Component id="editCustomerButton" min="-2" pref="92" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                              <Component id="saveChangesButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+                              <Component id="clearCustomerFieldsButton" min="-2" pref="107" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="51" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane7" min="-2" pref="878" max="-2" attributes="0"/>
-                          <Component id="editCustomerButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="newGuestLabel" min="-2" pref="21" max="-2" attributes="0"/>
                                   <Component id="customerIdLabel" min="-2" pref="20" max="-2" attributes="0"/>
@@ -603,22 +583,16 @@
                           </Group>
                           <Component id="jScrollPane7" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="createGuestButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="clearCustomerFieldsButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="saveChangesButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                              <Component id="editCustomerButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="createGuestButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="editCustomerButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="188" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="saveChangesButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="clearCustomerFieldsButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="154" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -721,7 +695,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="newGuestLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="New guest:"/>
+                <Property name="text" type="java.lang.String" value="Register new guest:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="createGuestButton">
