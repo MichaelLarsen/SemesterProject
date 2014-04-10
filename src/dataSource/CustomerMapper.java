@@ -18,6 +18,44 @@ import java.util.ArrayList;
  */
 public class CustomerMapper {
 
+    /**
+     * Metoden henter en customer fra databasen via customerId.
+     *
+     * @param customerId
+     * @param con
+     * @return customer
+     */
+    public Customer getGuestFromID(int customerId, Connection con) {
+        Customer customer = null;
+        String SQLString = "select * from CUSTOMERS "
+                + "where customer_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, customerId);
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(rs);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in CustomerMapper - getGuestFromID");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in CustomerMapper - getGuestFromID");
+                System.out.println(e.getMessage());
+            }
+        }
+        return customer;
+    }
+
     public boolean createCustomer(ArrayList<Customer> newCustomerList, Connection con) {
         int customerCreated = 0;
         String SQLString = "insert into CUSTOMERS values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -35,7 +73,7 @@ public class CustomerMapper {
                 statement.setString(8, newCustomerList.get(i).getEmail());
                 statement.setInt(9, newCustomerList.get(i).getPhone1());
                 statement.setInt(10, newCustomerList.get(i).getPhone2());
-                
+
                 customerCreated += statement.executeUpdate(); // customerCreated bliver = newCustomerList.size(), hvis Update går igennem
             }
         }
@@ -83,7 +121,7 @@ public class CustomerMapper {
         }
         return nextCustomerId;
     }
-    
+
     public ArrayList<Customer> getCustomersFromDB(Connection con) {
         Customer customer = null;
         ArrayList<Customer> customerList = new ArrayList<>();
@@ -115,26 +153,27 @@ public class CustomerMapper {
         return customerList;
     }
 
-    boolean updateCustomerDB(Customer customer, Connection con) {
+    public boolean updateCustomerDB(ArrayList<Customer> dirtyCustomerList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update CUSTOMERS"
-                + " set first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country =?, email = ?, private_phone = ?, work_phone = ?,"
-                + " agency = ?, check_in_date = ?, no_of_nights = ?, room_no = ?"
+                + " set first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country = ?, email = ?, phone_1 = ?, phone_2 = ?"
                 + " where customer_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setString(1, customer.getFirstName());
-            statement.setString(2, customer.getLastName());
-            statement.setString(3, customer.getStreet());
-            statement.setString(4, customer.getZipcode());
-            statement.setString(5, customer.getCity());
-            statement.setString(6, customer.getCountry());
-            statement.setString(7, customer.getEmail());
-            statement.setInt(8, customer.getPhone1());
-            statement.setInt(9, customer.getPhone2());
-            statement.setInt(10, customer.getCustomerId());
-            rowsUpdated = statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+            for (Customer customer : dirtyCustomerList) {
+                statement.setString(1, customer.getFirstName());
+                statement.setString(2, customer.getLastName());
+                statement.setString(3, customer.getStreet());
+                statement.setString(4, customer.getZipcode());
+                statement.setString(5, customer.getCity());
+                statement.setString(6, customer.getCountry());
+                statement.setString(7, customer.getEmail());
+                statement.setInt(8, customer.getPhone1());
+                statement.setInt(9, customer.getPhone2());
+                statement.setInt(10, customer.getCustomerId());
+                rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+            }
         }
         catch (SQLException e) {
             System.out.println("Fail in CustomerMapper - UpdateCustomerDB");
@@ -150,7 +189,6 @@ public class CustomerMapper {
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == 1; //hvis dette passer returneres true ellers false
+        return rowsUpdated == dirtyCustomerList.size(); //hvis dette passer returneres true ellers false
     }
-
 }

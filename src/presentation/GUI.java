@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,7 +36,6 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     public GUI() {
-
         ctr = new Control();
         initComponents();
         customerModel = new DefaultListModel<>();
@@ -44,13 +44,21 @@ public class GUI extends javax.swing.JFrame {
         newBookingModel = new DefaultListModel<>();
         infoBookingModel = new DefaultListModel<>();
         addedGuestsModel = new DefaultListModel<>();
-        guestTableModel = new DefaultTableModel();
+        startDefaultTableModel();
+        saveChangesButton.setEnabled(false);
 
-//        refreshModel(roomModel);
         refreshModel(customerModel);
         refreshModel(bookingModel);
         startGuestTable();
         refreshGuestTable(guestTableModel);
+    }
+
+    private void startDefaultTableModel() {
+        guestTableModel = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {  // Sørger for at vores guestTable bliver instantioeret og bliver låst, så man ikke kan ændre data i rækkerne.
+                return false;
+            }
+        };
     }
 
     private void startGuestTable() {
@@ -71,7 +79,7 @@ public class GUI extends javax.swing.JFrame {
         guestTableModel.setRowCount(0);
         ArrayList<Customer> guestList;
         guestList = ctr.getCustomersFromDB();
-        
+
         for (Customer customer : guestList) {
             Object[] guestInfoArray = new Object[10];
 
@@ -137,6 +145,95 @@ public class GUI extends javax.swing.JFrame {
         }
     }
 
+    private void clearCustomerFields() {
+        firstNameTextField.setText("");
+        lastNameTextField.setText("");
+        streetTextField.setText("");
+        zipcodeTextField.setText("");
+        cityTextField.setText("");
+        countryTextField.setText("");
+        phone1TextField.setText("");
+        phone2TextField.setText("");
+        emailTextField.setText("");
+
+        createGuestButton.setEnabled(true);
+        saveChangesButton.setEnabled(false);
+    }
+
+    private boolean getCustomerFieldData(String str) {
+        boolean actionSuccess = false;
+        String firstName = "", lastName = "", street = "", zipcode = "", city = "", country = "", email = "";
+        int customerId = 0, phone1 = 0, phone2 = 0;
+
+
+        if (!firstNameTextField.getText().isEmpty()) {
+            firstName = firstNameTextField.getText();
+        }
+        else {
+            firstNameLabel.setForeground(Color.red);
+        }
+        if (!lastNameTextField.getText().isEmpty()) {
+            lastName = lastNameTextField.getText();
+        }
+        else {
+            lastNameLabel.setForeground(Color.red);
+        }
+        if (!streetTextField.getText().isEmpty()) {
+            street = streetTextField.getText();
+        }
+        else {
+            streetLabel.setForeground(Color.red);
+        }
+        if (!zipcodeTextField.getText().isEmpty()) {
+            zipcode = zipcodeTextField.getText();
+        }
+        else {
+            zipcodeLabel.setForeground(Color.red);
+        }
+        if (!cityTextField.getText().isEmpty()) {
+            city = cityTextField.getText();
+        }
+        else {
+            cityLabel.setForeground(Color.red);
+        }
+        if (!countryTextField.getText().isEmpty()) {
+            country = countryTextField.getText();
+        }
+        else {
+            countryLabel.setForeground(Color.red);
+        }
+        if (!emailTextField.getText().isEmpty()) {
+            email = emailTextField.getText();
+        }
+        else {
+            emailLabel.setForeground(Color.red);
+        }
+        if (!phone1TextField.getText().isEmpty()) {
+            phone1 = Integer.parseInt(phone1TextField.getText());
+        }
+        else {
+            phone1Label.setForeground(Color.red);
+        }
+        if (!phone2TextField.getText().isEmpty()) {
+            phone2 = Integer.parseInt(phone2TextField.getText());
+        }
+
+        if (!(firstName.isEmpty() || lastName.isEmpty() || street.isEmpty() || zipcode.isEmpty() || city.isEmpty() || country.isEmpty() || email.isEmpty() || phone1 == 0)) {
+            if (str.equals("saveCustomer")) {
+                customerId = Integer.parseInt(customerIdLabel.getText());
+                Customer customer = new Customer(customerId, firstName, lastName, street, zipcode, city, country, email, phone1, phone2);
+                actionSuccess = ctr.updateCustomerDB(customer);
+            }
+            if (str.equals("createCustomer")) {
+                Customer customer = new Customer(firstName, lastName, street, zipcode, city, country, email, phone1, phone2);
+                actionSuccess = ctr.createCustomer(customer);
+            }
+            ctr.commitTransaction();
+            refreshGuestTable(guestTableModel);
+        }
+        return actionSuccess;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -196,10 +293,14 @@ public class GUI extends javax.swing.JFrame {
         phone1Label = new javax.swing.JLabel();
         phone2Label = new javax.swing.JLabel();
         newGuestLabel = new javax.swing.JLabel();
-        createNewGuestButton = new javax.swing.JButton();
+        createGuestButton = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         guestTable = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
+        mandatoryLabel = new javax.swing.JLabel();
+        editCustomerButton = new javax.swing.JButton();
+        saveChangesButton = new javax.swing.JButton();
+        clearCustomerFieldsButton = new javax.swing.JButton();
+        customerIdLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -487,46 +588,46 @@ public class GUI extends javax.swing.JFrame {
 
         newGuestLabel.setText("New guest:");
 
-        createNewGuestButton.setText("Create new guest");
-        createNewGuestButton.addActionListener(new java.awt.event.ActionListener() {
+        createGuestButton.setText("Create guest");
+        createGuestButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createNewGuestButtonActionPerformed(evt);
+                createGuestButtonActionPerformed(evt);
             }
         });
 
         guestTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Customer ID", "First name", "Last name", "Street", "Zipcode", "City", "Country", "E-mail", "Phone #1", "Phone #2"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
+        guestTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane7.setViewportView(guestTable);
 
-        jLabel3.setText("* mandatory");
+        mandatoryLabel.setText("* mandatory");
+
+        editCustomerButton.setText("Edit guest");
+        editCustomerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCustomerButtonActionPerformed(evt);
+            }
+        });
+
+        saveChangesButton.setText("Save changes");
+        saveChangesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveChangesButtonActionPerformed(evt);
+            }
+        });
+
+        clearCustomerFieldsButton.setText("Clear");
+        clearCustomerFieldsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearCustomerFieldsButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -535,40 +636,51 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addressLabel)
-                    .addComponent(countryLabel)
-                    .addComponent(phone1Label)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lastNameLabel)
-                            .addComponent(firstNameLabel))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(firstNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                            .addComponent(lastNameTextField)))
-                    .addComponent(phone2Label)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(createNewGuestButton)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(streetLabel)
-                                .addComponent(zipcodeLabel)
-                                .addComponent(cityLabel)
-                                .addComponent(emailLabel))
-                            .addGap(40, 40, 40)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(phone1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(phone2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(newGuestLabel)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103))
+                            .addComponent(addressLabel)
+                            .addComponent(countryLabel)
+                            .addComponent(phone1Label)
+                            .addComponent(phone2Label)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(streetLabel)
+                                    .addComponent(zipcodeLabel)
+                                    .addComponent(cityLabel)
+                                    .addComponent(emailLabel))
+                                .addGap(40, 40, 40)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(emailTextField)
+                                    .addComponent(phone2TextField)
+                                    .addComponent(phone1TextField)
+                                    .addComponent(countryTextField)
+                                    .addComponent(cityTextField)
+                                    .addComponent(streetTextField)
+                                    .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(mandatoryLabel)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lastNameLabel)
+                                    .addComponent(firstNameLabel)
+                                    .addComponent(newGuestLabel))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lastNameTextField)
+                                    .addComponent(firstNameTextField)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addGap(18, 18, 18)
+                        .addComponent(clearCustomerFieldsButton))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(saveChangesButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 878, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editCustomerButton))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -576,18 +688,20 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(44, 44, 44)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(newGuestLabel)
-                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newGuestLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(firstNameLabel)
                             .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(12, 12, 12)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lastNameLabel)
                             .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
+                        .addGap(37, 37, 37)
                         .addComponent(addressLabel)
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(streetLabel))
@@ -616,11 +730,20 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(emailLabel)
                             .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3))
+                        .addComponent(mandatoryLabel))
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addComponent(createNewGuestButton)
-                .addContainerGap(206, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(createGuestButton)
+                            .addComponent(clearCustomerFieldsButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(saveChangesButton))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(editCustomerButton)))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Customers", jPanel4);
@@ -787,76 +910,16 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
 
-    private void createNewGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewGuestButtonActionPerformed
-        String firstName = "";
-        String lastName = "";
-        String street = "";
-        String zipcode = "";
-        String city = "";
-        String country = "";
-        String email = "";
-        int phone1 = 0;
-        int phone2 = 0;
-
-        if (!firstNameTextField.getText().isEmpty()) {
-            firstName = firstNameTextField.getText();
+    private void createGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGuestButtonActionPerformed
+        boolean status = false;
+        status = getCustomerFieldData("createCustomer");
+        if (status) {
+            clearCustomerFields();
         }
         else {
-            firstNameLabel.setForeground(Color.red);
+            jOptionPane.showMessageDialog(this, "An error occured. Customer was not created.", "Create failed", jOptionPane.WARNING_MESSAGE);
         }
-        if (!lastNameTextField.getText().isEmpty()) {
-            lastName = lastNameTextField.getText();
-        }
-        else {
-            lastNameLabel.setForeground(Color.red);
-        }
-        if (!streetTextField.getText().isEmpty()) {
-            street = streetTextField.getText();
-        }
-        else {
-            streetLabel.setForeground(Color.red);
-        }
-        if (!zipcodeTextField.getText().isEmpty()) {
-            zipcode = zipcodeTextField.getText();
-        }
-        else {
-            zipcodeLabel.setForeground(Color.red);
-        }
-        if (!cityTextField.getText().isEmpty()) {
-            city = cityTextField.getText();
-        }
-        else {
-            cityLabel.setForeground(Color.red);
-        }
-        if (!countryTextField.getText().isEmpty()) {
-            country = countryTextField.getText();
-        }
-        else {
-            countryLabel.setForeground(Color.red);
-        }
-        if (!emailTextField.getText().isEmpty()) {
-            email = emailTextField.getText();
-        }
-        else {
-            emailLabel.setForeground(Color.red);
-        }
-        if (!phone1TextField.getText().isEmpty()) {
-            phone1 = Integer.parseInt(phone1TextField.getText());
-        }
-        else {
-            phone1Label.setForeground(Color.red);
-        }
-        if (!phone2TextField.getText().isEmpty()) {
-            phone2 = Integer.parseInt(phone2TextField.getText());
-        }
-
-        if (!(firstName.isEmpty() || lastName.isEmpty() || street.isEmpty() || zipcode.isEmpty() || city.isEmpty() || country.isEmpty() || email.isEmpty() || phone1 == 0)) {
-            Customer customer = new Customer(firstName, lastName, street, zipcode, city, country, email, phone1, phone2);
-            ctr.createCustomer(customer);
-            ctr.commitTransaction();
-            refreshGuestTable(guestTableModel);
-        }
-    }//GEN-LAST:event_createNewGuestButtonActionPerformed
+    }//GEN-LAST:event_createGuestButtonActionPerformed
 
     private void phone1TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone1TextFieldKeyTyped
         phone1Label.setForeground(Color.black);
@@ -878,10 +941,10 @@ public class GUI extends javax.swing.JFrame {
 
     private void firstNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameTextFieldKeyTyped
         firstNameLabel.setForeground(Color.black);
-        int strLength = firstNameTextField.getText().length();
+        int strLength = firstNameTextField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
         firstNameTextField.setForeground(Color.BLACK);
         char c = evt.getKeyChar();
-        if (strLength == 20 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE )) {
+        if (strLength == 20 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
             getToolkit().beep();
             evt.consume();
         }
@@ -947,6 +1010,52 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_streetTextFieldKeyTyped
 
+    private void editCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerButtonActionPerformed
+        if (guestTable.getSelectedRow() > -1) {
+            int selectedRowIndex = guestTable.getSelectedRow();
+            int customerId = (Integer) guestTableModel.getValueAt(selectedRowIndex, 0);
+            Customer customer = ctr.getGuestFromID(customerId);
+
+            if (customer != null) {
+                customerIdLabel.setText(Integer.toString(customer.getCustomerId()));
+                firstNameTextField.setText(customer.getFirstName());
+                lastNameTextField.setText(customer.getLastName());
+                streetTextField.setText(customer.getStreet());
+                zipcodeTextField.setText(customer.getZipcode());
+                cityTextField.setText(customer.getCity());
+                countryTextField.setText(customer.getCountry());
+                phone1TextField.setText(Integer.toString(customer.getPhone1()));
+                phone2TextField.setText(Integer.toString(customer.getPhone2()));
+                emailTextField.setText(customer.getEmail());
+
+                newGuestLabel.setText("Customer ID:");
+                createGuestButton.setEnabled(false);
+                saveChangesButton.setEnabled(true);
+            }
+        }
+        else {
+            jOptionPane.showMessageDialog(this, "You must first select a customer.", "Select customer", jOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_editCustomerButtonActionPerformed
+
+    private void clearCustomerFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearCustomerFieldsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_clearCustomerFieldsButtonActionPerformed
+
+    private void saveChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveChangesButtonActionPerformed
+        boolean status;
+        status = getCustomerFieldData("saveCustomer");
+        if (status) {
+            clearCustomerFields();
+            createGuestButton.setEnabled(true);
+            customerIdLabel.setText("");
+            newGuestLabel.setText("New guest:");
+        }
+        else {
+            jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_saveChangesButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1006,11 +1115,14 @@ public class GUI extends javax.swing.JFrame {
     private org.jdesktop.swingx.JXDatePicker checkOut;
     private javax.swing.JLabel cityLabel;
     private javax.swing.JTextField cityTextField;
+    private javax.swing.JButton clearCustomerFieldsButton;
     private javax.swing.JLabel countryLabel;
     private javax.swing.JTextField countryTextField;
-    private javax.swing.JButton createNewGuestButton;
+    private javax.swing.JButton createGuestButton;
+    private javax.swing.JLabel customerIdLabel;
     private javax.swing.JList customerJList;
     private javax.swing.JList customerJList2;
+    private javax.swing.JButton editCustomerButton;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField emailTextField;
     private javax.swing.JLabel firstNameLabel;
@@ -1019,7 +1131,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JOptionPane jOptionPane;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -1035,6 +1146,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lastNameLabel;
     private javax.swing.JTextField lastNameTextField;
+    private javax.swing.JLabel mandatoryLabel;
     private javax.swing.JList newBookingJList;
     private javax.swing.JLabel newGuestLabel;
     private javax.swing.JLabel phone1Label;
@@ -1043,6 +1155,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField phone2TextField;
     private javax.swing.JList roomJList;
     private javax.swing.JButton saveBookingButton;
+    private javax.swing.JButton saveChangesButton;
     private javax.swing.JButton saveNewGuestsButton;
     private javax.swing.JLabel streetLabel;
     private javax.swing.JTextField streetTextField;

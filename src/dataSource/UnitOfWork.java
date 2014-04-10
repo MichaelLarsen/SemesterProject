@@ -25,6 +25,7 @@ public class UnitOfWork {
     private ArrayList<RoomGuest> newGuestInRoomList;
     private ArrayList<RoomGuest> updateGuestInRoomList;
     private ArrayList<Customer> newCustomerList;
+    private ArrayList<Customer> dirtyCustomerList;
 
     public UnitOfWork() {
         newBookingList = new ArrayList<>();
@@ -33,6 +34,7 @@ public class UnitOfWork {
         updateBookingList = new ArrayList<>();
         updateGuestInRoomList = new ArrayList<>();
         newCustomerList = new ArrayList<>();
+        dirtyCustomerList = new ArrayList<>();
     }
 
     public boolean createCustomer(Customer customer, Connection con) {
@@ -43,7 +45,16 @@ public class UnitOfWork {
         }
         return createCustomerSuccess;
     }
-    
+
+    public boolean updateCustomerDB(Customer customer, Connection con) {
+        boolean updateCustomerSuccess = false;
+        if (!dirtyCustomerList.contains(customer)) {
+            dirtyCustomerList.add(customer);
+            updateCustomerSuccess = true;
+        }
+        return updateCustomerSuccess;
+    }
+
     public boolean bookRoom(Booking booking) {
         boolean bookingSuccess = false;
         if (!newBookingList.contains(booking)) {
@@ -97,8 +108,12 @@ public class UnitOfWork {
         CustomerMapper customerMapper = new CustomerMapper();
         RoomMapper roomMapper = new RoomMapper();
         RoomGuestMapper roomGuestMapper = new RoomGuestMapper();
+
         if (!newCustomerList.isEmpty()) {
             commitSuccess = commitSuccess && customerMapper.createCustomer(newCustomerList, con);
+        }
+        if (!dirtyCustomerList.isEmpty()) {
+            commitSuccess = commitSuccess && customerMapper.updateCustomerDB(dirtyCustomerList, con);
         }
         if (!newBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
@@ -127,6 +142,4 @@ public class UnitOfWork {
         }
         return commitSuccess;
     }
-
-    
 }

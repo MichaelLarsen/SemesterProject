@@ -161,9 +161,8 @@ public class BookingMapper {
                 statement.setDate(4, new java.sql.Date(updateBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(5, new java.sql.Date(updateBookingList.get(i).getCheckOutDate().getTime()));
                 statement.setInt(6, updateBookingList.get(i).getBookingId());
+                rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
             }
-
-            rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
         }
         catch (SQLException e) {
             System.out.println("Fail in BookingMapper - updateBookingDB");

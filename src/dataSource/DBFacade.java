@@ -76,6 +76,19 @@ public class DBFacade {
         return tempRoomList;
     }
 
+    public Customer getGuestFromID(int customerId) {
+        Customer customer;
+        con = null;
+        try {
+            con = openConnection();
+            customer = customerMapper.getGuestFromID(customerId, con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return customer;
+    }
+    
     //returns arraylist of customers
     public ArrayList<Customer> getCustomersFromDB() {
         con = null;
@@ -192,4 +205,12 @@ public class DBFacade {
         }
         return unitOfWork.createCustomer(customer, con);
     }
+
+    public boolean updateCustomerDB(Customer customer) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
+        return unitOfWork.updateCustomerDB(customer, con);
+    }
+
 }

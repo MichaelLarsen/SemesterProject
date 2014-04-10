@@ -57,6 +57,19 @@ public class Customer {
         this.phone1 = phone1;
         this.phone2 = phone2;
     }
+    
+    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.street = street;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.country = country;
+        this.email = email;
+        this.phone1 = phone1;
+        this.phone2 = phone2;
+    }
 
     public int getCustomerId() {
         return customerId;
