@@ -75,6 +75,19 @@ public class DBFacade {
         }
         return tempRoomList;
     }
+    
+    public Customer getCustomerDB(int bookingOwnerId) {
+        Customer customer;
+        con = null;
+        try {
+            con = openConnection();
+            customer = customerMapper.getCustomerDB(bookingOwnerId, con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return customer;
+    }
 
     public Customer getGuestFromID(int customerId) {
         Customer customer;
@@ -141,6 +154,19 @@ public class DBFacade {
             closeConnection(con);
         }
         return roomGuestList;
+    }
+    
+     public ArrayList<Customer> searchForGuestDB(String status, String... names) {
+        con = null;
+        ArrayList<Customer> guestsFound;
+        try {
+            con = openConnection();
+            guestsFound = customerMapper.searchForGuestDB(status, con, names);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return guestsFound;
     }
 
     public void openNewTransaction() {
@@ -213,4 +239,10 @@ public class DBFacade {
         return unitOfWork.updateCustomerDB(customer);
     }
 
+    public boolean deleteBookingFromDB(int bookingId) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
+        return unitOfWork.deleteBookingFromDB(bookingId);
+    }
 }

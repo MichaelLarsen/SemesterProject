@@ -45,6 +45,18 @@ public class Control {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
+    
+    public Customer getCustomerDB(int bookingOwnerId) {
+       return DBFacade.getCustomerDB(bookingOwnerId);
+    }
+    
+    public ArrayList<Room> getRooms() {
+        return roomList;
+    }
+    
+    public ArrayList<Booking> getBookings() {
+        return bookingList;
+    }
 
     public ArrayList<Customer> getCustomersFromDB() {
         customerList = DBFacade.getCustomersFromDB();
@@ -55,6 +67,10 @@ public class Control {
         bookingList = DBFacade.getBookingsFromDB();
         return bookingList;
     }
+    
+    public ArrayList<Customer> searchForGuestDB(String status, String... names) {
+        return DBFacade.searchForGuestDB(status, names);
+    }
 
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess;
@@ -62,16 +78,20 @@ public class Control {
         return updateSuccess;
     }
 
-    private boolean updateBookingDB(Booking booking) {
+    public boolean updateBookingDB(Booking booking) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateBookingDB(booking);
         return updateSuccess;
     }
 
-    private boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);
         return updateSuccess;
+    }
+    
+    public boolean deleteBookingFromDB(int bookingId) {
+        return DBFacade.deleteBookingFromDB(bookingId);
     }
 
     public Booking bookRoom(Room room, Customer customer, Date checkIn, Date checkOut) {
@@ -220,4 +240,8 @@ public class Control {
     public boolean updateCustomerDB(Customer customer) {
         return DBFacade.updateCustomerDB(customer);
     }
+
+    
+
+    
 }

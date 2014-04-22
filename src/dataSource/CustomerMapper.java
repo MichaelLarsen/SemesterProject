@@ -192,4 +192,84 @@ public class CustomerMapper {
         }
         return rowsUpdated == dirtyCustomerList.size(); //hvis dette passer returneres true ellers false
     }
+
+    public ArrayList<Customer> searchForGuestDB(String status, Connection con, String... names) {
+        Customer customer = null;
+        String SQLString = "";
+        ArrayList<Customer> customerList = new ArrayList<>();
+        if (status.equals("both")) {
+            SQLString = "select * from CUSTOMERS "
+                + "where upper(first_name) LIKE upper(?) AND upper(last_name) LIKE upper(?)";
+        }
+        if (status.equals("firstName")) {
+            SQLString = "select * from CUSTOMERS "
+                + "where upper(first_name) LIKE upper(?)";
+        }
+        if (status.equals("lastName")) {
+            SQLString = "select * from CUSTOMERS "
+                + "where upper(last_name) LIKE upper(?)";
+        }
+        
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            if (status.equals("both")) {
+                statement.setString(1, "%"+names[0]+"%");
+                statement.setString(2, "%"+names[1]+"%");
+            }
+            else{
+//                statement.setString(1, status);
+                statement.setString(1, "%"+names[0]+"%");
+            }
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(rs);
+                customerList.add(customer);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in CustomerMapper - searchForGuestDB");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in CustomerMapper - searchForGuestDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return customerList;
+    }
+
+    public Customer getCustomerDB(int bookingOwnerId, Connection con) {
+        Customer customer = null;
+        String SQLString = "select * from CUSTOMERS"
+                + " where customer_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, bookingOwnerId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                customer = new Customer(rs);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in CustomerMapper - getCustomerDB");
+            System.out.println(e.getMessage());
+        }
+        finally {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in CustomerMapper - getCustomerDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return customer;
+    }
 }

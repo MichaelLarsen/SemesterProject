@@ -26,6 +26,7 @@ public class UnitOfWork {
     private ArrayList<RoomGuest> updateGuestInRoomList;
     private ArrayList<Customer> newCustomerList;
     private ArrayList<Customer> dirtyCustomerList;
+    private ArrayList<Integer> deleteBookingsList;
 
     public UnitOfWork() {
         newBookingList = new ArrayList<>();
@@ -35,6 +36,7 @@ public class UnitOfWork {
         updateGuestInRoomList = new ArrayList<>();
         newCustomerList = new ArrayList<>();
         dirtyCustomerList = new ArrayList<>();
+        deleteBookingsList = new ArrayList<>();
     }
 
     public boolean createCustomer(Customer customer) {
@@ -99,6 +101,15 @@ public class UnitOfWork {
         }
         return updateSuccess;
     }
+    
+    public boolean deleteBookingFromDB(int bookingId) {
+        boolean deleteSuccess = false;
+        if (!deleteBookingsList.contains(bookingId)) {
+            deleteBookingsList.add(bookingId);
+            deleteSuccess = true;
+        }
+        return deleteSuccess;
+    }
 
     public boolean commitTransaction(Connection con) throws SQLException {
         boolean commitSuccess = true;
@@ -130,6 +141,9 @@ public class UnitOfWork {
         if (!updateGuestInRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomGuestMapper.updateGuestInRoom(updateGuestInRoomList, con);
         }
+        if (!deleteBookingsList.isEmpty()) {
+            commitSuccess = commitSuccess && bookingMapper.deleteBookingFromDB(deleteBookingsList, con);
+        }
         if (!commitSuccess) {
             con.rollback();
             System.out.println("Fejl i commitTransaction!");
@@ -142,4 +156,6 @@ public class UnitOfWork {
         }
         return commitSuccess;
     }
+
+    
 }

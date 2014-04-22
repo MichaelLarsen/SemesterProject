@@ -9,7 +9,7 @@ package domain;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 /**
  *
@@ -23,7 +23,7 @@ public class Booking {
     private Date checkOutDate;
     private int roomNo;
     private int bookingOwnerId;
-    private ArrayList<Customer> guestsInBooking;
+//    private ArrayList<Customer> guestsInBooking;
 
     public Booking(ResultSet rs) {
         super();
@@ -34,7 +34,7 @@ public class Booking {
             this.agency = rs.getString("agency");
             this.checkInDate = rs.getDate("check_in_date");
             this.checkOutDate = rs.getDate("check_out_date");
-            this.guestsInBooking = new ArrayList<>();
+//            this.guestsInBooking = new ArrayList<>();
         }
         catch (SQLException e) {
             System.out.println("Fail in BookingMapper/Booking - Booking");
@@ -66,17 +66,17 @@ public class Booking {
         this.bookingOwnerId = bookingOwnerId;
     }
 
-    public ArrayList<Customer> getCustomersForBooking() {
-        return guestsInBooking;
-    }
-
-    public void addCustomerForBooking(Customer customer) {
-        guestsInBooking.add(customer);
-    }
-
-    public int getOccupiedBeds() {
-        return guestsInBooking.size();
-    }
+//    public ArrayList<Customer> getCustomersForBooking() {
+//        return guestsInBooking;
+//    }
+//
+//    public void addCustomerForBooking(Customer customer) {
+//        guestsInBooking.add(customer);
+//    }
+//
+//    public int getOccupiedBeds() {
+//        return guestsInBooking.size();
+//    }
 
     @Override
     public String toString() {

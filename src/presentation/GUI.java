@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 public class GUI extends javax.swing.JFrame {
 
     private Control ctr;
+    private Booking chosenBooking;
     private DefaultListModel<Customer> customerModel;
     private DefaultListModel<Room> roomModel;
     private DefaultListModel<Booking> bookingModel;
@@ -31,6 +31,8 @@ public class GUI extends javax.swing.JFrame {
     private DefaultListModel infoBookingModel;
     private DefaultListModel addedGuestsModel;
     private DefaultTableModel guestTableModel;
+    private DefaultTableModel roomTableModel;
+    private DefaultTableModel bookingTableModel;
 
     /**
      * Creates new form GUI
@@ -49,16 +51,49 @@ public class GUI extends javax.swing.JFrame {
 
         refreshModel(customerModel);
         refreshModel(bookingModel);
+        startRoomTable();
         startGuestTable();
+        startBookingTable();
         refreshGuestTable(guestTableModel);
+        refreshBookingTable(bookingTableModel);
     }
 
     private void startDefaultTableModel() {
         guestTableModel = new DefaultTableModel() {
-            public boolean isCellEditable(int rowIndex, int columnIndex) {  // Sørger for at vores guestTable bliver instantioeret og bliver låst, så man ikke kan ændre data i rækkerne.
+            public boolean isCellEditable(int rowIndex, int columnIndex) {  // Sørger for at vores guestTable bliver instantieret og bliver låst, så man ikke kan ændre data i rækkerne.
                 return false;
             }
         };
+        roomTableModel = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {  // Sørger for at vores guestTable bliver instantieret og bliver låst, så man ikke kan ændre data i rækkerne.
+                return false;
+            }
+        };
+        bookingTableModel = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {  // Sørger for at vores guestTable bliver instantieret og bliver låst, så man ikke kan ændre data i rækkerne.
+                return false;
+            }
+        };
+    }
+
+    private void startRoomTable() {
+        roomTableModel.setColumnCount(0);
+        roomTableModel.addColumn("Room Number");
+        roomTableModel.addColumn("Type");
+        roomTableModel.addColumn("Room Size");
+        roomTableModel.addColumn("Price in USD");
+    }
+
+    private void startBookingTable() {
+        bookingTableModel.setColumnCount(0);
+        bookingTableModel.addColumn("Booking id");
+        bookingTableModel.addColumn("Booking owner(ID)");
+        bookingTableModel.addColumn("First name");
+        bookingTableModel.addColumn("Last name");
+        bookingTableModel.addColumn("Room number");
+        bookingTableModel.addColumn("Agency");
+        bookingTableModel.addColumn("Check in");
+        bookingTableModel.addColumn("Check out");
     }
 
     private void startGuestTable() {
@@ -73,6 +108,45 @@ public class GUI extends javax.swing.JFrame {
         guestTableModel.addColumn("E-mail");
         guestTableModel.addColumn("Phone #1");
         guestTableModel.addColumn("Phone #2");
+    }
+
+    private void refreshRoomTable(DefaultTableModel roomTableModel, Date checkIn, Date checkOut) {
+        roomTableModel.setRowCount(0);
+        roomTableModel.getDataVector().removeAllElements();
+        roomTableModel.fireTableDataChanged();
+        ArrayList<Room> roomList;
+        roomList = ctr.getAvailableRoomsDB(checkIn, checkOut);
+        for (Room room : roomList) {
+            Object[] roomArray = new Object[4];
+            roomArray[0] = room.getRoomNo();
+            roomArray[1] = room.getRoomTypeString();
+            roomArray[2] = room.getRoomSize();
+            roomArray[3] = room.getPrice();
+            roomTableModel.addRow(roomArray);
+        }
+        roomTable.setModel(roomTableModel);
+    }
+
+    private void refreshBookingTable(DefaultTableModel bookingTableModel) {
+        bookingTableModel.setRowCount(0);
+        bookingTableModel.getDataVector().removeAllElements();
+        bookingTableModel.fireTableDataChanged();
+        ArrayList<Booking> bookingList;
+        bookingList = ctr.getBookingsFromDB();
+        for (Booking booking : bookingList) {
+            Customer customer = ctr.getCustomerDB(booking.getBookingOwnerId());
+            Object[] bookingArray = new Object[8];
+            bookingArray[0] = booking.getBookingId();
+            bookingArray[1] = booking.getBookingOwnerId();
+            bookingArray[2] = customer.getFirstName();
+            bookingArray[3] = customer.getLastName();
+            bookingArray[4] = booking.getRoomNo();
+            bookingArray[5] = booking.getAgency();
+            bookingArray[6] = booking.getCheckInDate();
+            bookingArray[7] = booking.getCheckOutDate();
+            bookingTableModel.addRow(bookingArray);
+        }
+        bookingTable.setModel(bookingTableModel);
     }
 
     private void refreshGuestTable(DefaultTableModel guestTableModel) {
@@ -110,33 +184,33 @@ public class GUI extends javax.swing.JFrame {
             customerJList.setModel(customerModel);
             customerJList2.setModel(customerModel);
         }
-        if (model.equals(roomModel)) {
-            if (dates.length == 2) {
-                Date date1 = dates.length > 0 ? dates[0] : null;
-                Date date2 = dates.length > 1 ? dates[1] : null;
-                ArrayList<Room> roomList;
-                roomList = ctr.getAvailableRoomsDB(date1, date2);
-                roomModel.clear();
-                for (int i = 0; i < roomList.size(); i++) {
-                    roomModel.addElement(roomList.get(i));
-                }
-                roomJList.setModel(roomModel);
-            }
-        }
-        if (model.equals(bookingModel)) {
-            ArrayList<Booking> bookingList;
-            bookingList = ctr.getBookingsFromDB();
-            bookingModel.clear();
-            for (int i = 0; i < bookingList.size(); i++) {
-                bookingModel.addElement(bookingList.get(i));
-            }
-            bookingJList.setModel(bookingModel);
-        }
+
+//        if (model.equals(roomModel)) {
+//            if (dates.length == 2) {
+//                Date date1 = dates.length > 0 ? dates[0] : null;
+//                Date date2 = dates.length > 1 ? dates[1] : null;
+//                ArrayList<Room> roomList;
+//                roomList = ctr.getAvailableRoomsDB(date1, date2);
+//                roomModel.clear();
+//                for (int i = 0; i < roomList.size(); i++) {
+//                    roomModel.addElement(roomList.get(i));
+//                }
+//                roomJList.setModel(roomModel);
+//            }
+//        }
+//        if (model.equals(bookingModel)) {
+//            ArrayList<Booking> bookingList;
+//            bookingList = ctr.getBookingsFromDB();
+//            bookingModel.clear();
+//            for (int i = 0; i < bookingList.size(); i++) {
+//                bookingModel.addElement(bookingList.get(i));
+//            }
+//            bookingJList.setModel(bookingModel);
+//        }
         if (model.equals(infoBookingModel)) {
             infoBookingModel.clear();
-            Booking booking = (Booking) bookingJList.getSelectedValue();
             ArrayList<Customer> roomGuestList;
-            roomGuestList = ctr.getGuestsInRoom(booking);
+            roomGuestList = ctr.getGuestsInRoom(chosenBooking);
 
             for (int i = 0; i < roomGuestList.size(); i++) {
                 infoBookingModel.addElement(roomGuestList.get(i));
@@ -246,12 +320,9 @@ public class GUI extends javax.swing.JFrame {
         jOptionPane = new javax.swing.JOptionPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        roomJList = new javax.swing.JList();
         jScrollPane1 = new javax.swing.JScrollPane();
         customerJList = new javax.swing.JList();
         bookRoomButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         saveBookingButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         newBookingJList = new javax.swing.JList();
@@ -260,17 +331,45 @@ public class GUI extends javax.swing.JFrame {
         checkOut = new org.jdesktop.swingx.JXDatePicker();
         jLabel2 = new javax.swing.JLabel();
         checkAvailabilityButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        bookingJList = new javax.swing.JList();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        roomTable = new javax.swing.JTable();
+        searchLastNameField = new javax.swing.JTextField();
+        searchFirstNameField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        searchGuestButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        deleteBookingButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        bookingTable = new javax.swing.JTable();
+        guestsToBookingButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         addedGuestsJList = new javax.swing.JList();
         addGuestToRoomButton = new javax.swing.JButton();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        bookingInfoJList = new javax.swing.JList();
         jScrollPane8 = new javax.swing.JScrollPane();
         customerJList2 = new javax.swing.JList();
         saveNewGuestsButton = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        bookingInfoJList = new javax.swing.JList();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        bookingIdLabel = new javax.swing.JLabel();
+        bookingOwnerLabel = new javax.swing.JLabel();
+        roomNoLabel = new javax.swing.JLabel();
+        agencyLabel = new javax.swing.JLabel();
+        checkInLabel = new javax.swing.JLabel();
+        checkOutLabel = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        searchGuestButton2 = new javax.swing.JButton();
+        searchFirstNameField2 = new javax.swing.JTextField();
+        searchLastNameField2 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         firstNameTextField = new javax.swing.JTextField();
         lastNameTextField = new javax.swing.JTextField();
@@ -303,9 +402,6 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        roomJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Rooms"));
-        jScrollPane2.setViewportView(roomJList);
-
         customerJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Guests"));
         jScrollPane1.setViewportView(customerJList);
 
@@ -315,8 +411,6 @@ public class GUI extends javax.swing.JFrame {
                 bookRoomButtonActionPerformed(evt);
             }
         });
-
-        jButton1.setText("Delete booking");
 
         saveBookingButton.setText("Save Booking");
         saveBookingButton.addActionListener(new java.awt.event.ActionListener() {
@@ -351,48 +445,66 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        bookingJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Bookings"));
-        bookingJList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bookingJListMouseClicked(evt);
+        roomTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane9.setViewportView(roomTable);
+
+        searchFirstNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                searchFirstNameFieldKeyTyped(evt);
             }
         });
-        jScrollPane3.setViewportView(bookingJList);
+
+        jLabel4.setText("First name:");
+
+        jLabel5.setText("Last name:");
+
+        searchGuestButton.setText("Search");
+        searchGuestButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchGuestButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bookRoomButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(saveBookingButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1))))
-                .addContainerGap(123, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(checkOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
-                        .addComponent(checkAvailabilityButton)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(checkOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(checkAvailabilityButton)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(searchFirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(searchLastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(searchGuestButton)
+                            .addComponent(saveBookingButton)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(143, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -408,27 +520,75 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(checkAvailabilityButton))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(231, 231, 231)
-                        .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(saveBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addGap(40, 40, 40))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchLastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchFirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchGuestButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bookRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 144, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Booking", jPanel1);
+        jTabbedPane1.addTab("New Booking", jPanel1);
+
+        deleteBookingButton.setText("Delete booking");
+        deleteBookingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBookingButtonActionPerformed(evt);
+            }
+        });
+
+        bookingTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(bookingTable);
+
+        guestsToBookingButton.setText("Add guests to booking");
+        guestsToBookingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guestsToBookingButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(92, 92, 92)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1007, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(deleteBookingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guestsToBookingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(109, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(deleteBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(guestsToBookingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(182, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Booking overview", jPanel2);
 
         addedGuestsJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Added guests"));
         jScrollPane6.setViewportView(addedGuestsJList);
@@ -440,14 +600,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        bookingInfoJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Booking details"));
-        bookingInfoJList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bookingInfoJListMouseClicked(evt);
-            }
-        });
-        jScrollPane5.setViewportView(bookingInfoJList);
-
         customerJList2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Guests"));
         jScrollPane8.setViewportView(customerJList2);
 
@@ -458,39 +610,170 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        bookingInfoJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Guests in room"));
+        bookingInfoJList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bookingInfoJListMouseClicked(evt);
+            }
+        });
+        jScrollPane5.setViewportView(bookingInfoJList);
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel3.setText("Booking Id:");
+
+        jLabel6.setText("Booking owner(Id):");
+
+        jLabel7.setText("Room number:");
+
+        jLabel8.setText("Agency:");
+
+        jLabel9.setText("Check in:");
+
+        jLabel10.setText("Check out:");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bookingIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(agencyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(roomNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addComponent(bookingOwnerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(checkInLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                            .addComponent(checkOutLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(bookingIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(bookingOwnerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(roomNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(agencyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(checkInLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(checkOutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(28, 28, 28))
+        );
+
+        jLabel11.setText("First name:");
+
+        jLabel12.setText("Last name:");
+
+        searchGuestButton2.setText("Search");
+        searchGuestButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchGuestButton2ActionPerformed(evt);
+            }
+        });
+
+        searchFirstNameField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                searchFirstNameField2KeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(addGuestToRoomButton)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
+                .addGap(64, 64, 64)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveNewGuestsButton))
-                .addGap(566, 566, 566))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(searchFirstNameField2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(searchLastNameField2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(searchGuestButton2)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(addGuestToRoomButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(saveNewGuestsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane6))
+                .addGap(89, 183, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(jScrollPane5)
-                .addGap(36, 36, 36)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5)
+                        .addGap(9, 9, 9))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel11))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(searchGuestButton2)
+                                    .addComponent(searchFirstNameField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(searchLastNameField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addGuestToRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveNewGuestsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6))
-                .addContainerGap(64, Short.MAX_VALUE))
+                    .addComponent(addGuestToRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveNewGuestsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Booking details", jPanel3);
@@ -663,7 +946,7 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(110, 110, 110)
                         .addComponent(clearCustomerFieldsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -724,7 +1007,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(saveChangesButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(clearCustomerFieldsButton)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Customers", jPanel4);
@@ -734,258 +1017,39 @@ public class GUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1202, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 13, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addGuestToRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToRoomButtonActionPerformed
-        boolean addGuestSuccess;
-        if (newBookingJList.getSelectedValue() == null) {
-            if (newBookingJList.getSelectedValue() == null) {
-                if (bookingJList.getSelectedValue() != null && customerJList2.getSelectedValue() != null) {
-                    Customer customer = (Customer) customerJList2.getSelectedValue();
-                    Booking booking = (Booking) bookingJList.getSelectedValue();
-                    if (!addedGuestsModel.contains(customer)) {
-                        if (ctr.checkRoomAvailability(booking, addedGuestsModel.getSize()) == true) {
-                            addGuestSuccess = ctr.addGuestToRoom(customer, booking);
-                            if (addGuestSuccess) {
-                                addedGuestsModel.addElement(customer);
-                                addedGuestsJList.setModel(addedGuestsModel);
-                                jOptionPane.showMessageDialog(this, customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + booking.getRoomNo());
-                            }
-                            else {
-                                jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest to the room!", "Error!", jOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        else {
-                            jOptionPane.showMessageDialog(this, "Cannot add customer because room is full!", "Room is full!", jOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                    else {
-                        jOptionPane.showMessageDialog(this, "Customer already added!", "Warning!", jOptionPane.INFORMATION_MESSAGE);
-                    }
-                }
-                else {
-                    jOptionPane.showMessageDialog(this, "You must select a booking and a customer!");
-                }
-            }
+    private void clearCustomerFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearCustomerFieldsButtonActionPerformed
+        clearCustomerFields();
+        createGuestButton.setEnabled(true);
+        customerIdLabel.setText("");
+        newGuestLabel.setText("Register new guest:");
+    }//GEN-LAST:event_clearCustomerFieldsButtonActionPerformed
 
-        }
-        // Hvis man har lavet en booking, men endnu ikke har gemt den køres nedenstående
-        else {
-            boolean commitSuccess = false;
-            int reply = jOptionPane.showConfirmDialog(this, "You must save your new booking, before you can add guests.\nDo you want to save the booking now?", "Save booking?", jOptionPane.YES_NO_OPTION);
-            if (reply == jOptionPane.YES_OPTION) {
-                commitSuccess = ctr.commitTransaction();
-                if (commitSuccess) {
-                    newBookingModel.clear();
-                    refreshModel(bookingModel);
-                    refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
-                    jOptionPane.showMessageDialog(this, "Booking saved!");
-                }
-                else {
-                    jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Saving error!", jOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-    }//GEN-LAST:event_addGuestToRoomButtonActionPerformed
-
-    private void bookingInfoJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookingInfoJListMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bookingInfoJListMouseClicked
-
-    private void checkAvailabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAvailabilityButtonActionPerformed
-        Date checkInDate = checkIn.getDate();
-        Date checkOutDate = checkOut.getDate();
-        if (checkInDate != null && checkOutDate != null && !checkInDate.equals(checkOutDate) && checkOutDate.after(checkInDate)) {  // checker at begge datoer er valgt, og at checkOut dato er efter checkIn dato.
-            refreshModel(bookingModel);
-            refreshModel(roomModel, checkInDate, checkOutDate);
-        }
-        else {
-            jOptionPane.showMessageDialog(this, "You must choose a check-in and a check-out date. Check-in date must be before check-out date.", "Invalid dates!", jOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_checkAvailabilityButtonActionPerformed
-
-    private void checkInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkInActionPerformed
-        roomModel.clear();
-    }//GEN-LAST:event_checkInActionPerformed
-
-    private void bookingJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookingJListMouseClicked
-        infoBookingModel.clear();
-        Booking booking = (Booking) bookingJList.getSelectedValue();
-        ArrayList<Customer> roomGuestList;
-        roomGuestList = ctr.getGuestsInRoom(booking);
-
-        for (int i = 0; i < roomGuestList.size(); i++) {
-            infoBookingModel.addElement(roomGuestList.get(i));
-        }
-        bookingInfoJList.setModel(infoBookingModel);
-    }//GEN-LAST:event_bookingJListMouseClicked
-
-    private void saveBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBookingButtonActionPerformed
-        boolean commitSuccess;
-        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
-        if (reply == jOptionPane.YES_OPTION) {
-            commitSuccess = ctr.commitTransaction();
-            if (commitSuccess) {
-                newBookingModel.clear();
-                jOptionPane.showMessageDialog(this, "Booking er gemt!");
-                refreshModel(bookingModel);
-                refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
-            }
-            else {
-                jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_saveBookingButtonActionPerformed
-
-    private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
-        Booking newBooking = null;
-        if (roomJList.getSelectedValue() == null || customerJList.getSelectedValue() == null) {
-            jOptionPane.showMessageDialog(this, "You must select a room and a customer!");
-        }
-        else {
-            Room room = (Room) roomJList.getSelectedValue(); //typecast til room-objekt
-            Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
-            newBooking = ctr.bookRoom(room, customer, checkIn.getDate(), checkOut.getDate());
-            if (newBooking != null) {
-                newBookingModel.addElement(newBooking);
-                newBookingJList.setModel(newBookingModel);
-                jOptionPane.showMessageDialog(this, "Room booked by " + customer.getFirstName() + " " + customer.getLastName());
-            }
-            else {
-                jOptionPane.showMessageDialog(this, "Room is already booked for that period!", "Doublebooking", jOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_bookRoomButtonActionPerformed
-
-    private void checkOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutActionPerformed
-        roomModel.clear();
-    }//GEN-LAST:event_checkOutActionPerformed
-
-    private void saveNewGuestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveNewGuestsButtonActionPerformed
-        boolean commitSuccess;
-        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
-        if (reply == jOptionPane.YES_OPTION) {
-            commitSuccess = ctr.commitTransaction();
-            if (commitSuccess) {
-                jOptionPane.showMessageDialog(this, "Guests added to booking!");
-                refreshModel(infoBookingModel);
-                addedGuestsModel.clear();
-            }
-            else {
-                jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest(s) to the booking. No changes have been saved.", "Error adding guest(s)", jOptionPane.ERROR_MESSAGE);
-                addedGuestsModel.clear();
-            }
-        }
-    }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
-
-    private void createGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGuestButtonActionPerformed
-        boolean status = false;
-        status = getCustomerFieldData("createCustomer");
+    private void saveChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveChangesButtonActionPerformed
+        boolean status;
+        status = getCustomerFieldData("saveCustomer");
         if (status) {
             clearCustomerFields();
+            createGuestButton.setEnabled(true);
+            customerIdLabel.setText("");
+            newGuestLabel.setText("Register new guest:");
         }
         else {
-            jOptionPane.showMessageDialog(this, "An error occured. Customer was not created.", "Create failed", jOptionPane.WARNING_MESSAGE);
+            jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_createGuestButtonActionPerformed
-
-    private void phone1TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone1TextFieldKeyTyped
-        phone1Label.setForeground(Color.black);
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {   // Vi tillader at der indtastes tal fra 0-9 og DELETE og BACKSPACE. Indtaster man andre tegn får man en fejl-lyd.
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_phone1TextFieldKeyTyped
-
-    private void phone2TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone2TextFieldKeyTyped
-        phone2Label.setForeground(Color.black);
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_phone2TextFieldKeyTyped
-
-    private void firstNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameTextFieldKeyTyped
-        firstNameLabel.setForeground(Color.black);
-        int strLength = firstNameTextField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
-        firstNameTextField.setForeground(Color.BLACK);
-        char c = evt.getKeyChar();
-        if (strLength == 20 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_firstNameTextFieldKeyTyped
-
-    private void lastNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lastNameTextFieldKeyTyped
-        lastNameLabel.setForeground(Color.black);
-        int strLength = lastNameTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_lastNameTextFieldKeyTyped
-
-    private void zipcodeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zipcodeTextFieldKeyTyped
-        zipcodeLabel.setForeground(Color.black);
-        int strLength = zipcodeTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 10 || !(Character.isAlphabetic(c) || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_zipcodeTextFieldKeyTyped
-
-    private void cityTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cityTextFieldKeyTyped
-        cityLabel.setForeground(Color.black);
-        int strLength = cityTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_cityTextFieldKeyTyped
-
-    private void countryTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_countryTextFieldKeyTyped
-        countryLabel.setForeground(Color.black);
-        int strLength = countryTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_countryTextFieldKeyTyped
-
-    private void emailTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailTextFieldKeyTyped
-        emailLabel.setForeground(Color.black);
-        int strLength = emailTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 70 || c == KeyEvent.VK_SPACE) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_emailTextFieldKeyTyped
-
-    private void streetTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_streetTextFieldKeyTyped
-        streetLabel.setForeground(Color.black);
-        int strLength = emailTextField.getText().length();
-        char c = evt.getKeyChar();
-        if (strLength == 100) {
-            getToolkit().beep();
-            evt.consume();
-        }
-    }//GEN-LAST:event_streetTextFieldKeyTyped
+    }//GEN-LAST:event_saveChangesButtonActionPerformed
 
     private void editCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerButtonActionPerformed
         if (guestTable.getSelectedRow() > -1) {
@@ -1015,26 +1079,351 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_editCustomerButtonActionPerformed
 
-    private void clearCustomerFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearCustomerFieldsButtonActionPerformed
-        clearCustomerFields();
-        createGuestButton.setEnabled(true);
-        customerIdLabel.setText("");
-        newGuestLabel.setText("Register new guest:");
-    }//GEN-LAST:event_clearCustomerFieldsButtonActionPerformed
-
-    private void saveChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveChangesButtonActionPerformed
-        boolean status;
-        status = getCustomerFieldData("saveCustomer");
+    private void createGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGuestButtonActionPerformed
+        boolean status = false;
+        status = getCustomerFieldData("createCustomer");
         if (status) {
             clearCustomerFields();
-            createGuestButton.setEnabled(true);
-            customerIdLabel.setText("");
-            newGuestLabel.setText("Register new guest:");
         }
         else {
-            jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
+            jOptionPane.showMessageDialog(this, "An error occured. Customer was not created.", "Create failed", jOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_saveChangesButtonActionPerformed
+    }//GEN-LAST:event_createGuestButtonActionPerformed
+
+    private void phone2TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone2TextFieldKeyTyped
+        phone2Label.setForeground(Color.black);
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_phone2TextFieldKeyTyped
+
+    private void emailTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailTextFieldKeyTyped
+        emailLabel.setForeground(Color.black);
+        int strLength = emailTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 70 || c == KeyEvent.VK_SPACE) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_emailTextFieldKeyTyped
+
+    private void countryTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_countryTextFieldKeyTyped
+        countryLabel.setForeground(Color.black);
+        int strLength = countryTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_countryTextFieldKeyTyped
+
+    private void phone1TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone1TextFieldKeyTyped
+        phone1Label.setForeground(Color.black);
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {   // Vi tillader at der indtastes tal fra 0-9 og DELETE og BACKSPACE. Indtaster man andre tegn får man en fejl-lyd.
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_phone1TextFieldKeyTyped
+
+    private void cityTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cityTextFieldKeyTyped
+        cityLabel.setForeground(Color.black);
+        int strLength = cityTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_cityTextFieldKeyTyped
+
+    private void streetTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_streetTextFieldKeyTyped
+        streetLabel.setForeground(Color.black);
+        int strLength = emailTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 100) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_streetTextFieldKeyTyped
+
+    private void zipcodeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zipcodeTextFieldKeyTyped
+        zipcodeLabel.setForeground(Color.black);
+        int strLength = zipcodeTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 10 || !(Character.isAlphabetic(c) || Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_zipcodeTextFieldKeyTyped
+
+    private void lastNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lastNameTextFieldKeyTyped
+        lastNameLabel.setForeground(Color.black);
+        int strLength = lastNameTextField.getText().length();
+        char c = evt.getKeyChar();
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_lastNameTextFieldKeyTyped
+
+    private void firstNameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameTextFieldKeyTyped
+        firstNameLabel.setForeground(Color.black);
+        int strLength = firstNameTextField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
+        firstNameTextField.setForeground(Color.BLACK);
+        char c = evt.getKeyChar();
+        if (strLength == 40 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_firstNameTextFieldKeyTyped
+
+    private void saveNewGuestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveNewGuestsButtonActionPerformed
+        boolean commitSuccess;
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            commitSuccess = ctr.commitTransaction();
+            if (commitSuccess) {
+                jOptionPane.showMessageDialog(this, "Guests added to booking!");
+                refreshModel(infoBookingModel);
+                addedGuestsModel.clear();
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest(s) to the booking. No changes have been saved.", "Error adding guest(s)", jOptionPane.ERROR_MESSAGE);
+                addedGuestsModel.clear();
+            }
+        }
+    }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
+
+    private void bookingInfoJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookingInfoJListMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bookingInfoJListMouseClicked
+
+    private void addGuestToRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToRoomButtonActionPerformed
+        boolean addGuestSuccess;
+
+        if (chosenBooking != null && customerJList2.getSelectedValue() != null) {
+            Customer customer = (Customer) customerJList2.getSelectedValue();
+            if (!addedGuestsModel.contains(customer)) {
+                if (ctr.checkRoomAvailability(chosenBooking, addedGuestsModel.getSize()) == true) {
+                    addGuestSuccess = ctr.addGuestToRoom(customer, chosenBooking);
+                    if (addGuestSuccess) {
+                        addedGuestsModel.addElement(customer);
+                        addedGuestsJList.setModel(addedGuestsModel);
+                        jOptionPane.showMessageDialog(this, customer.getFirstName() + " " + customer.getLastName() + " added to roomNo " + chosenBooking.getRoomNo());
+                    }
+                    else {
+                        jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest to the room!", "Error!", jOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else {
+                    jOptionPane.showMessageDialog(this, "Cannot add customer because room is full!", "Room is full!", jOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "Customer already added!", "Warning!", jOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_addGuestToRoomButtonActionPerformed
+
+    private void guestsToBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestsToBookingButtonActionPerformed
+        refreshModel(customerModel);
+        if (bookingTable.getSelectedRow() > -1) {
+            int selectedRowIndex = bookingTable.getSelectedRow();
+            int bookingId = (Integer) bookingTableModel.getValueAt(selectedRowIndex, 0);
+            ArrayList<Booking> bookingList;
+            bookingList = ctr.getBookings();
+
+            for (Booking booking : bookingList) {
+                if (booking.getBookingId() == bookingId) {
+                    chosenBooking = booking;
+                }
+            }
+            if (chosenBooking != null) {
+                infoBookingModel.clear();
+                ArrayList<Customer> roomGuestList;
+                roomGuestList = ctr.getGuestsInRoom(chosenBooking);
+
+                for (int i = 0; i < roomGuestList.size(); i++) {
+                    infoBookingModel.addElement(roomGuestList.get(i));
+                }
+                bookingInfoJList.setModel(infoBookingModel);
+                bookingIdLabel.setText("" + chosenBooking.getBookingId());
+                bookingOwnerLabel.setText("" + chosenBooking.getBookingOwnerId());
+                roomNoLabel.setText("" + chosenBooking.getRoomNo());
+                agencyLabel.setText(chosenBooking.getAgency());
+                checkInLabel.setText("" + chosenBooking.getCheckInDate());
+                checkOutLabel.setText("" + chosenBooking.getCheckOutDate());
+            }
+        }
+        customerJList2.setModel(customerModel);
+        jTabbedPane1.setSelectedIndex(2);
+    }//GEN-LAST:event_guestsToBookingButtonActionPerformed
+
+    private void searchGuestButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGuestButton2ActionPerformed
+        customerModel.clear();
+        String firstName = searchFirstNameField2.getText();
+        String lastName = searchLastNameField2.getText();
+        ArrayList<Customer> foundGuests = new ArrayList<>();
+        if (!firstName.equals("") || !lastName.equals("")) {
+            if (lastName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("firstName", firstName);
+            }
+            if (firstName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("lastName", lastName);
+            }
+            if (!firstName.equals("") && !lastName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("both", firstName, lastName);
+            }
+            for (int i = 0; i < foundGuests.size(); i++) {
+                customerModel.addElement(foundGuests.get(i));
+            }
+            customerJList2.setModel(customerModel);
+        }
+        else {
+            refreshModel(customerModel);
+        }
+    }//GEN-LAST:event_searchGuestButton2ActionPerformed
+
+    private void searchFirstNameField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFirstNameField2KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchFirstNameField2KeyTyped
+
+    private void searchGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGuestButtonActionPerformed
+        customerModel.clear();
+        String firstName = searchFirstNameField.getText();
+        String lastName = searchLastNameField.getText();
+        ArrayList<Customer> foundGuests = new ArrayList<>();
+        if (!firstName.equals("") || !lastName.equals("")) {
+            if (lastName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("firstName", firstName);
+            }
+            if (firstName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("lastName", lastName);
+            }
+            if (!firstName.equals("") && !lastName.equals("")) {
+                foundGuests = ctr.searchForGuestDB("both", firstName, lastName);
+            }
+            for (int i = 0; i < foundGuests.size(); i++) {
+                customerModel.addElement(foundGuests.get(i));
+            }
+            customerJList.setModel(customerModel);
+        }
+        else {
+            refreshModel(customerModel);
+        }
+    }//GEN-LAST:event_searchGuestButtonActionPerformed
+
+    private void searchFirstNameFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFirstNameFieldKeyTyped
+        int strLength = firstNameTextField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
+        char c = evt.getKeyChar();
+        if (strLength == 40 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_searchFirstNameFieldKeyTyped
+
+    private void checkAvailabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAvailabilityButtonActionPerformed
+        Date checkInDate = checkIn.getDate();
+        Date checkOutDate = checkOut.getDate();
+        if (checkInDate != null && checkOutDate != null && !checkInDate.equals(checkOutDate) && checkOutDate.after(checkInDate)) {  // checker at begge datoer er valgt, og at checkOut dato er efter checkIn dato.
+            refreshModel(bookingModel);
+            refreshRoomTable(roomTableModel, checkInDate, checkOutDate);
+            //            refreshModel(roomModel, checkInDate, checkOutDate);
+        }
+        else {
+            jOptionPane.showMessageDialog(this, "You must choose a check-in and a check-out date. Check-in date must be before check-out date.", "Invalid dates!", jOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_checkAvailabilityButtonActionPerformed
+
+    private void checkOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutActionPerformed
+        roomModel.clear();
+    }//GEN-LAST:event_checkOutActionPerformed
+
+    private void checkInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkInActionPerformed
+        roomModel.clear();
+    }//GEN-LAST:event_checkInActionPerformed
+
+    private void saveBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBookingButtonActionPerformed
+        boolean commitSuccess;
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            commitSuccess = ctr.commitTransaction();
+            if (commitSuccess) {
+                newBookingModel.clear();
+                jOptionPane.showMessageDialog(this, "Booking saved!");
+                refreshBookingTable(bookingTableModel);
+                refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
+//                refreshModel(bookingModel);
+//                refreshModel(roomModel, checkIn.getDate(), checkOut.getDate());
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_saveBookingButtonActionPerformed
+
+    private void bookRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookRoomButtonActionPerformed
+        if (roomTable.getSelectedRow() > -1) {
+            Room chosenRoom = null;
+            int selectedRowIndex = roomTable.getSelectedRow();
+            int roomNo = (Integer) roomTableModel.getValueAt(selectedRowIndex, 0);
+            ArrayList<Room> roomList;
+            roomList = ctr.getRooms();
+
+            for (Room room : roomList) {
+                if (room.getRoomNo() == roomNo) {
+                    chosenRoom = room;
+                }
+            }
+            if (chosenRoom != null && customerJList.getSelectedValue() != null) {
+                Booking newBooking = null;
+                Customer customer = (Customer) customerJList.getSelectedValue(); ////typecast til customer-objekt
+                newBooking = ctr.bookRoom(chosenRoom, customer, checkIn.getDate(), checkOut.getDate());
+                if (newBooking != null) {
+                    newBookingModel.addElement(newBooking);
+                    newBookingJList.setModel(newBookingModel);
+                    jOptionPane.showMessageDialog(this, "Room booked by " + customer.getFirstName() + " " + customer.getLastName());
+                }
+                else {
+                    jOptionPane.showMessageDialog(this, "Room is already booked for that period!", "Doublebooking", jOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "You must select a room and a customer!");
+            }
+        }
+    }//GEN-LAST:event_bookRoomButtonActionPerformed
+
+    private void deleteBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBookingButtonActionPerformed
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            boolean deleteSuccess;
+            boolean commitSuccess;
+            if (bookingTable.getSelectedRow() > -1) {
+                int selectedRowIndex = bookingTable.getSelectedRow();
+                int bookingId = (Integer) bookingTableModel.getValueAt(selectedRowIndex, 0);
+                deleteSuccess = ctr.deleteBookingFromDB(bookingId);
+                if (deleteSuccess) {
+                    commitSuccess = ctr.commitTransaction();
+                    if (commitSuccess) {
+                        jOptionPane.showMessageDialog(this, "Booking deleted!");
+                        refreshBookingTable(bookingTableModel);
+                    }
+                    else {
+                        jOptionPane.showMessageDialog(this, "Fail in commit", "Commit failed", jOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else {
+                    jOptionPane.showMessageDialog(this, "Something went wrong with the deletion", "Delete failed", jOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "You must choose a booking!");
+            }
+        }
+    }//GEN-LAST:event_deleteBookingButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1086,12 +1475,17 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton addGuestToRoomButton;
     private javax.swing.JList addedGuestsJList;
     private javax.swing.JLabel addressLabel;
+    private javax.swing.JLabel agencyLabel;
     private javax.swing.JButton bookRoomButton;
+    private javax.swing.JLabel bookingIdLabel;
     private javax.swing.JList bookingInfoJList;
-    private javax.swing.JList bookingJList;
+    private javax.swing.JLabel bookingOwnerLabel;
+    private javax.swing.JTable bookingTable;
     private javax.swing.JButton checkAvailabilityButton;
     private org.jdesktop.swingx.JXDatePicker checkIn;
+    private javax.swing.JLabel checkInLabel;
     private org.jdesktop.swingx.JXDatePicker checkOut;
+    private javax.swing.JLabel checkOutLabel;
     private javax.swing.JLabel cityLabel;
     private javax.swing.JTextField cityTextField;
     private javax.swing.JButton clearCustomerFieldsButton;
@@ -1101,27 +1495,40 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel customerIdLabel;
     private javax.swing.JList customerJList;
     private javax.swing.JList customerJList2;
+    private javax.swing.JButton deleteBookingButton;
     private javax.swing.JButton editCustomerButton;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField emailTextField;
     private javax.swing.JLabel firstNameLabel;
     private javax.swing.JTextField firstNameTextField;
     private javax.swing.JTable guestTable;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton guestsToBookingButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JOptionPane jOptionPane;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lastNameLabel;
     private javax.swing.JTextField lastNameTextField;
@@ -1132,10 +1539,17 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField phone1TextField;
     private javax.swing.JLabel phone2Label;
     private javax.swing.JTextField phone2TextField;
-    private javax.swing.JList roomJList;
+    private javax.swing.JLabel roomNoLabel;
+    private javax.swing.JTable roomTable;
     private javax.swing.JButton saveBookingButton;
     private javax.swing.JButton saveChangesButton;
     private javax.swing.JButton saveNewGuestsButton;
+    private javax.swing.JTextField searchFirstNameField;
+    private javax.swing.JTextField searchFirstNameField2;
+    private javax.swing.JButton searchGuestButton;
+    private javax.swing.JButton searchGuestButton2;
+    private javax.swing.JTextField searchLastNameField;
+    private javax.swing.JTextField searchLastNameField2;
     private javax.swing.JLabel streetLabel;
     private javax.swing.JTextField streetTextField;
     private javax.swing.JLabel zipcodeLabel;

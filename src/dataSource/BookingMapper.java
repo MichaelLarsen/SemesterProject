@@ -213,4 +213,33 @@ public class BookingMapper {
         }
         return tempBookingList;
     }
+
+    public boolean deleteBookingFromDB(ArrayList<Integer> deleteBookingsList, Connection con) {
+        int rowsDeleted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
+        String SQLString = "delete from BOOKINGS"
+                + " where booking_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            for (int i = 0; i < deleteBookingsList.size(); i++) {
+                statement.setInt(1, deleteBookingsList.get(i));
+                rowsDeleted += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - deleteBookingFromDB");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal køres efter catch
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - deleteBookingFromDB");
+                System.out.println(e.getMessage());
+            }
+        }
+        return rowsDeleted == deleteBookingsList.size(); //hvis dette passer returneres true ellers false  
+    }
 }
