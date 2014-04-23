@@ -6,7 +6,7 @@
 package dataSource;
 
 import domain.Booking;
-import domain.Customer;
+import domain.Guest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -110,13 +110,13 @@ public class BookingMapper {
         return bookingAdded == newBookingList.size();
     }
 
-    public ArrayList<Customer> getGuestsInBooking(Booking booking, Connection con) {
-        ArrayList<Customer> roomGuestList = new ArrayList<>();
-        Customer customer = null;
+    public ArrayList<Guest> getGuestsInBooking(Booking booking, Connection con) {
+        ArrayList<Guest> roomGuestList = new ArrayList<>();
+        Guest guest = null;
         String SQLString = "SELECT * "
-                + "FROM CUSTOMERS "
-                + "JOIN ROOM_GUESTS "
-                + "ON CUSTOMERS.customer_id = ROOM_GUESTS.customer_id "
+                + "FROM GUESTS "
+                + "JOIN BOOKING_DETAILS "
+                + "ON GUESTS.guest_id = BOOKING_DETAILS.guest_id "
                 + "WHERE booking_id = ?";
         PreparedStatement statement = null;
         try {
@@ -125,8 +125,8 @@ public class BookingMapper {
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(rs);
-                roomGuestList.add(customer);
+                guest = new Guest(rs);
+                roomGuestList.add(guest);
             }
         }
         catch (SQLException e) {
@@ -181,16 +181,16 @@ public class BookingMapper {
         return rowsUpdated == updateBookingList.size(); //hvis dette passer returneres true ellers false  
     }
 
-    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer, Connection con) {
+    public ArrayList<Booking> getGuestBookingsFromDB(Guest guest, Connection con) {
         Booking booking = null;
         ArrayList<Booking> tempBookingList = new ArrayList<>();
         String SQLString = "select * from bookings b "
-                + "join room_guests rg on rg.booking_id = b.booking_id "
-                + "where customer_id = ?";
+                + "join BOOKING_DETAILS rg on rg.booking_id = b.booking_id "
+                + "where guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setInt(1, customer.getCustomerId());
+            statement.setInt(1, guest.getGuestId());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 booking = new Booking(rs);
@@ -198,7 +198,7 @@ public class BookingMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in BookingMapper - getCustomerBookingsFromDB");
+            System.out.println("Fail in BookingMapper - getGuestBookingsFromDB");
             System.out.println(e.getMessage());
         }
         finally // must close statement
@@ -207,7 +207,7 @@ public class BookingMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in BookingMapper - getCustomerBookingsFromDB");
+                System.out.println("Fail in BookingMapper - getGuestBookingsFromDB");
                 System.out.println(e.getMessage());
             }
         }
@@ -216,14 +216,20 @@ public class BookingMapper {
 
     public boolean deleteBookingFromDB(ArrayList<Integer> deleteBookingsList, Connection con) {
         int rowsDeleted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "delete from BOOKINGS"
+        String SQLString1 = "delete from BOOKING_DETAILS" // først slettes evt gæster på bookingen
                 + " where booking_id = ?";
-        PreparedStatement statement = null;
+        String SQLString2 = "delete from BOOKINGS" // herefter slettes selve bookingen
+                + " where booking_id = ?";
+        PreparedStatement statement1 = null;
+        PreparedStatement statement2 = null;
         try {
-            statement = con.prepareStatement(SQLString);
+            statement1 = con.prepareStatement(SQLString1);
+            statement2 = con.prepareStatement(SQLString2);
             for (int i = 0; i < deleteBookingsList.size(); i++) {
-                statement.setInt(1, deleteBookingsList.get(i));
-                rowsDeleted += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+                statement1.setInt(1, deleteBookingsList.get(i));
+                statement2.setInt(1, deleteBookingsList.get(i));
+                statement1.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+                rowsDeleted += statement2.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
             }
         }
         catch (SQLException e) {
@@ -233,7 +239,7 @@ public class BookingMapper {
         finally // Skal køres efter catch
         {
             try {
-                statement.close(); //lukker statements
+                statement1.close(); //lukker statements
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - deleteBookingFromDB");

@@ -23,7 +23,6 @@ public class Booking {
     private Date checkOutDate;
     private int roomNo;
     private int bookingOwnerId;
-//    private ArrayList<Customer> guestsInBooking;
 
     public Booking(ResultSet rs) {
         super();
@@ -31,10 +30,14 @@ public class Booking {
             this.bookingId = rs.getInt("booking_id");
             this.bookingOwnerId = rs.getInt("booking_owner");
             this.roomNo = rs.getInt("room_no");
-            this.agency = rs.getString("agency");
+            if (rs.getString("agency") == null) {
+                this.agency = "N/A";
+            }
+            else {
+                this.agency = rs.getString("agency");
+            }
             this.checkInDate = rs.getDate("check_in_date");
             this.checkOutDate = rs.getDate("check_out_date");
-//            this.guestsInBooking = new ArrayList<>();
         }
         catch (SQLException e) {
             System.out.println("Fail in BookingMapper/Booking - Booking");
@@ -65,18 +68,6 @@ public class Booking {
     public void setBookingOwnerId(int bookingOwnerId) {
         this.bookingOwnerId = bookingOwnerId;
     }
-
-//    public ArrayList<Customer> getCustomersForBooking() {
-//        return guestsInBooking;
-//    }
-//
-//    public void addCustomerForBooking(Customer customer) {
-//        guestsInBooking.add(customer);
-//    }
-//
-//    public int getOccupiedBeds() {
-//        return guestsInBooking.size();
-//    }
 
     @Override
     public String toString() {

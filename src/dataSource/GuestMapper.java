@@ -5,7 +5,7 @@
  */
 package dataSource;
 
-import domain.Customer;
+import domain.Guest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,31 +16,31 @@ import java.util.ArrayList;
  *
  * @author Sebastian, Michael og Andreas
  */
-public class CustomerMapper {
+public class GuestMapper {
 
     /**
-     * Metoden henter en customer fra databasen via customerId.
+     * Metoden henter en guest fra databasen via guestId.
      *
-     * @param customerId
+     * @param guestId
      * @param con
-     * @return customer
+     * @return guest
      */
-    public Customer getGuestFromID(int customerId, Connection con) {
-        Customer customer = null;
-        String SQLString = "select * from CUSTOMERS "
-                + "where customer_id = ?";
+    public Guest getGuestFromID(int guestId, Connection con) {
+        Guest guest = null;
+        String SQLString = "select * from GUESTS "
+                + "where guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setInt(1, customerId);
+            statement.setInt(1, guestId);
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(rs);
+                guest = new Guest(rs);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - getGuestFromID");
+            System.out.println("Fail in GuestMapper - getGuestFromID");
             System.out.println(e.getMessage());
         }
         finally // must close statement
@@ -49,36 +49,36 @@ public class CustomerMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - getGuestFromID");
+                System.out.println("Fail in GuestMapper - getGuestFromID");
                 System.out.println(e.getMessage());
             }
         }
-        return customer;
+        return guest;
     }
 
-    public boolean createCustomer(ArrayList<Customer> newCustomerList, Connection con) {
-        int customerCreated = 0;
-        String SQLString = "insert into CUSTOMERS values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public boolean createGuest(ArrayList<Guest> newGuestList, Connection con) {
+        int guestsCreated = 0;
+        String SQLString = "insert into GUESTS values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            for (int i = 0; i < newCustomerList.size(); i++) {
-                statement.setInt(1, getNewCustomerId(con));
-                statement.setString(2, newCustomerList.get(i).getFirstName());
-                statement.setString(3, newCustomerList.get(i).getLastName());
-                statement.setString(4, newCustomerList.get(i).getStreet());
-                statement.setString(5, newCustomerList.get(i).getZipcode());
-                statement.setString(6, newCustomerList.get(i).getCity());
-                statement.setString(7, newCustomerList.get(i).getCountry());
-                statement.setString(8, newCustomerList.get(i).getEmail());
-                statement.setInt(9, newCustomerList.get(i).getPhone1());
-                statement.setInt(10, newCustomerList.get(i).getPhone2());
+            for (int i = 0; i < newGuestList.size(); i++) {
+                statement.setInt(1, getNewGuestsId(con));
+                statement.setString(2, newGuestList.get(i).getFirstName());
+                statement.setString(3, newGuestList.get(i).getLastName());
+                statement.setString(4, newGuestList.get(i).getStreet());
+                statement.setString(5, newGuestList.get(i).getZipcode());
+                statement.setString(6, newGuestList.get(i).getCity());
+                statement.setString(7, newGuestList.get(i).getCountry());
+                statement.setString(8, newGuestList.get(i).getEmail());
+                statement.setInt(9, newGuestList.get(i).getPhone1());
+                statement.setInt(10, newGuestList.get(i).getPhone2());
 
-                customerCreated += statement.executeUpdate(); // customerCreated bliver = newCustomerList.size(), hvis Update går igennem
+                guestsCreated += statement.executeUpdate(); // guestCreated bliver = newGuestList.size(), hvis Update går igennem
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - createCustomer");
+            System.out.println("Fail in GuestMapper - createGuest");
             System.out.println(e.getMessage());
         }
         finally // Skal lukke statement
@@ -87,27 +87,27 @@ public class CustomerMapper {
                 statement.close(); //lukker statements
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - createCustomer");
+                System.out.println("Fail in GuestMapper - createGuest");
                 System.out.println(e.getMessage());
             }
         }
-        return customerCreated == newCustomerList.size();
+        return guestsCreated == newGuestList.size();
     }
 
-    public int getNewCustomerId(Connection con) {
-        int nextCustomerId = 0;
+    public int getNewGuestsId(Connection con) {
+        int nextGuestId = 0;
 
-        String SQLString = "select customer_id_seq.nextval from SYS.DUAL";
+        String SQLString = "select guest_id_seq.nextval from SYS.DUAL";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                nextCustomerId = rs.getInt(1);
+                nextGuestId = rs.getInt(1);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - getNewCustomerId");
+            System.out.println("Fail in GuestMapper - getNewGuestId");
             System.out.println(e.getMessage());
         }
         finally {
@@ -115,29 +115,29 @@ public class CustomerMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - getNewCustomerId");
+                System.out.println("Fail in GuestMapper - getNewGuestId");
                 System.out.println(e.getMessage());
             }
         }
-        return nextCustomerId;
+        return nextGuestId;
     }
 
-    public ArrayList<Customer> getCustomersFromDB(Connection con) {
-        Customer customer = null;
-        ArrayList<Customer> customerList = new ArrayList<>();
-        String SQLString = "select * from CUSTOMERS "
-                + "order by customer_id desc";
+    public ArrayList<Guest> getGuestsFromDB(Connection con) {
+        Guest guest = null;
+        ArrayList<Guest> guestList = new ArrayList<>();
+        String SQLString = "select * from GUESTS "
+                + "order by guest_id desc";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(rs);
-                customerList.add(customer);
+                guest = new Guest(rs);
+                guestList.add(guest);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - getCustomersFromDB");
+            System.out.println("Fail in GuestMapper - getGuestsFromDB");
             System.out.println(e.getMessage());
         }
         finally // must close statement
@@ -146,38 +146,38 @@ public class CustomerMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - getCustomersFromDB");
+                System.out.println("Fail in GuestMapper - getGuestsFromDB");
                 System.out.println(e.getMessage());
             }
         }
-        return customerList;
+        return guestList;
     }
 
-    public boolean updateCustomerDB(ArrayList<Customer> dirtyCustomerList, Connection con) {
+    public boolean updateGuestDB(ArrayList<Guest> dirtyGuestList, Connection con) {
         int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "update CUSTOMERS"
+        String SQLString = "update GUESTS"
                 + " set first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country = ?, email = ?, phone_1 = ?, phone_2 = ?"
-                + " where customer_id = ?";
+                + " where guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            for (Customer customer : dirtyCustomerList) {
-                statement.setString(1, customer.getFirstName());
-                statement.setString(2, customer.getLastName());
-                statement.setString(3, customer.getStreet());
-                statement.setString(4, customer.getZipcode());
-                statement.setString(5, customer.getCity());
-                statement.setString(6, customer.getCountry());
-                statement.setString(7, customer.getEmail());
-                statement.setInt(8, customer.getPhone1());
-                statement.setInt(9, customer.getPhone2());
-                statement.setInt(10, customer.getCustomerId());
+            for (Guest guest : dirtyGuestList) {
+                statement.setString(1, guest.getFirstName());
+                statement.setString(2, guest.getLastName());
+                statement.setString(3, guest.getStreet());
+                statement.setString(4, guest.getZipcode());
+                statement.setString(5, guest.getCity());
+                statement.setString(6, guest.getCountry());
+                statement.setString(7, guest.getEmail());
+                statement.setInt(8, guest.getPhone1());
+                statement.setInt(9, guest.getPhone2());
+                statement.setInt(10, guest.getGuestId());
                 rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
             }
             
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - UpdateCustomerDB");
+            System.out.println("Fail in GuestMapper - UpdateGuestDB");
             System.out.println(e.getMessage());
         }
         finally // Skal køres efter catch
@@ -186,27 +186,27 @@ public class CustomerMapper {
                 statement.close(); //lukker statements
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - UpdateCustomerDB");
+                System.out.println("Fail in GuestMapper - UpdateGuestDB");
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == dirtyCustomerList.size(); //hvis dette passer returneres true ellers false
+        return rowsUpdated == dirtyGuestList.size(); //hvis dette passer returneres true ellers false
     }
 
-    public ArrayList<Customer> searchForGuestDB(String status, Connection con, String... names) {
-        Customer customer = null;
+    public ArrayList<Guest> searchForGuestDB(String status, Connection con, String... names) {
+        Guest guest = null;
         String SQLString = "";
-        ArrayList<Customer> customerList = new ArrayList<>();
+        ArrayList<Guest> guestList = new ArrayList<>();
         if (status.equals("both")) {
-            SQLString = "select * from CUSTOMERS "
+            SQLString = "select * from GUESTS "
                 + "where upper(first_name) LIKE upper(?) AND upper(last_name) LIKE upper(?)";
         }
         if (status.equals("firstName")) {
-            SQLString = "select * from CUSTOMERS "
+            SQLString = "select * from GUESTS "
                 + "where upper(first_name) LIKE upper(?)";
         }
         if (status.equals("lastName")) {
-            SQLString = "select * from CUSTOMERS "
+            SQLString = "select * from GUESTS "
                 + "where upper(last_name) LIKE upper(?)";
         }
         
@@ -223,12 +223,12 @@ public class CustomerMapper {
             }
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                customer = new Customer(rs);
-                customerList.add(customer);
+                guest = new Guest(rs);
+                guestList.add(guest);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - searchForGuestDB");
+            System.out.println("Fail in GuestMapper - searchForGuestDB");
             System.out.println(e.getMessage());
         }
         finally // must close statement
@@ -237,28 +237,28 @@ public class CustomerMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - searchForGuestDB");
+                System.out.println("Fail in GuestMapper - searchForGuestDB");
                 System.out.println(e.getMessage());
             }
         }
-        return customerList;
+        return guestList;
     }
 
-    public Customer getCustomerDB(int bookingOwnerId, Connection con) {
-        Customer customer = null;
-        String SQLString = "select * from CUSTOMERS"
-                + " where customer_id = ?";
+    public Guest getGuestDB(int bookingOwnerId, Connection con) {
+        Guest guest = null;
+        String SQLString = "select * from GUESTS"
+                + " where guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             statement.setInt(1, bookingOwnerId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                customer = new Customer(rs);
+                guest = new Guest(rs);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper - getCustomerDB");
+            System.out.println("Fail in GuestMapper - getGuestDB");
             System.out.println(e.getMessage());
         }
         finally {
@@ -266,10 +266,10 @@ public class CustomerMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in CustomerMapper - getCustomerDB");
+                System.out.println("Fail in GuestMapper - getGuestDB");
                 System.out.println(e.getMessage());
             }
         }
-        return customer;
+        return guest;
     }
 }

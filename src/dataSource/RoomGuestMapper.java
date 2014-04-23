@@ -20,12 +20,12 @@ public class RoomGuestMapper {
 
     public boolean addGuestToRoom(ArrayList<RoomGuest> newGuestInRoomList, Connection con) {
         int guestAdded = 0;
-        String SQLString = "insert into ROOM_GUESTS values (?, ?)";
+        String SQLString = "insert into BOOKING_DETAILS values (?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newGuestInRoomList.size(); i++) {
-                statement.setInt(1, newGuestInRoomList.get(i).getCustomerId());
+                statement.setInt(1, newGuestInRoomList.get(i).getGuestId());
                 statement.setInt(2, newGuestInRoomList.get(i).getBookingId());
                 guestAdded += statement.executeUpdate(); //bookingAdded bliver = newGuestInRoomList.size(), hvis Update går igennem
             }
@@ -49,15 +49,15 @@ public class RoomGuestMapper {
 
     public boolean updateGuestInRoom(ArrayList<RoomGuest> updateGuestInRoomList, Connection con) {
        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "update ROOM_GUESTS"
+        String SQLString = "update BOOKING_DETAILS"
                 + " set booking_id = ?"
-                + " where customer_id = ?";
+                + " where guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < updateGuestInRoomList.size(); i++) {
                 statement.setInt(1, updateGuestInRoomList.get(i).getBookingId());
-                statement.setInt(2, updateGuestInRoomList.get(i).getCustomerId());
+                statement.setInt(2, updateGuestInRoomList.get(i).getGuestId());
             }
 
             rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateGuestInRoomList.size(), hvis Update går igennem

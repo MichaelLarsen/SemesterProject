@@ -6,7 +6,7 @@
 package dataSource;
 
 import domain.Booking;
-import domain.Customer;
+import domain.Guest;
 import domain.Room;
 import domain.RoomGuest;
 import java.sql.Connection;
@@ -24,8 +24,8 @@ public class UnitOfWork {
     private ArrayList<Room> updateRoomList;
     private ArrayList<RoomGuest> newGuestInRoomList;
     private ArrayList<RoomGuest> updateGuestInRoomList;
-    private ArrayList<Customer> newCustomerList;
-    private ArrayList<Customer> dirtyCustomerList;
+    private ArrayList<Guest> newGuestList;
+    private ArrayList<Guest> dirtyGuestList;
     private ArrayList<Integer> deleteBookingsList;
 
     public UnitOfWork() {
@@ -34,27 +34,27 @@ public class UnitOfWork {
         newGuestInRoomList = new ArrayList<>();
         updateBookingList = new ArrayList<>();
         updateGuestInRoomList = new ArrayList<>();
-        newCustomerList = new ArrayList<>();
-        dirtyCustomerList = new ArrayList<>();
+        newGuestList = new ArrayList<>();
+        dirtyGuestList = new ArrayList<>();
         deleteBookingsList = new ArrayList<>();
     }
 
-    public boolean createCustomer(Customer customer) {
-        boolean createCustomerSuccess = false;
-        if (!newCustomerList.contains(customer)) {
-            newCustomerList.add(customer);
-            createCustomerSuccess = true;
+    public boolean createGuest(Guest guest) {
+        boolean createGuestSuccess = false;
+        if (!newGuestList.contains(guest)) {
+            newGuestList.add(guest);
+            createGuestSuccess = true;
         }
-        return createCustomerSuccess;
+        return createGuestSuccess;
     }
 
-    public boolean updateCustomerDB(Customer customer) {
-        boolean updateCustomerSuccess = false;
-        if (!dirtyCustomerList.contains(customer)) {
-            dirtyCustomerList.add(customer);
-            updateCustomerSuccess = true;
+    public boolean updateGuestDB(Guest guest) {
+        boolean updateGuestSuccess = false;
+        if (!dirtyGuestList.contains(guest)) {
+            dirtyGuestList.add(guest);
+            updateGuestSuccess = true;
         }
-        return updateCustomerSuccess;
+        return updateGuestSuccess;
     }
 
     public boolean bookRoom(Booking booking) {
@@ -116,15 +116,15 @@ public class UnitOfWork {
         con.setAutoCommit(false);
 
         BookingMapper bookingMapper = new BookingMapper();
-        CustomerMapper customerMapper = new CustomerMapper();
+        GuestMapper guestMapper = new GuestMapper();
         RoomMapper roomMapper = new RoomMapper();
         RoomGuestMapper roomGuestMapper = new RoomGuestMapper();
 
-        if (!newCustomerList.isEmpty()) {
-            commitSuccess = commitSuccess && customerMapper.createCustomer(newCustomerList, con);
+        if (!newGuestList.isEmpty()) {
+            commitSuccess = commitSuccess && guestMapper.createGuest(newGuestList, con);
         }
-        if (!dirtyCustomerList.isEmpty()) {
-            commitSuccess = commitSuccess && customerMapper.updateCustomerDB(dirtyCustomerList, con);
+        if (!dirtyGuestList.isEmpty()) {
+            commitSuccess = commitSuccess && guestMapper.updateGuestDB(dirtyGuestList, con);
         }
         if (!newBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
@@ -157,5 +157,16 @@ public class UnitOfWork {
         return commitSuccess;
     }
 
-    
+    boolean undoNewBooking(Booking booking) {
+        boolean undoSuccess = false;
+        int i = 0;
+        while (undoSuccess == false && i < newBookingList.size()) {
+            if (booking.getBookingId() == newBookingList.get(i).getBookingId()) {
+                newBookingList.remove(i);
+                undoSuccess = true;
+            }
+            i++;
+        }
+        return undoSuccess;
+    }
 }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class DBFacade {
 
-    private CustomerMapper customerMapper;
+    private GuestMapper guestMapper;
     private RoomMapper roomMapper;
     private BookingMapper bookingMapper;
     private Connection con;
@@ -26,7 +26,7 @@ public class DBFacade {
     private static DBFacade instance;
 
     private DBFacade() {
-        customerMapper = new CustomerMapper();
+        guestMapper = new GuestMapper();
         roomMapper = new RoomMapper();
         bookingMapper = new BookingMapper();
         con = null;
@@ -76,44 +76,44 @@ public class DBFacade {
         return tempRoomList;
     }
     
-    public Customer getCustomerDB(int bookingOwnerId) {
-        Customer customer;
+    public Guest getGuestDB(int bookingOwnerId) {
+        Guest guest;
         con = null;
         try {
             con = openConnection();
-            customer = customerMapper.getCustomerDB(bookingOwnerId, con);
+            guest = guestMapper.getGuestDB(bookingOwnerId, con);
         }
         finally {
             closeConnection(con);
         }
-        return customer;
+        return guest;
     }
 
-    public Customer getGuestFromID(int customerId) {
-        Customer customer;
+    public Guest getGuestFromID(int guestId) {
+        Guest guest;
         con = null;
         try {
             con = openConnection();
-            customer = customerMapper.getGuestFromID(customerId, con);
+            guest = guestMapper.getGuestFromID(guestId, con);
         }
         finally {
             closeConnection(con);
         }
-        return customer;
+        return guest;
     }
     
-    //returns arraylist of customers
-    public ArrayList<Customer> getCustomersFromDB() {
+    //returns arraylist of guests
+    public ArrayList<Guest> getGuestsFromDB() {
         con = null;
-        ArrayList<Customer> tempCustomerList;
+        ArrayList<Guest> tempGuestList;
         try {
             con = openConnection();
-            tempCustomerList = customerMapper.getCustomersFromDB(con);
+            tempGuestList = guestMapper.getGuestsFromDB(con);
         }
         finally {
             closeConnection(con);
         }
-        return tempCustomerList;
+        return tempGuestList;
     }
 
     //returns arraylist of bookings
@@ -130,12 +130,12 @@ public class DBFacade {
         return tempBookingList;
     }
 
-    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer) {
+    public ArrayList<Booking> getGuestBookingsFromDB(Guest guest) {
         con = null;
         ArrayList<Booking> tempBookingList;
         try {
             con = openConnection();
-            tempBookingList = bookingMapper.getCustomerBookingsFromDB(customer, con);
+            tempBookingList = bookingMapper.getGuestBookingsFromDB(guest, con);
         }
         finally {
             closeConnection(con);
@@ -143,9 +143,9 @@ public class DBFacade {
         return tempBookingList;
     }
 
-    public ArrayList<Customer> getGuestsInRoomFromDB(Booking booking) {
+    public ArrayList<Guest> getGuestsInRoomFromDB(Booking booking) {
         con = null;
-        ArrayList<Customer> roomGuestList;
+        ArrayList<Guest> roomGuestList;
         try {
             con = openConnection();
             roomGuestList = bookingMapper.getGuestsInBooking(booking, con);
@@ -156,12 +156,12 @@ public class DBFacade {
         return roomGuestList;
     }
     
-     public ArrayList<Customer> searchForGuestDB(String status, String... names) {
+     public ArrayList<Guest> searchForGuestDB(String status, String... names) {
         con = null;
-        ArrayList<Customer> guestsFound;
+        ArrayList<Guest> guestsFound;
         try {
             con = openConnection();
-            guestsFound = customerMapper.searchForGuestDB(status, con, names);
+            guestsFound = guestMapper.searchForGuestDB(status, con, names);
         }
         finally {
             closeConnection(con);
@@ -225,18 +225,18 @@ public class DBFacade {
         return unitOfWork.addGuestToRoom(roomguest);
     }
 
-    public boolean createCustomer(Customer customer) {
+    public boolean createGuest(Guest guest) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.createCustomer(customer);
+        return unitOfWork.createGuest(guest);
     }
 
-    public boolean updateCustomerDB(Customer customer) {
+    public boolean updateGuestDB(Guest guest) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.updateCustomerDB(customer);
+        return unitOfWork.updateGuestDB(guest);
     }
 
     public boolean deleteBookingFromDB(int bookingId) {
@@ -244,5 +244,12 @@ public class DBFacade {
             openNewTransaction();
         }
         return unitOfWork.deleteBookingFromDB(bookingId);
+    }
+
+    public boolean undoNewBooking(Booking booking) {
+        if (unitOfWork == null) {
+            openNewTransaction();
+        }
+        return unitOfWork.undoNewBooking(booking);
     }
 }

@@ -11,20 +11,20 @@ package domain;
  * @author Michael
  */
 public class RoomGuest {
-    private int customerId;
+    private int guestId;
     private int bookingId;
 
-    public RoomGuest(int customerId, int bookingId) {
-        this.customerId = customerId;
+    public RoomGuest(int guestId, int bookingId) {
+        this.guestId = guestId;
         this.bookingId = bookingId;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getGuestId() {
+        return guestId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setGuestId(int guestId) {
+        this.guestId = guestId;
     }
 
     public int getBookingId() {

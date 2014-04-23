@@ -7,15 +7,14 @@ package domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.UIManager;
 
 /**
  *
  * @author Sebastian, Michael og Andreas
  */
-public class Customer {
+public class Guest {
 
-    private int customerId;
+    private int guestId;
     private String firstName;
     private String lastName;
     private String street;
@@ -26,10 +25,10 @@ public class Customer {
     private int phone1;
     private int phone2;
 
-    public Customer(ResultSet rs) {
+    public Guest(ResultSet rs) {
         super();
         try {
-            this.customerId = rs.getInt("customer_id");
+            this.guestId = rs.getInt("guest_id");
             this.firstName = rs.getString("first_name");
             this.lastName = rs.getString("last_name");;
             this.street = rs.getString("street");
@@ -41,12 +40,12 @@ public class Customer {
             this.phone2 = rs.getInt("phone_2");
         }
         catch (SQLException e) {
-            System.out.println("Fail in CustomerMapper/Customer - Customer");
+            System.out.println("Fail in GuestMapper/Guest - Guest");
             System.out.println(e.getMessage());
         }
     }
 
-    public Customer(String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
+    public Guest(String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
@@ -58,8 +57,8 @@ public class Customer {
         this.phone2 = phone2;
     }
     
-    public Customer(int customerId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
-        this.customerId = customerId;
+    public Guest(int guestId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
+        this.guestId = guestId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
@@ -71,12 +70,12 @@ public class Customer {
         this.phone2 = phone2;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getGuestId() {
+        return guestId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setGuestId(int guestId) {
+        this.guestId = guestId;
     }
 
     public String getFirstName() {
@@ -154,7 +153,7 @@ public class Customer {
     @Override
     public String toString() {
         String str = "";
-        str = "ID: " + customerId + "   " + firstName + " " + lastName + "\n";
+        str = "ID: " + guestId + "   " + firstName + " " + lastName + "\n";
         return str;
     }
 }

@@ -16,13 +16,13 @@ import java.util.ArrayList;
 public class Control {
 
     private DBFacade DBFacade;
-    private ArrayList<Customer> customerList;
+    private ArrayList<Guest> guestList;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
-        customerList = new ArrayList<>();
+        guestList = new ArrayList<>();
         roomList = getRoomsFromDB();
     }
 
@@ -46,8 +46,8 @@ public class Control {
         return roomList;
     }
     
-    public Customer getCustomerDB(int bookingOwnerId) {
-       return DBFacade.getCustomerDB(bookingOwnerId);
+    public Guest getGuestDB(int bookingOwnerId) {
+       return DBFacade.getGuestDB(bookingOwnerId);
     }
     
     public ArrayList<Room> getRooms() {
@@ -58,9 +58,9 @@ public class Control {
         return bookingList;
     }
 
-    public ArrayList<Customer> getCustomersFromDB() {
-        customerList = DBFacade.getCustomersFromDB();
-        return customerList;
+    public ArrayList<Guest> getGuestsFromDB() {
+        guestList = DBFacade.getGuestsFromDB();
+        return guestList;
     }
 
     public ArrayList<Booking> getBookingsFromDB() {
@@ -68,7 +68,7 @@ public class Control {
         return bookingList;
     }
     
-    public ArrayList<Customer> searchForGuestDB(String status, String... names) {
+    public ArrayList<Guest> searchForGuestDB(String status, String... names) {
         return DBFacade.searchForGuestDB(status, names);
     }
 
@@ -94,14 +94,14 @@ public class Control {
         return DBFacade.deleteBookingFromDB(bookingId);
     }
 
-    public Booking bookRoom(Room room, Customer customer, Date checkIn, Date checkOut) {
+    public Booking bookRoom(Room room, Guest guest, Date checkIn, Date checkOut) {
         Boolean bookingAddedSuccess;
         boolean doubleBooking;
         Booking newBooking = null;
 
         doubleBooking = checkForDoubleBooking(room, checkIn, checkOut);
         if (doubleBooking == false) {
-            newBooking = new Booking(customer.getCustomerId(), room.getRoomNo(), "", checkIn, checkOut);
+            newBooking = new Booking(guest.getGuestId(), room.getRoomNo(), "", checkIn, checkOut);
             bookingAddedSuccess = DBFacade.bookRoom(newBooking);
             if (bookingAddedSuccess == true && !bookingList.contains(newBooking)) {
                 bookingList.add(newBooking);
@@ -110,7 +110,7 @@ public class Control {
         return newBooking;
     }
 
-    public ArrayList<Customer> getGuestsInRoom(Booking booking) {
+    public ArrayList<Guest> getGuestsInRoom(Booking booking) {
         return DBFacade.getGuestsInRoomFromDB(booking);
     }
 
@@ -174,18 +174,18 @@ public class Control {
         return doubleBooking;
     }
 
-    public boolean addGuestToRoom(Customer customer, Booking booking) {
+    public boolean addGuestToRoom(Guest guest, Booking booking) {
         ArrayList<Booking> tempBookingList;
-        tempBookingList = DBFacade.getCustomerBookingsFromDB(customer); //henter evt. bookings hvori kunden allerede indgår
+        tempBookingList = DBFacade.getGuestBookingsFromDB(guest); //henter evt. bookings hvori kunden allerede indgår
 
         boolean addGuestSuccess = false;
         boolean doubleBooking = false;
 
         if (!tempBookingList.isEmpty()) {   //checker om kunden allerede bor på andre bookinger i samme periode
-            doubleBooking = checkCustomerForDoubleBooking(tempBookingList, booking);
+            doubleBooking = checkGuestForDoubleBooking(tempBookingList, booking);
         }
         if (doubleBooking == false) {
-            RoomGuest roomGuest = new RoomGuest(customer.getCustomerId(), booking.getBookingId());
+            RoomGuest roomGuest = new RoomGuest(guest.getGuestId(), booking.getBookingId());
             addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
         }
         return addGuestSuccess;
@@ -193,7 +193,7 @@ public class Control {
 
     public boolean checkRoomAvailability(Booking booking, int arraySize) {
         boolean available = false;
-        ArrayList<Customer> tempRoomGuestList = DBFacade.getGuestsInRoomFromDB(booking);  // vi henter en liste over allerede eksisterende kunder på bookingen
+        ArrayList<Guest> tempRoomGuestList = DBFacade.getGuestsInRoomFromDB(booking);  // vi henter en liste over allerede eksisterende kunder på bookingen
         for (int i = 0; i < roomList.size(); i++) {
             if (roomList.get(i).getRoomNo() == booking.getRoomNo()) {
                 if (roomList.get(i).getRoomSize() > arraySize + tempRoomGuestList.size()) {   // vi checker at antallet af folk vi vil tilføje (arraySize) + antallet af folk allerede i bookingen (tempRoomGuestList) ikke overstiger getRoomSize.
@@ -204,11 +204,11 @@ public class Control {
         return available;
     }
 
-    public ArrayList<Booking> getCustomerBookingsFromDB(Customer customer) {
-        return DBFacade.getCustomerBookingsFromDB(customer);
+    public ArrayList<Booking> getGuestBookingsFromDB(Guest guest) {
+        return DBFacade.getGuestBookingsFromDB(guest);
     }
 
-    private boolean checkCustomerForDoubleBooking(ArrayList<Booking> oldBookingList, Booking newBooking) {
+    private boolean checkGuestForDoubleBooking(ArrayList<Booking> oldBookingList, Booking newBooking) {
         boolean doubleBooking = false;
         Date newCheckInDate = newBooking.getCheckInDate();
         Date newCheckOutDate = newBooking.getCheckOutDate();
@@ -229,16 +229,20 @@ public class Control {
         return doubleBooking;
     }
 
-    public boolean createCustomer(Customer customer) {
-        return DBFacade.createCustomer(customer);
+    public boolean createGuest(Guest guest) {
+        return DBFacade.createGuest(guest);
     }
 
-    public Customer getGuestFromID(int customerId) {
-        return DBFacade.getGuestFromID(customerId);
+    public Guest getGuestFromID(int guestId) {
+        return DBFacade.getGuestFromID(guestId);
     }
 
-    public boolean updateCustomerDB(Customer customer) {
-        return DBFacade.updateCustomerDB(customer);
+    public boolean updateGuestDB(Guest guest) {
+        return DBFacade.updateGuestDB(guest);
+    }
+
+    public boolean undoNewBooking(Booking booking) {
+        return DBFacade.undoNewBooking(booking);
     }
 
     
