@@ -1537,7 +1537,6 @@ public class GUI extends javax.swing.JFrame {
         Date checkInDate = checkIn.getDate();
         Date checkOutDate = checkOut.getDate();
         if (checkInDate != null && checkOutDate != null && !checkInDate.equals(checkOutDate) && checkOutDate.after(checkInDate)) {  // checker at begge datoer er valgt, og at checkOut dato er efter checkIn dato.
-            refreshModel(bookingModel);
             refreshRoomTable(roomTableModel, checkInDate, checkOutDate);
         }
         else {
