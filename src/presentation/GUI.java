@@ -1554,19 +1554,24 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBookingButtonActionPerformed
         boolean commitSuccess;
-        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
-        if (reply == jOptionPane.YES_OPTION) {
-            commitSuccess = ctr.commitTransaction();
-            if (commitSuccess) {
-                newBookingModel.clear();
-                jOptionPane.showMessageDialog(this, "Booking saved!");
-                refreshBookingTable(bookingTableModel);
-                refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
-                newBookingStatusLabel.setText("");
+        if (!newBookingModel.isEmpty()) {
+            int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
+            if (reply == jOptionPane.YES_OPTION) {
+                commitSuccess = ctr.commitTransaction();
+                if (commitSuccess) {
+                    newBookingModel.clear();
+                    jOptionPane.showMessageDialog(this, "Booking saved!");
+                    refreshBookingTable(bookingTableModel);
+                    refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
+                    newBookingStatusLabel.setText("");
+                }
+                else {
+                    jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
+                }
             }
-            else {
-                jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
-            }
+        }
+        else {
+            newBookingStatusLabel.setText("There is no bookings to be saved");
         }
     }//GEN-LAST:event_saveBookingButtonActionPerformed
 
