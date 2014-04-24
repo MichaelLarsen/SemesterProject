@@ -320,7 +320,7 @@ public class GuestMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                stringArrayList.add("" + rs.getInt("id") + rs.getInt("guest_id") + rs.getDate("logdate") + rs.getInt("action") + rs.getString("content") + "\n");
+                stringArrayList.add("LogID: " + rs.getInt("id") + " GuestID: " + rs.getInt("guest_id") + " Logdate: " + rs.getDate("logdate") + " Action: " + rs.getInt("action") + " XML: " + rs.getString("content") + "\n");
             }
         }
         catch (SQLException e) {
