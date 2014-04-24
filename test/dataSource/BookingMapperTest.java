@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dataSource;
 
 import domain.Booking;
@@ -23,12 +22,13 @@ import static org.junit.Assert.*;
  * @author Michael
  */
 public class BookingMapperTest {
+
     Connection con;
     private final String id = "SEM2_TEST_GR04";
     private final String pw = "SEM2_TEST_GR04";
     BookingMapper bm;
     private ArrayList<Booking> bookingListTest;
-    
+
     @Before
     public void setUp() {
         getConnection();
@@ -36,46 +36,46 @@ public class BookingMapperTest {
         bm = new BookingMapper();
         bookingListTest = new ArrayList<>();
     }
-    
+
     @After
     public void tearDown() {
         releaseConnection();
     }
 
     /**
-     * Test of getBookingsFromDB method, of class BookingMapper.
+     * Test of getBookingsFromDB method, of class BookingMapper. Tester at vi
+     * har fået de bookings ud vi skal (size = 2)
      */
     @Test
     public void testGetBookingsFromDB() {
         System.out.println("getBookingsFromDB");
         ArrayList<Booking> result = bm.getBookingsFromDB(con);
-        assertEquals(result.size(), 1);
+        assertEquals(3, result.size());
     }
 
     /**
-     * Test of getNewBookingId method, of class BookingMapper.
+     * Test of getNewBookingId method, of class BookingMapper. Tester 2 værdier
+     * og sørger for at databasen holder dem unikke
      */
     @Test
     public void testGetNewBookingId() {
-        //test af 2 nye unikke id'er.
         System.out.println("getNewBookingId");
         int result1 = bm.getNewBookingId(con);
-        int newId = 3000020;
-        assertEquals(result1, newId);
+        assertEquals(3000020, result1);
         int result2 = bm.getNewBookingId(con);
-        newId = 3000021;
-        assertEquals(result2, newId);
-        
+        assertEquals(3000021, result2);
+
     }
 
     /**
-     * Test of addBooking method, of class BookingMapper.
+     * Test of addBooking method, of class BookingMapper. Tester tilføjning af
+     * ny booking
      */
     @Test
     public void testAddBooking() {
         System.out.println("addBooking");
-        Date checkIn = new Date(1451,6,22);
-        Date checkOut = new Date(1451,6,29);
+        Date checkIn = new Date(1451, 6, 22);
+        Date checkOut = new Date(1451, 6, 29);
         Booking booking = new Booking(2000001, 1009, "Star Tours", checkIn, checkOut);
         bookingListTest.add(booking);
         boolean result = bm.addBooking(bookingListTest, con);
@@ -84,6 +84,7 @@ public class BookingMapperTest {
 
     /**
      * Test of getGuestsInBooking method, of class BookingMapper.
+     *
      */
     @Test
     public void testGetGuestsInBooking() {
@@ -96,7 +97,10 @@ public class BookingMapperTest {
             }
         }
         ArrayList<Guest> result = bm.getGuestsInBooking(booking, con);
-        assertEquals(result.size(),1);
+        assertEquals(2, result.size());
+        //Test for de rigtige gæster
+        assertEquals(2000001, result.get(0).getGuestId());
+        assertEquals(2000002, result.get(1).getGuestId());
     }
 
     /**
@@ -106,9 +110,13 @@ public class BookingMapperTest {
     public void testUpdateBooking() {
         System.out.println("updateBooking");
         bookingListTest = bm.getBookingsFromDB(con);
-        bookingListTest.get(0).setRoomNo(1008);
+        //husk at det er descending, så index 0 i arraylist er faktisk den sidste booking
+        assertEquals(1008, bookingListTest.get(0).getRoomNo());
+        bookingListTest.get(0).setRoomNo(1009);
         boolean result = bm.updateBooking(bookingListTest, con);
-        assertEquals(result, true);
+        assertEquals(true, result);
+        //Test om roomNo er ændret
+        assertEquals(1009, bookingListTest.get(0).getRoomNo());
     }
 
     /**
@@ -118,9 +126,10 @@ public class BookingMapperTest {
     public void testGetGuestBookingsFromDB() {
         System.out.println("getGuestBookingsFromDB");
         //laver en ny gæst da vi ikke har en metode til at hente gæster ud fra bookingMapper
-        Guest guest = new Guest(2000001, "Michael", "Larsen", "Søborg Torv 7",""+2860, "Søborg", "Denmark", "larsen_max@hotmail.com", 25462013,0);
+        Guest guest = new Guest(2000001, "Michael", "Larsen", "Søborg Torv 7", "" + 2860, "Søborg", "Denmark", "larsen_max@hotmail.com", 25462013, 0);
         ArrayList<Booking> result = bm.getGuestBookingsFromDB(guest, con);
-        assertEquals(result.size(), 1);
+        //ser hvor mange rum gæsten sover på (expected 2)
+        assertEquals(2, result.size());
     }
 
     /**
@@ -130,12 +139,22 @@ public class BookingMapperTest {
     public void testDeleteBookingFromDB() {
         System.out.println("deleteBookingFromDB");
         bookingListTest = bm.getBookingsFromDB(con);
+        //checker at der er 3 bookings som forventet
+        assertEquals(3, bookingListTest.size());
+        
         ArrayList<Integer> bookingTestNumbers = new ArrayList<>();
-        for (int i = 0; i < bookingListTest.size(); i++) {
-            bookingTestNumbers.add(bookingListTest.get(i).getBookingId());
-        }
+        bookingTestNumbers.add(bookingListTest.get(0).getBookingId()); //sletter den første booking(descending dvs. med bookingID: 3000003)
         boolean result = bm.deleteBookingFromDB(bookingTestNumbers, con);
-        assertEquals(result, true);
+        assertEquals(true, result);
+        
+        bookingListTest = bm.getBookingsFromDB(con);
+        //checker at den har slettet 1 booking via dens bookingID
+        assertEquals(2, bookingListTest.size());
+        
+        //checker at det er de rigtige 2 som ikke er slettet. Har slettet booking med ID: 3000003
+        assertEquals(3000002, bookingListTest.get(0).getBookingId());
+        assertEquals(3000001, bookingListTest.get(1).getBookingId());
+        
     }
 
     /**
@@ -143,25 +162,23 @@ public class BookingMapperTest {
      */
     @Test
     public void testGetLog() {
-        System.out.println("log");
-        //tester ved at tilføje en booking
-        Date checkIn = new Date(1451,6,22);
-        Date checkOut = new Date(1451,6,29);
-        System.out.println(checkIn +" til "+ checkOut);
+        System.out.println("getLog");
+        //tester ved at tilføje en booking idet der bliver oprettet en log ved create, update eller delete
+        Date checkIn = new Date(1451, 6, 22);
+        Date checkOut = new Date(1451, 6, 29);
         Booking booking = new Booking(2000002, 1009, "Star Tours", checkIn, checkOut);
         bookingListTest.add(booking);
         bm.addBooking(bookingListTest, con);
         ArrayList<String> stringTestList;
         stringTestList = bm.getLog(con);
-        assertEquals(stringTestList.size(),1);
-        
-        
+        //da vi lige har oprettet en booking i databasen, burde vi også have lavet en log.
+        //derfor må stringTestList være size 1
+        assertEquals(1, stringTestList.size());
     }
 
     /**
      * Test of getLog method, of class BookingMapper.
      */
-    
     private void getConnection() {
         try {
             con = DriverManager.getConnection("jdbc:oracle:thin:@datdb.cphbusiness.dk:1521:dat", id, pw);
@@ -180,5 +197,5 @@ public class BookingMapperTest {
             System.err.println(e);
         }
     }
-    
+
 }
