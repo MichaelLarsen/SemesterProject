@@ -260,13 +260,18 @@ public class BookingMapper {
         CREATE(1), UPDATE(2), DELETE(3), ADDED_GUEST(4);
         private int actionType;
 
-        private ActionType(int roomSize) {
-            this.actionType = roomSize;
+        private ActionType(int state) {
+            this.actionType = state;
         }
     }
 
     public static void log(int booking_id, ActionType action, Connection con) {
-        String SQLString = "INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) SELECT BOOKING_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT (SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = " + booking_id + ") AS GUESTS, b.* FROM Bookings b WHERE b.booking_id = " + booking_id + "') xmlstr FROM Dual";
+        String SQLString = "INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) SELECT BOOKING_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT"
+                + " (SELECT LISTAGG(CONCAT(CONCAT("
+                + "g.FIRST_NAME, '' ''), g.LAST_NAME), '','') "
+                + "WITHIN GROUP (ORDER BY 1) AS Fullname "
+                + "FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = " + booking_id + ") AS GUESTS, b.* "
+                + "FROM Bookings b WHERE b.booking_id = " + booking_id + "') xmlstr FROM Dual";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -288,5 +293,35 @@ public class BookingMapper {
                 System.out.println(e.getMessage());
             }
         }
+    }
+    
+     
+    public ArrayList<String> getLog(Connection con) {
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        String SQLString = "select * from booking_log"
+                + " order by id";
+           PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                stringArrayList.add(""+rs.getInt("id")+rs.getInt("booking_id")+rs.getDate("logdate")+rs.getInt("action")+rs.getString("content")+"\n");
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - getLog");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - getLog");
+                System.out.println(e.getMessage());
+            }
+        }
+        return stringArrayList;
     }
 }

@@ -129,6 +129,32 @@ public class DBFacade {
         }
         return tempBookingList;
     }
+    
+    public ArrayList<String> getBookingLog() {
+       con = null;
+        ArrayList<String> tempBookingLogList;
+        try {
+            con = openConnection();
+            tempBookingLogList = bookingMapper.getLog(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return tempBookingLogList;
+    }
+    
+     public ArrayList<String> getGuestLog() {
+        con = null;
+        ArrayList<String> tempGuestLogList;
+        try {
+            con = openConnection();
+            tempGuestLogList = guestMapper.getLog(con);
+        }
+        finally {
+            closeConnection(con);
+        }
+        return tempGuestLogList;
+    }
 
     public ArrayList<Booking> getGuestBookingsFromDB(Guest guest) {
         con = null;

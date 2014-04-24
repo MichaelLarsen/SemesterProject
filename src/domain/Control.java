@@ -67,6 +67,14 @@ public class Control {
         bookingList = DBFacade.getBookingsFromDB();
         return bookingList;
     }
+    
+    public ArrayList<String> getBookingLog() {
+        return DBFacade.getBookingLog();
+    }
+    
+    public ArrayList<String> getGuestLog() {
+        return DBFacade.getGuestLog();
+    }
 
     public ArrayList<Guest> searchForGuestDB(String status, String... names) {
         return DBFacade.searchForGuestDB(status, names);
@@ -253,5 +261,9 @@ public class Control {
         }
         return undoSuccess;
     }
+
+    
+
+    
 
 }

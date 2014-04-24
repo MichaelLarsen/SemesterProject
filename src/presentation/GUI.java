@@ -185,28 +185,6 @@ public class GUI extends javax.swing.JFrame {
             guestJList2.setModel(guestModel);
         }
 
-//        if (model.equals(roomModel)) {
-//            if (dates.length == 2) {
-//                Date date1 = dates.length > 0 ? dates[0] : null;
-//                Date date2 = dates.length > 1 ? dates[1] : null;
-//                ArrayList<Room> roomList;
-//                roomList = ctr.getAvailableRoomsDB(date1, date2);
-//                roomModel.clear();
-//                for (int i = 0; i < roomList.size(); i++) {
-//                    roomModel.addElement(roomList.get(i));
-//                }
-//                roomJList.setModel(roomModel);
-//            }
-//        }
-//        if (model.equals(bookingModel)) {
-//            ArrayList<Booking> bookingList;
-//            bookingList = ctr.getBookingsFromDB();
-//            bookingModel.clear();
-//            for (int i = 0; i < bookingList.size(); i++) {
-//                bookingModel.addElement(bookingList.get(i));
-//            }
-//            bookingJList.setModel(bookingModel);
-//        }
         if (model.equals(infoBookingModel)) {
             infoBookingModel.clear();
             ArrayList<Guest> roomGuestList;
@@ -420,6 +398,10 @@ public class GUI extends javax.swing.JFrame {
         saveGuestChangesButton = new javax.swing.JButton();
         clearGuestFieldsButton = new javax.swing.JButton();
         guestIdLabel = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        logTextArea = new javax.swing.JTextArea();
+        getLogButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1186,6 +1168,40 @@ public class GUI extends javax.swing.JFrame {
 
         jTabbedPane.addTab("Guests", guestPanel4);
 
+        logTextArea.setColumns(20);
+        logTextArea.setRows(5);
+        jScrollPane3.setViewportView(logTextArea);
+
+        getLogButton.setText("Get log");
+        getLogButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getLogButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(getLogButton))
+                .addContainerGap(151, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(getLogButton)
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+
+        jTabbedPane.addTab("Log", jPanel4);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1620,6 +1636,20 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_newBookingUndoButtonActionPerformed
 
+    private void getLogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getLogButtonActionPerformed
+        logTextArea.setText("");
+        ArrayList<String> bookingLogStrings;
+        bookingLogStrings = ctr.getBookingLog();
+        for (int i = 0; i < bookingLogStrings.size(); i++) {
+            logTextArea.append(bookingLogStrings.get(i));
+        }
+        ArrayList<String> guestLogStrings;
+        guestLogStrings = ctr.getGuestLog();
+        for (int i = 0; i < guestLogStrings.size(); i++) {
+            logTextArea.append(guestLogStrings.get(i));
+        }
+    }//GEN-LAST:event_getLogButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1699,6 +1729,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField emailTextField;
     private javax.swing.JLabel firstNameLabel;
     private javax.swing.JTextField firstNameTextField;
+    private javax.swing.JButton getLogButton;
     private javax.swing.JLabel guestIdLabel;
     private javax.swing.JList guestJList;
     private javax.swing.JList guestJList2;
@@ -1729,12 +1760,14 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
@@ -1744,6 +1777,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JLabel lastNameLabel;
     private javax.swing.JTextField lastNameTextField;
+    private javax.swing.JTextArea logTextArea;
     private javax.swing.JLabel logo;
     private javax.swing.JLabel mandatoryLabel;
     private javax.swing.JList newBookingJList;

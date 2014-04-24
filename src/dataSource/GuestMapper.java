@@ -63,7 +63,8 @@ public class GuestMapper {
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newGuestList.size(); i++) {
-                statement.setInt(1, getNewGuestsId(con));
+                int newId = getNewGuestsId(con);
+                statement.setInt(1, newId);
                 statement.setString(2, newGuestList.get(i).getFirstName());
                 statement.setString(3, newGuestList.get(i).getLastName());
                 statement.setString(4, newGuestList.get(i).getStreet());
@@ -73,8 +74,8 @@ public class GuestMapper {
                 statement.setString(8, newGuestList.get(i).getEmail());
                 statement.setInt(9, newGuestList.get(i).getPhone1());
                 statement.setInt(10, newGuestList.get(i).getPhone2());
-
                 guestsCreated += statement.executeUpdate(); // guestCreated bliver = newGuestList.size(), hvis Update går igennem
+                log(newId, ActionType.CREATE, con);
             }
         }
         catch (SQLException e) {
@@ -173,8 +174,9 @@ public class GuestMapper {
                 statement.setInt(9, guest.getPhone2());
                 statement.setInt(10, guest.getGuestId());
                 rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+                log(guest.getGuestId(), ActionType.UPDATE, con);
             }
-            
+
         }
         catch (SQLException e) {
             System.out.println("Fail in GuestMapper - UpdateGuestDB");
@@ -199,27 +201,26 @@ public class GuestMapper {
         ArrayList<Guest> guestList = new ArrayList<>();
         if (status.equals("both")) {
             SQLString = "select * from GUESTS "
-                + "where upper(first_name) LIKE upper(?) AND upper(last_name) LIKE upper(?)";
+                    + "where upper(first_name) LIKE upper(?) AND upper(last_name) LIKE upper(?)";
         }
         if (status.equals("firstName")) {
             SQLString = "select * from GUESTS "
-                + "where upper(first_name) LIKE upper(?)";
+                    + "where upper(first_name) LIKE upper(?)";
         }
         if (status.equals("lastName")) {
             SQLString = "select * from GUESTS "
-                + "where upper(last_name) LIKE upper(?)";
+                    + "where upper(last_name) LIKE upper(?)";
         }
-        
+
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             if (status.equals("both")) {
-                statement.setString(1, "%"+names[0]+"%");
-                statement.setString(2, "%"+names[1]+"%");
+                statement.setString(1, "%" + names[0] + "%");
+                statement.setString(2, "%" + names[1] + "%");
             }
-            else{
-//                statement.setString(1, status);
-                statement.setString(1, "%"+names[0]+"%");
+            else {
+                statement.setString(1, "%" + names[0] + "%");
             }
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -272,4 +273,71 @@ public class GuestMapper {
         }
         return guest;
     }
+
+    public enum ActionType {
+
+        CREATE(1), UPDATE(2);
+        private int actionType;
+
+        private ActionType(int state) {
+            this.actionType = state;
+        }
+    }
+
+    public static void log(int guest_id, ActionType action, Connection con) {
+        String SQLString = "INSERT INTO GUEST_LOG (Id, Action, Guest_Id, Logdate, Content) "
+                + "SELECT GUEST_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT * FROM GUESTS "
+                + "WHERE GUEST_ID = " + guest_id + "') xmlstr FROM Dual";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, action.actionType);
+            statement.setInt(2, guest_id);
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in GuestMapper - log");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal lukke statement
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in GuestMapper - log");
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public ArrayList<String> getLog(Connection con) {
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        String SQLString = "select * from guest_log"
+                + " order by id";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                stringArrayList.add("" + rs.getInt("id") + rs.getInt("guest_id") + rs.getDate("logdate") + rs.getInt("action") + rs.getString("content") + "\n");
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in GuestMapper - getLog");
+            System.out.println(e.getMessage());
+        }
+        finally // must close statement
+        {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in GuestMapper - getLog");
+                System.out.println(e.getMessage());
+            }
+        }
+        return stringArrayList;
+    }
+
 }
