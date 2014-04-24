@@ -27,14 +27,14 @@ public class BookingMapperTest {
     private final String id = "SEM2_TEST_GR04";
     private final String pw = "SEM2_TEST_GR04";
     BookingMapper bm;
-    private ArrayList<Booking> bookingList;
+    private ArrayList<Booking> bookingListTest;
     
     @Before
     public void setUp() {
         getConnection();
         Fixture.setUp(con);
         bm = new BookingMapper();
-        bookingList = new ArrayList<>();
+        bookingListTest = new ArrayList<>();
     }
     
     @After
@@ -57,10 +57,15 @@ public class BookingMapperTest {
      */
     @Test
     public void testGetNewBookingId() {
+        //test af 2 nye unikke id'er.
         System.out.println("getNewBookingId");
-        int result = bm.getNewBookingId(con);
+        int result1 = bm.getNewBookingId(con);
         int newId = 3000020;
-        assertEquals(result, newId);
+        assertEquals(result1, newId);
+        int result2 = bm.getNewBookingId(con);
+        newId = 3000021;
+        assertEquals(result2, newId);
+        
     }
 
     /**
@@ -72,9 +77,9 @@ public class BookingMapperTest {
         Date checkIn = new Date(1451,6,22);
         Date checkOut = new Date(1451,6,29);
         Booking booking = new Booking(2000001, 1009, "Star Tours", checkIn, checkOut);
-        bookingList.add(booking);
-        boolean result = bm.addBooking(bookingList, con);
-        assertTrue(result==true);
+        bookingListTest.add(booking);
+        boolean result = bm.addBooking(bookingListTest, con);
+        assertEquals(true, result);
     }
 
     /**
@@ -84,14 +89,14 @@ public class BookingMapperTest {
     public void testGetGuestsInBooking() {
         System.out.println("getGuestsInBooking");
         Booking booking = null;
-        ArrayList<Booking> bookings = bm.getBookingsFromDB(con);
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getBookingId() == 3000001) {
-                booking = bookings.get(i);
+        bookingListTest = bm.getBookingsFromDB(con);
+        for (int i = 0; i < bookingListTest.size(); i++) {
+            if (bookingListTest.get(i).getBookingId() == 3000001) {
+                booking = bookingListTest.get(i);
             }
         }
         ArrayList<Guest> result = bm.getGuestsInBooking(booking, con);
-        assertTrue(result.size()==1);
+        assertEquals(result.size(),1);
     }
 
     /**
@@ -100,12 +105,10 @@ public class BookingMapperTest {
     @Test
     public void testUpdateBooking() {
         System.out.println("updateBooking");
-        ArrayList<Booking> updateBookingList = null;
-        Connection con = null;
-        BookingMapper instance = new BookingMapper();
-        boolean expResult = false;
-        boolean result = instance.updateBooking(updateBookingList, con);
-        assertEquals(expResult, result);
+        bookingListTest = bm.getBookingsFromDB(con);
+        bookingListTest.get(0).setRoomNo(1008);
+        boolean result = bm.updateBooking(bookingListTest, con);
+        assertEquals(result, true);
     }
 
     /**
@@ -114,12 +117,10 @@ public class BookingMapperTest {
     @Test
     public void testGetGuestBookingsFromDB() {
         System.out.println("getGuestBookingsFromDB");
-        Guest guest = null;
-        Connection con = null;
-        BookingMapper instance = new BookingMapper();
-        ArrayList<Booking> expResult = null;
-        ArrayList<Booking> result = instance.getGuestBookingsFromDB(guest, con);
-        assertEquals(expResult, result);
+        //laver en ny gæst da vi ikke har en metode til at hente gæster ud fra bookingMapper
+        Guest guest = new Guest(2000001, "Michael", "Larsen", "Søborg Torv 7",""+2860, "Søborg", "Denmark", "larsen_max@hotmail.com", 25462013,0);
+        ArrayList<Booking> result = bm.getGuestBookingsFromDB(guest, con);
+        assertEquals(result.size(), 1);
     }
 
     /**
@@ -128,38 +129,38 @@ public class BookingMapperTest {
     @Test
     public void testDeleteBookingFromDB() {
         System.out.println("deleteBookingFromDB");
-        ArrayList<Integer> deleteBookingsList = null;
-        Connection con = null;
-        BookingMapper instance = new BookingMapper();
-        boolean expResult = false;
-        boolean result = instance.deleteBookingFromDB(deleteBookingsList, con);
-        assertEquals(expResult, result);
+        bookingListTest = bm.getBookingsFromDB(con);
+        ArrayList<Integer> bookingTestNumbers = new ArrayList<>();
+        for (int i = 0; i < bookingListTest.size(); i++) {
+            bookingTestNumbers.add(bookingListTest.get(i).getBookingId());
+        }
+        boolean result = bm.deleteBookingFromDB(bookingTestNumbers, con);
+        assertEquals(result, true);
     }
 
     /**
      * Test of log method, of class BookingMapper.
      */
     @Test
-    public void testLog() {
+    public void testGetLog() {
         System.out.println("log");
-        int booking_id = 0;
-        BookingMapper.ActionType action = null;
-        Connection con = null;
-        BookingMapper.log(booking_id, action, con);
+        //tester ved at tilføje en booking
+        Date checkIn = new Date(1451,6,22);
+        Date checkOut = new Date(1451,6,29);
+        System.out.println(checkIn +" til "+ checkOut);
+        Booking booking = new Booking(2000002, 1009, "Star Tours", checkIn, checkOut);
+        bookingListTest.add(booking);
+        bm.addBooking(bookingListTest, con);
+        ArrayList<String> stringTestList;
+        stringTestList = bm.getLog(con);
+        assertEquals(stringTestList.size(),1);
+        
+        
     }
 
     /**
      * Test of getLog method, of class BookingMapper.
      */
-    @Test
-    public void testGetLog() {
-        System.out.println("getLog");
-        Connection con = null;
-        BookingMapper instance = new BookingMapper();
-        ArrayList<String> expResult = null;
-        ArrayList<String> result = instance.getLog(con);
-        assertEquals(expResult, result);
-    }
     
     private void getConnection() {
         try {

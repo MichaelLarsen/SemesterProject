@@ -37,7 +37,9 @@ public class Fixture {
 			// insert tuples
                         st.addBatch("create sequence booking_id_seq start with 3000020");
                         st.addBatch("insert into guests values(2000001, 'Michael', 'Larsen', 'Søborg Torv 7', 2860, 'Søborg', 'Denmark', 'larsen_max@hotmail.com', 25462013, null)");
-			st.addBatch("insert into rooms values(1009, 'FAMILY', 100)");
+                        st.addBatch("insert into guests values(2000002, 'Hans', 'Olsen', 'Søborg Torv 7', 2860, 'Søborg', 'Denmark', 'larsen_max@hotmail.com', 25462013, null)");
+			st.addBatch("insert into rooms values(1008, 'FAMILY', 100)");
+                        st.addBatch("insert into rooms values(1009, 'FAMILY', 100)");
                         st.addBatch("insert into bookings values(3000001, 2000001, 1009, 'Star Tours', to_date('22-04-2014', 'DD-MM-YYYY'), to_date('29-04-2014', 'DD-MM-YYYY'))");
 			st.addBatch("insert into booking_details values(2000001, 3000001)");
 			st.addBatch("INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) "

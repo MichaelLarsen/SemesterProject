@@ -266,7 +266,6 @@ public class BookingMapper {
     }
 
     public static void log(int booking_id, ActionType action, Connection con) {
-        
         String SQLString = "INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) " //laver ny log for ændret booking
                 + "SELECT BOOKING_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT" //vælger alle bookings med en unik ID og indsætter actiontype og bookingID på '?'
                     + "(SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname " //henter de gæster som bor på bookingen med fornavn og efternavn aggregeret som en kolonne og gruppere dem som Fullname
