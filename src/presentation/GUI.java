@@ -425,7 +425,7 @@ public class GUI extends javax.swing.JFrame {
 
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/presentation/image/Casablanca_logo.jpg"))); // NOI18N
 
-        introductionLabel.setText("Casablanca Holiday Center Booking System <\\n> blabla bla");
+        introductionLabel.setText("Casablanca Holiday Center Booking System");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -436,7 +436,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(logo)
                 .addGap(186, 186, 186)
                 .addComponent(introductionLabel)
-                .addContainerGap(478, Short.MAX_VALUE))
+                .addContainerGap(555, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
