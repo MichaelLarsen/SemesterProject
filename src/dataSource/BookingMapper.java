@@ -271,7 +271,7 @@ public class BookingMapper {
                 + "SELECT BOOKING_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT" //vælger alle bookings med en unik ID og indsætter actiontype og bookingID på '?'
                     + "(SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname " //henter de gæster som bor på bookingen med fornavn og efternavn aggregeret som en kolonne og gruppere dem som Fullname
                     + "FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = " + booking_id + ") AS GUESTS, "
-                + "b.* FROM Bookings b WHERE b.booking_id = " + booking_id + "') xmlstr FROM Dual"; //Vi henter data som xml da det kan bruges af mange programmer og bruges i mange sammenhænge
+                + "* FROM Bookings WHERE booking_id = " + booking_id + "') xmlstr FROM Dual"; //Vi henter data som xml da det kan bruges af mange programmer og bruges i mange sammenhænge
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
