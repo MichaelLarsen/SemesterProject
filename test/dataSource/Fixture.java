@@ -49,10 +49,10 @@ public class Fixture {
 			st.addBatch("insert into booking_details values(2000001, 3000001)");
 			st.addBatch("insert into booking_details values(2000002, 3000001)");
 			st.addBatch("insert into booking_details values(2000001, 3000002)");
-//			st.addBatch("INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) "
-//                                + "SELECT 1, 1, 3000001, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT "
-//                                + "(SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = 3000001) AS GUESTS, "
-//                                + "b.* FROM Bookings b WHERE b.booking_id = 3000001') xmlstr FROM Dual");
+			st.addBatch("INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) "
+                                + "SELECT 1, 1, 3000001, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT "
+                                + "(SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = 3000001) AS GUESTS, "
+                                + "b.* FROM Bookings b WHERE b.booking_id = 3000001') xmlstr FROM Dual");
                        
 
 			int[] opcounts = st.executeBatch();

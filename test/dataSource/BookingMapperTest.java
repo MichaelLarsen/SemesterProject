@@ -141,20 +141,20 @@ public class BookingMapperTest {
         bookingListTest = bm.getBookingsFromDB(con);
         //checker at der er 3 bookings som forventet
         assertEquals(3, bookingListTest.size());
-        
+
         ArrayList<Integer> bookingTestNumbers = new ArrayList<>();
         bookingTestNumbers.add(bookingListTest.get(0).getBookingId()); //sletter den første booking(descending dvs. med bookingID: 3000003)
         boolean result = bm.deleteBookingFromDB(bookingTestNumbers, con);
         assertEquals(true, result);
-        
+
         bookingListTest = bm.getBookingsFromDB(con);
         //checker at den har slettet 1 booking via dens bookingID
         assertEquals(2, bookingListTest.size());
-        
+
         //checker at det er de rigtige 2 som ikke er slettet. Har slettet booking med ID: 3000003
         assertEquals(3000002, bookingListTest.get(0).getBookingId());
         assertEquals(3000001, bookingListTest.get(1).getBookingId());
-        
+
     }
 
     /**
@@ -173,6 +173,14 @@ public class BookingMapperTest {
         stringTestList = bm.getLog(con);
         //da vi lige har oprettet en booking i databasen, burde vi også have lavet en log.
         //derfor må stringTestList være size 1
+        assertEquals(2, stringTestList.size());
+    }
+
+    @Test
+    public void testLog() {
+        ArrayList<String> stringTestList;
+        stringTestList = bm.getLog(con);
+        //checker om der er 1 log da vi har tilfæjet en i set up
         assertEquals(1, stringTestList.size());
     }
 
