@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author Michael
  */
-public class RoomGuestMapper {
+public class BookingDetailsMapper {
 
     public boolean addGuestToRoom(ArrayList<RoomGuest> newGuestInRoomList, Connection con) {
         int guestAdded = 0;

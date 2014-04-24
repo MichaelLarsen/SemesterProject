@@ -1613,6 +1613,7 @@ public class GUI extends javax.swing.JFrame {
             newBookingModel.removeElement(booking);
             ctr.undoNewBooking(booking);
             newBookingStatusLabel.setText("Booking was removed.");
+            refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
         }
         else {
             jOptionPane.showMessageDialog(this, "You must select a booking to remove", "Remove booking.", jOptionPane.INFORMATION_MESSAGE);

@@ -22,7 +22,8 @@ public class BookingMapper {
     public ArrayList<Booking> getBookingsFromDB(Connection con) {
         Booking booking = null;
         ArrayList<Booking> bookingList = new ArrayList<>();
-        String SQLString = "select * from BOOKINGS";
+        String SQLString = "select * from BOOKINGS "
+                + "order by booking_id desc";       
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -84,13 +85,15 @@ public class BookingMapper {
         try {
             statement = con.prepareStatement(SQLString);
             for (int i = 0; i < newBookingList.size(); i++) {
-                statement.setInt(1, getNewBookingId(con));
+                int bookingId = getNewBookingId(con);
+                statement.setInt(1, bookingId);
                 statement.setInt(2, newBookingList.get(i).getBookingOwnerId());
                 statement.setInt(3, newBookingList.get(i).getRoomNo());
                 statement.setString(4, newBookingList.get(i).getAgency());
                 statement.setDate(5, new java.sql.Date(newBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(6, new java.sql.Date(newBookingList.get(i).getCheckOutDate().getTime()));
                 bookingAdded += statement.executeUpdate(); //bookingAdded bliver = newBookingList.size(), hvis Update går igennem
+                log(bookingId, ActionType.CREATE, con);
             }
         }
         catch (SQLException e) {
@@ -162,6 +165,7 @@ public class BookingMapper {
                 statement.setDate(5, new java.sql.Date(updateBookingList.get(i).getCheckOutDate().getTime()));
                 statement.setInt(6, updateBookingList.get(i).getBookingId());
                 rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+                log(updateBookingList.get(i).getBookingId(), ActionType.UPDATE, con);
             }
         }
         catch (SQLException e) {
@@ -215,6 +219,7 @@ public class BookingMapper {
     }
 
     public boolean deleteBookingFromDB(ArrayList<Integer> deleteBookingsList, Connection con) {
+        
         int rowsDeleted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString1 = "delete from BOOKING_DETAILS" // først slettes evt gæster på bookingen
                 + " where booking_id = ?";
@@ -226,6 +231,7 @@ public class BookingMapper {
             statement1 = con.prepareStatement(SQLString1);
             statement2 = con.prepareStatement(SQLString2);
             for (int i = 0; i < deleteBookingsList.size(); i++) {
+                log(deleteBookingsList.get(i), ActionType.DELETE, con);
                 statement1.setInt(1, deleteBookingsList.get(i));
                 statement2.setInt(1, deleteBookingsList.get(i));
                 statement1.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
@@ -247,5 +253,40 @@ public class BookingMapper {
             }
         }
         return rowsDeleted == deleteBookingsList.size(); //hvis dette passer returneres true ellers false  
+    }
+    
+    public enum ActionType {
+
+        CREATE(1), UPDATE(2), DELETE(3), ADDED_GUEST(4);
+        private int actionType;
+
+        private ActionType(int roomSize) {
+            this.actionType = roomSize;
+        }
+    }
+
+    public static void log(int booking_id, ActionType action, Connection con) {
+        String SQLString = "INSERT INTO BOOKING_LOG (Id, Action, Booking_Id, Logdate, Content) SELECT BOOKING_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT (SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = " + booking_id + ") AS GUESTS, b.* FROM Bookings b WHERE b.booking_id = " + booking_id + "') xmlstr FROM Dual";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, action.actionType);
+            statement.setInt(2, booking_id);
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper - log");
+            System.out.println(e.getMessage());
+        }
+        finally // Skal lukke statement
+        {
+            try {
+                statement.close(); //lukker statements
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper - log");
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }

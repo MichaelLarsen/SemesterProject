@@ -118,7 +118,7 @@ public class UnitOfWork {
         BookingMapper bookingMapper = new BookingMapper();
         GuestMapper guestMapper = new GuestMapper();
         RoomMapper roomMapper = new RoomMapper();
-        RoomGuestMapper roomGuestMapper = new RoomGuestMapper();
+        BookingDetailsMapper roomGuestMapper = new BookingDetailsMapper();
 
         if (!newGuestList.isEmpty()) {
             commitSuccess = commitSuccess && guestMapper.createGuest(newGuestList, con);
