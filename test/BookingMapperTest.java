@@ -22,8 +22,8 @@ import static org.junit.Assert.*;
 public class BookingMapperTest {
 
     Connection con;
-    private final String id = "";
-    private final String pw = "";
+    private final String id = "SEM2_TEST_GR04";
+    private final String pw = "SEM2_TEST_GR04";
     BookingMapper bm;
 
     public BookingMapperTest() {

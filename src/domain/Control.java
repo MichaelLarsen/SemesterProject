@@ -92,7 +92,7 @@ public class Control {
         return updateSuccess;
     }
 
-    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+    public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);
         return updateSuccess;
@@ -193,7 +193,7 @@ public class Control {
             doubleBooking = checkGuestForDoubleBooking(tempBookingList, booking);
         }
         if (doubleBooking == false) {
-            RoomGuest roomGuest = new RoomGuest(guest.getGuestId(), booking.getBookingId());
+            BookingDetail roomGuest = new BookingDetail(guest.getGuestId(), booking.getBookingId());
             addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
         }
         return addGuestSuccess;

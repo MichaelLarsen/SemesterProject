@@ -6,7 +6,8 @@
 
 package dataSource;
 
-import domain.RoomGuest;
+import static dataSource.BookingMapper.log;
+import domain.BookingDetail;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,9 +17,9 @@ import java.util.ArrayList;
  *
  * @author Michael
  */
-public class BookingDetailsMapper {
+public class BookingDetailMapper {
 
-    public boolean addGuestToRoom(ArrayList<RoomGuest> newGuestInRoomList, Connection con) {
+    public boolean addGuestToRoom(ArrayList<BookingDetail> newGuestInRoomList, Connection con) {
         int guestAdded = 0;
         String SQLString = "insert into BOOKING_DETAILS values (?, ?)";
         PreparedStatement statement = null;
@@ -28,6 +29,7 @@ public class BookingDetailsMapper {
                 statement.setInt(1, newGuestInRoomList.get(i).getGuestId());
                 statement.setInt(2, newGuestInRoomList.get(i).getBookingId());
                 guestAdded += statement.executeUpdate(); //bookingAdded bliver = newGuestInRoomList.size(), hvis Update går igennem
+                log(newGuestInRoomList.get(i).getBookingId(), BookingMapper.ActionType.ADDED_GUEST, con);
             }
         }
         catch (SQLException e) {
@@ -47,7 +49,7 @@ public class BookingDetailsMapper {
         return guestAdded == newGuestInRoomList.size();
     }
 
-    public boolean updateGuestInRoom(ArrayList<RoomGuest> updateGuestInRoomList, Connection con) {
+    public boolean updateGuestInRoom(ArrayList<BookingDetail> updateGuestInRoomList, Connection con) {
        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
         String SQLString = "update BOOKING_DETAILS"
                 + " set booking_id = ?"

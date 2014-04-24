@@ -10,11 +10,11 @@ package domain;
  *
  * @author Michael
  */
-public class RoomGuest {
+public class BookingDetail {
     private int guestId;
     private int bookingId;
 
-    public RoomGuest(int guestId, int bookingId) {
+    public BookingDetail(int guestId, int bookingId) {
         this.guestId = guestId;
         this.bookingId = bookingId;
     }

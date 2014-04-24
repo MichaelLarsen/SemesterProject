@@ -8,7 +8,7 @@ package dataSource;
 import domain.Booking;
 import domain.Guest;
 import domain.Room;
-import domain.RoomGuest;
+import domain.BookingDetail;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ public class UnitOfWork {
     private ArrayList<Booking> newBookingList;
     private ArrayList<Booking> updateBookingList;
     private ArrayList<Room> updateRoomList;
-    private ArrayList<RoomGuest> newGuestInRoomList;
-    private ArrayList<RoomGuest> updateGuestInRoomList;
+    private ArrayList<BookingDetail> newGuestInRoomList;
+    private ArrayList<BookingDetail> updateGuestInRoomList;
     private ArrayList<Guest> newGuestList;
     private ArrayList<Guest> dirtyGuestList;
     private ArrayList<Integer> deleteBookingsList;
@@ -66,7 +66,7 @@ public class UnitOfWork {
         return bookingSuccess;
     }
 
-    public boolean addGuestToRoom(RoomGuest roomguest) {
+    public boolean addGuestToRoom(BookingDetail roomguest) {
         boolean addGuestSuccess = false;
         if (!newGuestInRoomList.contains(roomguest)) {
             newGuestInRoomList.add(roomguest);
@@ -93,7 +93,7 @@ public class UnitOfWork {
         return updateSuccess;
     }
 
-    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+    public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess = false;
         if (!updateGuestInRoomList.contains(roomGuest)) {
             updateGuestInRoomList.add(roomGuest);
@@ -118,7 +118,7 @@ public class UnitOfWork {
         BookingMapper bookingMapper = new BookingMapper();
         GuestMapper guestMapper = new GuestMapper();
         RoomMapper roomMapper = new RoomMapper();
-        BookingDetailsMapper roomGuestMapper = new BookingDetailsMapper();
+        BookingDetailMapper roomGuestMapper = new BookingDetailMapper();
 
         if (!newGuestList.isEmpty()) {
             commitSuccess = commitSuccess && guestMapper.createGuest(newGuestList, con);

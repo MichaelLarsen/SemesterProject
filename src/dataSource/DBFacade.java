@@ -230,7 +230,7 @@ public class DBFacade {
         return unitOfWork.updateBookingDB(booking);
     }
 
-    public boolean updateGuestsInRoomDB(RoomGuest roomGuest) {
+    public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
@@ -244,7 +244,7 @@ public class DBFacade {
         return unitOfWork.bookRoom(booking);
     }
 
-    public boolean addGuestToRoom(RoomGuest roomguest) {
+    public boolean addGuestToRoom(BookingDetail roomguest) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
