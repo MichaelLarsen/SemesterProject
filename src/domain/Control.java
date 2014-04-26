@@ -86,12 +86,20 @@ public class Control {
         return updateSuccess;
     }
 
+    /**
+     * Benyttes ikke
+     * TODO slet?
+     */
     public boolean updateBookingDB(Booking booking) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateBookingDB(booking);
         return updateSuccess;
     }
 
+    /**
+     * Benyttes ikke pt, da vi endnu ikke har implementeret mulighed for at fjerne gæst fra en booking.
+     * TODO slet?
+     */    
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);

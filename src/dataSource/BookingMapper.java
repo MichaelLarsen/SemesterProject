@@ -14,22 +14,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * BookingMapper klassen håndterer persistering af data mellem programmet og
+ * databasens BOOKINGS tabel.
  *
- * @author Sebastian, Michael og Andreas
+ * @author Andreas, Michael & Sebastian
  */
 public class BookingMapper {
 
+    /**
+     * Henter alle bookings fra databasen, til visning i bookingoversigt.
+     *
+     * @param con       Forbindelse til databasen.
+     * @return          Liste med alle bookings fra databasen.
+     */
     public ArrayList<Booking> getBookingsFromDB(Connection con) {
         Booking booking = null;
         ArrayList<Booking> bookingList = new ArrayList<>();
         String SQLString = "select * from BOOKINGS "
-                + "order by booking_id desc";       
+                + "order by booking_id desc";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                booking = new Booking(rs);
+                booking = new Booking(rs);      // Vi sender vores ResultSet direkte videre til vores constructor
                 bookingList.add(booking);
             }
         }
@@ -37,10 +45,9 @@ public class BookingMapper {
             System.out.println("Fail in BookingMapper - getBookingsFromDB");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
-        {
+        finally {    // SKAL køres efter try/catch statement
             try {
-                statement.close();
+                statement.close();  // Vi beder eksplicit om at lukke/release vores statement, inklusiv forbindelse
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - getBookingsFromDB");
@@ -50,6 +57,13 @@ public class BookingMapper {
         return bookingList;
     }
 
+    /**
+     * Henter næste, unikke bookingId som databasen genererer, til brug ved
+     * oprettelse af ny booking.
+     *
+     * @param con       Forbindelse til databasen.
+     * @return          Næste bookingId.
+     */
     public int getNewBookingId(Connection con) {
         int nextBookingId = 0;
 
@@ -78,9 +92,16 @@ public class BookingMapper {
         return nextBookingId;
     }
 
+    /**
+     * Persisterer booking i databasen, til brug ved oprettelse af ny booking.
+     *
+     * @param newBookingList    Liste af Booking-objekter, som skal persisteres.
+     * @param con               Forbindelse til databasen.
+     * @return                  TRUE, hvis INSERTs lykkes. Rækker tilføjet == antallet af Bookings i liste.
+     */
     public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
-        String SQLString = "insert into BOOKINGS values (?, ?, ?, ?, ?, ?)";
+        String SQLString = "INSERT INTO bookings VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -92,7 +113,7 @@ public class BookingMapper {
                 statement.setString(4, newBookingList.get(i).getAgency());
                 statement.setDate(5, new java.sql.Date(newBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(6, new java.sql.Date(newBookingList.get(i).getCheckOutDate().getTime()));
-                bookingAdded += statement.executeUpdate(); //bookingAdded bliver = newBookingList.size(), hvis Update går igennem
+                bookingAdded += statement.executeUpdate();
                 log(bookingId, ActionType.CREATE, con);
             }
         }
@@ -100,10 +121,9 @@ public class BookingMapper {
             System.out.println("Fail in BookingMapper - addBooking");
             System.out.println(e.getMessage());
         }
-        finally // Skal lukke statement
-        {
+        finally {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - addBooking");
@@ -113,13 +133,20 @@ public class BookingMapper {
         return bookingAdded == newBookingList.size();
     }
 
+    /**
+     * Henter gæster som bor på booking/room, til visning i bookingoversigt.
+     *
+     * @param booking       Bookingen vi ønsker gæsterne for.
+     * @param con           Forbindelse til databasen.
+     * @return              Liste med gæster fra bookingen.
+     */
     public ArrayList<Guest> getGuestsInBooking(Booking booking, Connection con) {
         ArrayList<Guest> roomGuestList = new ArrayList<>();
         Guest guest = null;
         String SQLString = "SELECT * "
                 + "FROM GUESTS "
-                + "JOIN BOOKING_DETAILS "
-                + "ON GUESTS.guest_id = BOOKING_DETAILS.guest_id "
+                + "JOIN booking_details "
+                + "ON guests.guest_id = booking_details.guest_id "
                 + "WHERE booking_id = ?";
         PreparedStatement statement = null;
         try {
@@ -136,8 +163,7 @@ public class BookingMapper {
             System.out.println("Fail in BookingMapper - getGuestsInRoom");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
-        {
+        finally {
             try {
                 statement.close();
             }
@@ -149,11 +175,24 @@ public class BookingMapper {
         return roomGuestList;
     }
 
+    /**
+     * Persisterer ændringer til booking(s) i databasen.
+     * - Gælder ikke tilføjelse/fjernelse af gæster, som håndteres i BookingDetailMapper.addGuestToRoom().
+     *
+     * Metoden benyttes ikke pt., da vi ikke blev færdig med at implementere
+     * denne user story.
+     *
+     * TODO slet?
+     *
+     * @param updateBookingList     Liste af ændrede bookings.
+     * @param con                   Forbindelse til databasen.
+     * @return                      TRUE, hvis UPDATEs lykkes. Rækker ændret == antallet af Bookings i liste.
+     */
     public boolean updateBooking(ArrayList<Booking> updateBookingList, Connection con) {
-        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "update BOOKINGS"
-                + " set booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, check_out_date = ?"
-                + " where booking_id = ?";
+        int rowsUpdated = 0;
+        String SQLString = "UPDATE bookings "
+                + "SET booking_owner = ?, room_no = ?, agency = ?, check_in_date = ?, check_out_date = ? "
+                + "WHERE booking_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -164,7 +203,7 @@ public class BookingMapper {
                 statement.setDate(4, new java.sql.Date(updateBookingList.get(i).getCheckInDate().getTime()));
                 statement.setDate(5, new java.sql.Date(updateBookingList.get(i).getCheckOutDate().getTime()));
                 statement.setInt(6, updateBookingList.get(i).getBookingId());
-                rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+                rowsUpdated += statement.executeUpdate();
                 log(updateBookingList.get(i).getBookingId(), ActionType.UPDATE, con);
             }
         }
@@ -172,25 +211,33 @@ public class BookingMapper {
             System.out.println("Fail in BookingMapper - updateBookingDB");
             System.out.println(e.getMessage());
         }
-        finally // Skal køres efter catch
-        {
+        finally {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - updateBookingDB");
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == updateBookingList.size(); //hvis dette passer returneres true ellers false  
+        return rowsUpdated == updateBookingList.size();
     }
-    //Finder hvilke bookinger en gæst sover på (ikke hvilke bookinger han ejer). Bruges til at checke at han ikke sover på to værelser på samme tid.
+
+    /**
+     * Henter alle bookinger gæsten sover på (ikke dem han er ejer på). 
+     * Bruges til at checke at gæsten ikke bookes til flere værelser i samme tidsrum.
+     *
+     * @param guest         Gæst for hvem bookings ønskes.
+     * @param con           Forbindelse til databasen.
+     * @return              Liste med bookinger gæsten
+     */
     public ArrayList<Booking> getGuestBookingsFromDB(Guest guest, Connection con) {
         Booking booking = null;
         ArrayList<Booking> tempBookingList = new ArrayList<>();
-        String SQLString = "select * from bookings b "
-                + "join BOOKING_DETAILS rg on rg.booking_id = b.booking_id "
-                + "where guest_id = ?";
+        String SQLString = "SELECT * "
+                + "FROM bookings b "
+                + "JOIN booking_details bd ON bd.booking_id = b.booking_id "
+                + "WHERE guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -205,8 +252,7 @@ public class BookingMapper {
             System.out.println("Fail in BookingMapper - getGuestBookingsFromDB");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
-        {
+        finally {
             try {
                 statement.close();
             }
@@ -218,34 +264,40 @@ public class BookingMapper {
         return tempBookingList;
     }
 
+    /**
+     * Sletter booking fra databasen (BOOKINGS table), samt evt. gæster på bookingen (BOOKING_DETAILS).
+     *
+     * @param deleteBookingsList    Liste med bookingIds på bookings som skal slettes. Bemærk, som programmet er pt. sletter vi aldrig mere end én booking af gangen.
+     * @param con                   Forbindelse til datgabasen.
+     * @return                      TRUE, hvis DELETE lykkes. Rækker slettet == antallet af bookingIds i liste (altid 1).
+     */
     public boolean deleteBookingFromDB(ArrayList<Integer> deleteBookingsList, Connection con) {
-        
-        int rowsDeleted = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString1 = "delete from BOOKING_DETAILS" // først slettes evt gæster på bookingen
-                + " where booking_id = ?";
-        String SQLString2 = "delete from BOOKINGS" // herefter slettes selve bookingen
-                + " where booking_id = ?";
+        int rowsDeleted = 0;
+        String SQLString1 = "DELETE FROM booking_details "   // først slettes evt gæster på bookingen
+                + "WHERE booking_id = ?";
+        String SQLString2 = "DELETE FROM bookings "  // herefter slettes selve bookingen
+                + "WHERE booking_id = ?";
         PreparedStatement statement1 = null;
         PreparedStatement statement2 = null;
         try {
             statement1 = con.prepareStatement(SQLString1);
             statement2 = con.prepareStatement(SQLString2);
             for (int i = 0; i < deleteBookingsList.size(); i++) {
-                log(deleteBookingsList.get(i), ActionType.DELETE, con);
+                log(deleteBookingsList.get(i), ActionType.DELETE, con);     // før sletning logges bookingens tilstand
                 statement1.setInt(1, deleteBookingsList.get(i));
                 statement2.setInt(1, deleteBookingsList.get(i));
-                statement1.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
-                rowsDeleted += statement2.executeUpdate(); //rowsInserted bliver = updateBookingList.size(), hvis Update går igennem
+                statement1.executeUpdate();
+                rowsDeleted += statement2.executeUpdate();
             }
         }
         catch (SQLException e) {
             System.out.println("Fail in BookingMapper - deleteBookingFromDB");
             System.out.println(e.getMessage());
         }
-        finally // Skal køres efter catch
+        finally
         {
             try {
-                statement1.close(); //lukker statements
+                statement1.close();
             }
             catch (SQLException e) {
                 System.out.println("Fail in BookingMapper - deleteBookingFromDB");
@@ -254,7 +306,7 @@ public class BookingMapper {
         }
         return rowsDeleted == deleteBookingsList.size(); //hvis dette passer returneres true ellers false  
     }
-    
+
     public enum ActionType {
 
         CREATE(1), UPDATE(2), DELETE(3), ADDED_GUEST(4);
@@ -271,7 +323,7 @@ public class BookingMapper {
                 + " (SELECT LISTAGG(CONCAT(CONCAT(g.FIRST_NAME, '' ''), g.LAST_NAME), '','') WITHIN GROUP (ORDER BY 1) AS Fullname " //henter de gæster som bor på bookingen med fornavn og efternavn aggregeret som en kolonne og gruppere dem som Fullname
                 + "FROM GUESTS g JOIN BOOKING_DETAILS bd ON bd.GUEST_ID = g.GUEST_ID AND bd.BOOKING_ID = " + booking_id + ") AS GUESTS, "
                 + "b.* FROM Bookings b WHERE b.booking_id = " + booking_id + "') xmlstr FROM Dual"; //Vi henter data som xml da det kan bruges af mange programmer og bruges i mange sammenhænge
-        
+
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -294,13 +346,12 @@ public class BookingMapper {
             }
         }
     }
-    
-     
+
     public ArrayList<String> getLog(Connection con) {
         ArrayList<String> stringArrayList = new ArrayList<>();
         String SQLString = "select * from booking_log"
                 + " order by id";
-           PreparedStatement statement = null;
+        PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();

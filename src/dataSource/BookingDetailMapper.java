@@ -14,9 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * 
  * BookingDetailMapper klassen håndterer persistering af data mellem programmet 
  * og databasens BOOKING_DETAILS tabel.
+ * 
  * @author Andreas, Michael & Sebastian
  */
 public class BookingDetailMapper {
@@ -26,11 +26,11 @@ public class BookingDetailMapper {
      * 
      * @param newGuestInRoomList    Liste af BookingDetail-objekter, som inderholder guestId & bookingId.
      * @param con                   Forbindelse til databasen.
-     * @return                      true hvis persistering lykkedes (rækker tilføjet == antallet af BookingDetails i liste).
+     * @return                      TRUE, hvis persistering lykkes.  Rækker tilføjet == antallet af BookingDetails i liste.
      */
     public boolean addGuestToRoom(ArrayList<BookingDetail> newGuestInRoomList, Connection con) {
         int guestAdded = 0;
-        String SQLString = "insert into BOOKING_DETAILS values (?, ?)";
+        String SQLString = "INSERT INTO booking_details VALUES (?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -45,10 +45,10 @@ public class BookingDetailMapper {
             System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
             System.out.println(e.getMessage());
         }
-        finally // Skal lukke statement
+        finally
         {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
                 System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
@@ -59,17 +59,15 @@ public class BookingDetailMapper {
     }
 
     /**
-     * Gæster som ønskes tilføjet til en booking, persisteres i databasen.
+     * Benyttes ikke pt
      * 
-     * @param updateGuestInRoomList
-     * @param con
-     * @return 
+     * TODO slet?
      */
     public boolean updateGuestInRoom(ArrayList<BookingDetail> updateGuestInRoomList, Connection con) {
        int rowsUpdated = 0;
-        String SQLString = "update BOOKING_DETAILS"
-                + " set booking_id = ?"
-                + " where guest_id = ?";
+        String SQLString = "UPDATE booking_details "
+                + "SET booking_id = ? "
+                + "WHERE guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);

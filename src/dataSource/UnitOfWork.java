@@ -93,6 +93,10 @@ public class UnitOfWork {
         return updateSuccess;
     }
 
+    /**
+     * benyttes ikke
+     * TODO slet?
+     */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess = false;
         if (!updateGuestInRoomList.contains(roomGuest)) {

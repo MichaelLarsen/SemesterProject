@@ -230,6 +230,10 @@ public class DBFacade {
         return unitOfWork.updateBookingDB(booking);
     }
 
+    /**
+     * Benyttes ikke
+     * TODO slet?
+     */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         if (unitOfWork == null) {
             openNewTransaction();
