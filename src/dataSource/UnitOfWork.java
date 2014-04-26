@@ -118,7 +118,7 @@ public class UnitOfWork {
         BookingMapper bookingMapper = new BookingMapper();
         GuestMapper guestMapper = new GuestMapper();
         RoomMapper roomMapper = new RoomMapper();
-        BookingDetailMapper roomGuestMapper = new BookingDetailMapper();
+        BookingDetailMapper bookingDetailMapper = new BookingDetailMapper();
 
         if (!newGuestList.isEmpty()) {
             commitSuccess = commitSuccess && guestMapper.createGuest(newGuestList, con);
@@ -133,13 +133,13 @@ public class UnitOfWork {
             commitSuccess = commitSuccess && roomMapper.updateRoomDB(updateRoomList, con);
         }
         if (!newGuestInRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && roomGuestMapper.addGuestToRoom(newGuestInRoomList, con);
+            commitSuccess = commitSuccess && bookingDetailMapper.addGuestToRoom(newGuestInRoomList, con);
         }
         if (!updateBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.updateBooking(updateBookingList, con);
         }
         if (!updateGuestInRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && roomGuestMapper.updateGuestInRoom(updateGuestInRoomList, con);
+            commitSuccess = commitSuccess && bookingDetailMapper.updateGuestInRoom(updateGuestInRoomList, con);
         }
         if (!deleteBookingsList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.deleteBookingFromDB(deleteBookingsList, con);
