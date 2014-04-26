@@ -305,7 +305,7 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                stringArrayList.add("LogID: "+rs.getInt("id")+" BookingID: "+rs.getInt("booking_id")+" LogDate: "+rs.getDate("logdate")+" Action: "+rs.getInt("action")+" XML: "+rs.getString("content")+"\n");
+                stringArrayList.add("LogID: " + rs.getInt("id") + " BookingID: " + rs.getInt("booking_id") + " LogDate: " + rs.getTimestamp("logdate") + " Action: " + rs.getInt("action") + " XML: " + rs.getString("content") + "\n");
             }
         }
         catch (SQLException e) {
