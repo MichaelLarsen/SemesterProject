@@ -487,6 +487,12 @@ public class GUI extends javax.swing.JFrame {
         roomTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane9.setViewportView(roomTable);
 
+        searchLastNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                searchLastNameFieldKeyTyped(evt);
+            }
+        });
+
         searchFirstNameField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 searchFirstNameFieldKeyTyped(evt);
@@ -831,6 +837,12 @@ public class GUI extends javax.swing.JFrame {
         searchFirstNameField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 searchFirstNameField2KeyTyped(evt);
+            }
+        });
+
+        searchLastNameField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                searchLastNameField2KeyTyped(evt);
             }
         });
 
@@ -1372,7 +1384,12 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_firstNameTextFieldKeyTyped
 
     private void searchFirstNameField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFirstNameField2KeyTyped
-        // TODO add your handling code here:
+        int strLength = searchFirstNameField2.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
+        char c = evt.getKeyChar();
+        if (strLength == 40 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_SPACE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
     }//GEN-LAST:event_searchFirstNameField2KeyTyped
 
     private void searchGuestButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGuestButton2ActionPerformed
@@ -1584,7 +1601,7 @@ public class GUI extends javax.swing.JFrame {
                 if (bookingsNotSaved.size() > 0) {
                     String stringShow = "";
                     for (Booking booking : bookingsNotSaved) {
-                        String str = "Room: "+booking.getRoomNo()+" is already occupied from "+booking.getCheckInDate()+" to "+booking.getCheckOutDate()+"\n";
+                        String str = "Room: " + booking.getRoomNo() + " is already occupied from " + booking.getCheckInDate() + " to " + booking.getCheckOutDate() + "\n";
                         stringShow = stringShow.concat(str);
                     }
                     jOptionPane.showMessageDialog(this, stringShow);
@@ -1666,8 +1683,28 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_getLogButtonActionPerformed
 
     private void jTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPaneMouseClicked
-        refreshBookingTable(bookingTableModel);
+        if (jTabbedPane.getSelectedIndex() == 2) {
+            refreshBookingTable(bookingTableModel);
+        }
     }//GEN-LAST:event_jTabbedPaneMouseClicked
+
+    private void searchLastNameFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchLastNameFieldKeyTyped
+        int strLength = searchLastNameField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
+        char c = evt.getKeyChar();
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_searchLastNameFieldKeyTyped
+
+    private void searchLastNameField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchLastNameField2KeyTyped
+        int strLength = searchLastNameField2.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
+        char c = evt.getKeyChar();
+        if (strLength == 30 || !(Character.isAlphabetic(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_searchLastNameField2KeyTyped
 
     /**
      * @param args the command line arguments
