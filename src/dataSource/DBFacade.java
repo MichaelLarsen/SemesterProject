@@ -289,4 +289,8 @@ public class DBFacade {
     public void removeBookingFromUOF(Booking booking) {
         unitOfWork.removeBookingFromUOF(booking);
     }
+
+    public void clearNewBookingDetails() {
+        unitOfWork.clearNewBookingDetails();
+    }
 }

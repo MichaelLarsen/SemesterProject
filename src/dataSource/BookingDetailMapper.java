@@ -63,7 +63,7 @@ public class BookingDetailMapper {
      * 
      * TODO slet?
      */
-    public boolean updateGuestInRoom(ArrayList<BookingDetail> updateGuestInRoomList, Connection con) {
+    public boolean updateBookingDetail(ArrayList<BookingDetail> updateGuestInRoomList, Connection con) {
        int rowsUpdated = 0;
         String SQLString = "UPDATE booking_details "
                 + "SET booking_id = ? "

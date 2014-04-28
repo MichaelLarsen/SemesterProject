@@ -368,6 +368,7 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         addedGuestsJList = new javax.swing.JList();
         addGuestToRoomButton = new javax.swing.JButton();
+        clearAddedGuestsButton = new javax.swing.JButton();
         saveNewGuestsButton = new javax.swing.JButton();
         guestPanel4 = new javax.swing.JPanel();
         firstNameTextField = new javax.swing.JTextField();
@@ -867,12 +868,22 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        clearAddedGuestsButton.setText("Clear");
+        clearAddedGuestsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearAddedGuestsButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(142, 142, 142)
+                        .addComponent(addGuestToRoomButton))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -891,10 +902,10 @@ public class GUI extends javax.swing.JFrame {
                                             .addComponent(searchGuestButton2))
                                         .addGroup(jPanel10Layout.createSequentialGroup()
                                             .addComponent(jLabel12)
-                                            .addGap(0, 0, Short.MAX_VALUE)))))))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(addGuestToRoomButton)))
+                                            .addGap(0, 0, Short.MAX_VALUE)))))
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(clearAddedGuestsButton)
+                                .addGap(36, 36, 36)))))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
@@ -911,11 +922,13 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(searchLastNameField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addGuestToRoomButton)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(clearAddedGuestsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 18, Short.MAX_VALUE)
+                .addGap(5, 5, 5))
         );
 
         saveNewGuestsButton.setText("Save changes");
@@ -1419,24 +1432,28 @@ public class GUI extends javax.swing.JFrame {
 
     private void saveNewGuestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveNewGuestsButtonActionPerformed
         boolean commitSuccess;
-        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
-        if (reply == jOptionPane.YES_OPTION) {
-            commitSuccess = ctr.commitTransaction();
-            if (commitSuccess) {
-                jOptionPane.showMessageDialog(this, "Guests added to booking!");
-                refreshModel(infoBookingModel);
-                addedGuestsModel.clear();
+        if (!addedGuestsModel.isEmpty()) {
+            int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
+            if (reply == jOptionPane.YES_OPTION) {
+                commitSuccess = ctr.commitTransaction();
+                if (commitSuccess) {
+                    jOptionPane.showMessageDialog(this, "Guests added to booking!");
+                    refreshModel(infoBookingModel);
+                    addedGuestsModel.clear();
+                }
+                else {
+                    jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest(s) to the booking. No changes have been saved.", "Error adding guest(s)", jOptionPane.ERROR_MESSAGE);
+                    addedGuestsModel.clear();
+                }
             }
-            else {
-                jOptionPane.showMessageDialog(this, "Something went wrong in adding the guest(s) to the booking. No changes have been saved.", "Error adding guest(s)", jOptionPane.ERROR_MESSAGE);
-                addedGuestsModel.clear();
-            }
+        }
+        else{
+            jOptionPane.showMessageDialog(this, "There is nothing to save.");
         }
     }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
 
     private void addGuestToRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToRoomButtonActionPerformed
         boolean addGuestSuccess;
-
         if (chosenBooking != null && guestJList2.getSelectedValue() != null) {
             Guest guest = (Guest) guestJList2.getSelectedValue();
             if (!addedGuestsModel.contains(guest)) {
@@ -1644,6 +1661,7 @@ public class GUI extends javax.swing.JFrame {
                     newBookingModel.addElement(newBooking);
                     newBookingJList.setModel(newBookingModel);
                     newBookingStatusLabel.setText("Room booked by " + guest.getFirstName() + " " + guest.getLastName());
+                    roomTableModel.removeRow(selectedRowIndex);
                 }
                 else {
                     jOptionPane.showMessageDialog(this, "Room is already booked for that period!", "Doublebooking", jOptionPane.INFORMATION_MESSAGE);
@@ -1705,6 +1723,11 @@ public class GUI extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_searchLastNameField2KeyTyped
+
+    private void clearAddedGuestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAddedGuestsButtonActionPerformed
+        addedGuestsModel.clear();
+        ctr.clearNewBookingDetails();
+    }//GEN-LAST:event_clearAddedGuestsButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1775,6 +1798,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel checkOutLabel3;
     private javax.swing.JLabel cityLabel;
     private javax.swing.JTextField cityTextField;
+    private javax.swing.JButton clearAddedGuestsButton;
     private javax.swing.JButton clearGuestFieldsButton;
     private javax.swing.JLabel countryLabel;
     private javax.swing.JTextField countryTextField;

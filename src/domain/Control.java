@@ -130,35 +130,38 @@ public class Control {
     }
 
     public ArrayList<Room> getAvailableRoomsDB(Date checkInDate, Date checkOutDate) {
-        Date bookingStartDate;
-        Date bookingEndDate;
+//        Date bookingStartDate;
+//        Date bookingEndDate;
+        bookingList = DBFacade.getBookingsFromDB();
         Room room;
         ArrayList<Room> availableRoomList = new ArrayList<>();
-        bookingList = DBFacade.getBookingsFromDB();
-
         for (int i = 0; i < roomList.size(); i++) {
             room = roomList.get(i);
-            boolean doubleBooking = false;
-            for (int j = 0; j < bookingList.size(); j++) {
-                if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
-                    bookingStartDate = bookingList.get(j).getCheckInDate();
-                    bookingEndDate = bookingList.get(j).getCheckOutDate();
-                    //Januar starter på 00, så 03 er fx april.
-//                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-//                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
-                    if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
-                            || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
-                            || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
-                        doubleBooking = false;
-                        availableRoomList.add(room);
-//                        System.out.println("Sådan - ledigt!");
-                    }
-                    else {
-                        doubleBooking = true;
-//                        System.out.println("Doublebooking!");
-                    }
-                }
-            }
+            boolean doubleBooking;
+            doubleBooking = checkForDoubleBooking(room, checkInDate, checkOutDate);
+//            boolean doubleBooking = false;
+//            int j = 0;
+//            while (doubleBooking == false && j < bookingList.size()) {
+//                if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
+//                    bookingStartDate = bookingList.get(j).getCheckInDate();
+//                    bookingEndDate = bookingList.get(j).getCheckOutDate();
+//                    //Januar starter på 00, så 03 er fx april.
+////                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+////                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+//                    if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
+//                            || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
+//                            || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+//                        doubleBooking = false;
+////                        availableRoomList.add(room);
+////                        System.out.println("Sådan - ledigt!");
+//                    }
+//                    else {
+//                        doubleBooking = true;
+////                        System.out.println("Doublebooking!");
+//                    }
+//                }
+//                j++;
+//            }
             if (doubleBooking == false && !availableRoomList.contains(room)) {
                 availableRoomList.add(room);
             }
@@ -168,28 +171,52 @@ public class Control {
 
     public boolean checkForDoubleBooking(Room room, Date checkInDate, Date checkOutDate) {
         boolean doubleBooking = false;
-        bookingList = DBFacade.getBookingsFromDB();
-        for (int j = 0; j < bookingList.size(); j++) {
+        int j = 0;
+        while (doubleBooking == false && j < bookingList.size()) {
             if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
                 Date bookingStartDate = bookingList.get(j).getCheckInDate();
                 Date bookingEndDate = bookingList.get(j).getCheckOutDate();
                 //Januar starter på 00, så 03 er fx april.
-//                System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-//                System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+//                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+//                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
                 if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                         || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
                         || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
                     doubleBooking = false;
-//                    System.out.println("Sådan - ledigt!");
+//                        availableRoomList.add(room);
+//                        System.out.println("Sådan - ledigt!");
                 }
                 else {
                     doubleBooking = true;
-//                    System.out.println("Doublebooking!");
+//                        System.out.println("Doublebooking!");
                 }
             }
+            j++;
         }
-        return doubleBooking;
+            return doubleBooking;
     }
+//        boolean doubleBooking = false;
+//        bookingList = DBFacade.getBookingsFromDB();
+//        for (int j = 0; j < bookingList.size(); j++) {
+//            if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
+//                Date bookingStartDate = bookingList.get(j).getCheckInDate();
+//                Date bookingEndDate = bookingList.get(j).getCheckOutDate();
+//                //Januar starter på 00, så 03 er fx april.
+////                System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
+////                System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
+//                if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
+//                        || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
+//                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+//                    doubleBooking = false;
+////                    System.out.println("Sådan - ledigt!");
+//                }
+//                else {
+//                    doubleBooking = true;
+////                    System.out.println("Doublebooking!");
+//                }
+//            }
+//        }
+    
 
     public boolean addGuestToRoom(Guest guest, Booking booking) {
         ArrayList<Booking> tempBookingList;
@@ -202,8 +229,8 @@ public class Control {
             doubleBooking = checkGuestForDoubleBooking(tempBookingList, booking);
         }
         if (doubleBooking == false) {
-            BookingDetail roomGuest = new BookingDetail(guest.getGuestId(), booking.getBookingId());
-            addGuestSuccess = DBFacade.addGuestToRoom(roomGuest);
+            BookingDetail bookingDetail = new BookingDetail(guest.getGuestId(), booking.getBookingId());
+            addGuestSuccess = DBFacade.addGuestToRoom(bookingDetail);
         }
         return addGuestSuccess;
     }
@@ -274,6 +301,7 @@ public class Control {
     public boolean saveBooking() {
         boolean commitSuccess = false;
         boolean doubleBooking = false;
+        bookingList = DBFacade.getBookingsFromDB();
         notSavedBookings = new ArrayList<>();
         ArrayList<Booking> bookingsForSaving = DBFacade.getBookingsFromUOF();
         ArrayList<Booking> bookingsForSavingCopy = new ArrayList<>(bookingsForSaving);
@@ -299,6 +327,10 @@ public class Control {
 
     public ArrayList<Booking> getBookingsNotSaved() {
         return notSavedBookings;
+    }
+
+    public void clearNewBookingDetails() {
+        DBFacade.clearNewBookingDetails();
     }
 
 }

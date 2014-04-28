@@ -20,20 +20,20 @@ import java.util.ArrayList;
 public class UnitOfWork {
 
     private ArrayList<Booking> newBookingList;
-    private ArrayList<Booking> updateBookingList;
-    private ArrayList<Room> updateRoomList;
-    private ArrayList<BookingDetail> newGuestInRoomList;
-    private ArrayList<BookingDetail> updateGuestInRoomList;
+    private ArrayList<Booking> dirtyBookingList;
+    private ArrayList<Room> dirtyRoomList;
+    private ArrayList<BookingDetail> newBookingDetailList;
+    private ArrayList<BookingDetail> dirtyBookingDetailList;
     private ArrayList<Guest> newGuestList;
     private ArrayList<Guest> dirtyGuestList;
     private ArrayList<Integer> deleteBookingsList;
 
     public UnitOfWork() {
         newBookingList = new ArrayList<>();
-        updateRoomList = new ArrayList<>();
-        newGuestInRoomList = new ArrayList<>();
-        updateBookingList = new ArrayList<>();
-        updateGuestInRoomList = new ArrayList<>();
+        dirtyRoomList = new ArrayList<>();
+        newBookingDetailList = new ArrayList<>();
+        dirtyBookingList = new ArrayList<>();
+        dirtyBookingDetailList = new ArrayList<>();
         newGuestList = new ArrayList<>();
         dirtyGuestList = new ArrayList<>();
         deleteBookingsList = new ArrayList<>();
@@ -68,8 +68,8 @@ public class UnitOfWork {
 
     public boolean addGuestToRoom(BookingDetail roomguest) {
         boolean addGuestSuccess = false;
-        if (!newGuestInRoomList.contains(roomguest)) {
-            newGuestInRoomList.add(roomguest);
+        if (!newBookingDetailList.contains(roomguest)) {
+            newBookingDetailList.add(roomguest);
             addGuestSuccess = true;
         }
         return addGuestSuccess;
@@ -77,8 +77,8 @@ public class UnitOfWork {
 
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess = false;
-        if (!updateRoomList.contains(room)) {
-            updateRoomList.add(room);
+        if (!dirtyRoomList.contains(room)) {
+            dirtyRoomList.add(room);
             updateSuccess = true;
         }
         return updateSuccess;
@@ -86,8 +86,8 @@ public class UnitOfWork {
 
     boolean updateBookingDB(Booking booking) {
         boolean updateSuccess = false;
-        if (!updateBookingList.contains(booking)) {
-            updateBookingList.add(booking);
+        if (!dirtyBookingList.contains(booking)) {
+            dirtyBookingList.add(booking);
             updateSuccess = true;
         }
         return updateSuccess;
@@ -99,8 +99,8 @@ public class UnitOfWork {
      */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess = false;
-        if (!updateGuestInRoomList.contains(roomGuest)) {
-            updateGuestInRoomList.add(roomGuest);
+        if (!dirtyBookingDetailList.contains(roomGuest)) {
+            dirtyBookingDetailList.add(roomGuest);
             updateSuccess = true;
         }
         return updateSuccess;
@@ -133,17 +133,17 @@ public class UnitOfWork {
         if (!newBookingList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
         }
-        if (!updateRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && roomMapper.updateRoomDB(updateRoomList, con);
+        if (!dirtyRoomList.isEmpty()) {
+            commitSuccess = commitSuccess && roomMapper.updateRoomDB(dirtyRoomList, con);
         }
-        if (!newGuestInRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && bookingDetailMapper.addGuestToRoom(newGuestInRoomList, con);
+        if (!newBookingDetailList.isEmpty()) {
+            commitSuccess = commitSuccess && bookingDetailMapper.addGuestToRoom(newBookingDetailList, con);
         }
-        if (!updateBookingList.isEmpty()) {
-            commitSuccess = commitSuccess && bookingMapper.updateBooking(updateBookingList, con);
+        if (!dirtyBookingList.isEmpty()) {
+            commitSuccess = commitSuccess && bookingMapper.updateBooking(dirtyBookingList, con);
         }
-        if (!updateGuestInRoomList.isEmpty()) {
-            commitSuccess = commitSuccess && bookingDetailMapper.updateGuestInRoom(updateGuestInRoomList, con);
+        if (!dirtyBookingDetailList.isEmpty()) {
+            commitSuccess = commitSuccess && bookingDetailMapper.updateBookingDetail(dirtyBookingDetailList, con);
         }
         if (!deleteBookingsList.isEmpty()) {
             commitSuccess = commitSuccess && bookingMapper.deleteBookingFromDB(deleteBookingsList, con);
@@ -180,5 +180,9 @@ public class UnitOfWork {
 
     void removeBookingFromUOF(Booking booking) {
         newBookingList.remove(booking);
+    }
+
+    void clearNewBookingDetails() {
+        newBookingDetailList.clear();
     }
 }
