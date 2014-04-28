@@ -282,4 +282,12 @@ public class DBFacade {
         }
         return unitOfWork.undoNewBooking(booking);
     }
+
+    public ArrayList<Booking> getBookingsFromUOF() {
+        return unitOfWork.getBookings();
+    }
+
+    public void removeBookingFromUOF(Booking booking) {
+        unitOfWork.removeBookingFromUOF(booking);
+    }
 }

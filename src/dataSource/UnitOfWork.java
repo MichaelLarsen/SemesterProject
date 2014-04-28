@@ -161,7 +161,7 @@ public class UnitOfWork {
         return commitSuccess;
     }
 
-    boolean undoNewBooking(Booking booking) {
+    public boolean undoNewBooking(Booking booking) {
         boolean undoSuccess = false;
         int i = 0;
         while (undoSuccess == false && i < newBookingList.size()) {
@@ -172,5 +172,13 @@ public class UnitOfWork {
             i++;
         }
         return undoSuccess;
+    }
+
+    public ArrayList<Booking> getBookings() {
+        return newBookingList;
+    }
+
+    void removeBookingFromUOF(Booking booking) {
+        newBookingList.remove(booking);
     }
 }

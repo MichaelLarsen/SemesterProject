@@ -19,10 +19,10 @@ public class Control {
     private ArrayList<Guest> guestList;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
+    private ArrayList<Booking> notSavedBookings;
 
     public Control() {
         DBFacade = DBFacade.getInstance();
-        guestList = new ArrayList<>();
         roomList = getRoomsFromDB();
     }
 
@@ -67,11 +67,11 @@ public class Control {
         bookingList = DBFacade.getBookingsFromDB();
         return bookingList;
     }
-    
+
     public ArrayList<String> getBookingLog() {
         return DBFacade.getBookingLog();
     }
-    
+
     public ArrayList<String> getGuestLog() {
         return DBFacade.getGuestLog();
     }
@@ -87,8 +87,7 @@ public class Control {
     }
 
     /**
-     * Benyttes ikke
-     * TODO slet?
+     * Benyttes ikke TODO slet?
      */
     public boolean updateBookingDB(Booking booking) {
         boolean updateSuccess;
@@ -97,9 +96,9 @@ public class Control {
     }
 
     /**
-     * Benyttes ikke pt, da vi endnu ikke har implementeret mulighed for at fjerne gæst fra en booking.
-     * TODO slet?
-     */    
+     * Benyttes ikke pt, da vi endnu ikke har implementeret mulighed for at
+     * fjerne gæst fra en booking. TODO slet?
+     */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);
@@ -168,6 +167,7 @@ public class Control {
 
     public boolean checkForDoubleBooking(Room room, Date checkInDate, Date checkOutDate) {
         boolean doubleBooking = false;
+        bookingList = DBFacade.getBookingsFromDB();
         for (int j = 0; j < bookingList.size(); j++) {
             if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
                 Date bookingStartDate = bookingList.get(j).getCheckInDate();
@@ -258,7 +258,7 @@ public class Control {
     }
 
     public boolean undoNewBooking(Booking booking) {
-       boolean undoSuccess = DBFacade.undoNewBooking(booking);
+        boolean undoSuccess = DBFacade.undoNewBooking(booking);
         int i = 0;
         while (undoSuccess == true && i < bookingList.size()) {
             if (booking.getBookingId() == bookingList.get(i).getBookingId()) {
@@ -270,8 +270,30 @@ public class Control {
         return undoSuccess;
     }
 
+    public boolean saveBooking() {
+        boolean commitSuccess = false;
+        boolean doubleBooking = false;
+        notSavedBookings = new ArrayList<>();
+        ArrayList<Booking> bookingsForSaving = DBFacade.getBookingsFromUOF();
+        for (Booking booking : bookingsForSaving) {
+            Room newRoom = null;
+            for (int i = 0; i < roomList.size(); i++) {
+                if (roomList.get(i).getRoomNo() == booking.getRoomNo()) {
+                    newRoom = roomList.get(i);
+                }
+            }
+            doubleBooking = checkForDoubleBooking(newRoom, booking.getCheckInDate(), booking.getCheckOutDate());
+            if (doubleBooking) {
+                DBFacade.removeBookingFromUOF(booking);
+                notSavedBookings.add(booking);
+            }
+               commitSuccess = commitTransaction();
+        }
+        return commitSuccess;
+    }
     
-
-    
+    public ArrayList<Booking> getBookingsNotSaved(){
+        return notSavedBookings;
+    }
 
 }

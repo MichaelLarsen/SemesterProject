@@ -1573,10 +1573,19 @@ public class GUI extends javax.swing.JFrame {
         if (!newBookingModel.isEmpty()) {
             int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Save?", jOptionPane.YES_NO_OPTION);
             if (reply == jOptionPane.YES_OPTION) {
-                commitSuccess = ctr.commitTransaction();
+                commitSuccess = ctr.saveBooking();
+                ArrayList<Booking> bookingsNotSaved = ctr.getBookingsNotSaved();
+                if (bookingsNotSaved.size() > 0) {
+                    String stringShow = "";
+                    for (Booking booking : bookingsNotSaved) {
+                        String str = "Room: "+booking.getRoomNo()+"is already occupied from "+booking.getCheckInDate()+" to "+booking.getCheckOutDate()+"\n";
+                        stringShow = stringShow.concat(str);
+                    }
+                    jOptionPane.showMessageDialog(this, stringShow);
+                }
                 if (commitSuccess) {
                     newBookingModel.clear();
-                    jOptionPane.showMessageDialog(this, "Booking saved!");
+                    newBookingStatusLabel.setText("Booking(s) were saved!");
                     refreshBookingTable(bookingTableModel);
                     refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
                     newBookingStatusLabel.setText("");
