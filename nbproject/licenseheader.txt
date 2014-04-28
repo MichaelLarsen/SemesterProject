@@ -1,0 +1,8 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Semester Projekt - Datamatiker 2. semester
+${licensePrefix}Gruppe 4: Andreas, Michael og Sebastian ${licensePrefix}
+<#if licenseLast??>
+${licenseLast}
+</#if>

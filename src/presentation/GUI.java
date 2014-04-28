@@ -134,7 +134,7 @@ public class GUI extends javax.swing.JFrame {
         ArrayList<Booking> bookingList;
         bookingList = ctr.getBookingsFromDB();
         for (Booking booking : bookingList) {
-            Guest guest = ctr.getGuestDB(booking.getBookingOwnerId());
+            Guest guest = ctr.getGuestFromID(booking.getBookingOwnerId());
             Object[] bookingArray = new Object[8];
             bookingArray[0] = booking.getBookingId();
             bookingArray[1] = booking.getBookingOwnerId();

@@ -46,10 +46,6 @@ public class Control {
         return roomList;
     }
 
-    public Guest getGuestDB(int bookingOwnerId) {
-        return DBFacade.getGuestDB(bookingOwnerId);
-    }
-
     public ArrayList<Room> getRooms() {
         return roomList;
     }

@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
 package dataSource;
 
@@ -11,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * Facade-klasse som styrer kommunikation mellem vores Domain- og DataSource-lag.
+ * Sørger for global adgang til domænet og holder styr på vores forbindelse, så
+ * vi ikke opretter unødige forbindelser til databasen.
  *
  * @author Sebastian, Michael og Andreas
  */
@@ -22,9 +24,11 @@ public class DBFacade {
     private Connection con;
     private UnitOfWork unitOfWork = new UnitOfWork();
 
-    // Singleton for at sikre at der kun er en forbindelse samt at give global adgang til domænet.
     private static DBFacade instance;
 
+    /**
+     * Private constructor til Singleton.
+     */
     private DBFacade() {
         guestMapper = new GuestMapper();
         roomMapper = new RoomMapper();
@@ -32,37 +36,58 @@ public class DBFacade {
         con = null;
     }
 
-    public static DBFacade getInstance() {
+    /**
+     * Public static metode, som er vores Singletons ny constructor.
+     *
+     * @return      Instans af DBFacade, hvis den ikke allerede er instansieret.
+     */
+    public static DBFacade getInstance() {      
         if (instance == null) {
             instance = new DBFacade();
         }
         return instance;
     }
 
+    /**
+    * Opretter forbindelse til databasen, såfremt vi ikke allerede har én åben.
+    *
+    * @return       Forbindelse til databasen, ny eller allerede eksisterende.
+    */
     private Connection openConnection() {
         if (con == null) {
             try {
                 con = new DBConnector().getConnection();
             }
             catch (Exception e) {
-                System.out.println("Fail in establishing connection - DBFacade");
+                System.out.println("Failed to establish connection.");
+                System.out.println("Fail in DBFacade.openConnection()");
                 System.out.println(e.getMessage());
             }
         }
         return con;
     }
 
+    /**
+    * Lukker forbindelse til databasen.
+    *
+    * @param con        Forbindelse til databasen.
+    */
     private void closeConnection(Connection con) {
         try {
             con.close();
         }
         catch (SQLException e) {
-            System.out.println("Fail in closing connection - DBFacade");
+            System.out.println("Error in closing connection.");
+            System.out.println("Fail in DBFacade.closeConnection()");
             System.out.println(e.getMessage());
         }
     }
 
-    //returns arraylist of rooms
+    /**
+    * Henter alle rum fra databasen.
+    *
+    * @return       Liste med alle Rooms i databasen.
+    */
     public ArrayList<Room> getRoomFromDB() {
         con = null;
         ArrayList<Room> tempRoomList;
@@ -76,19 +101,11 @@ public class DBFacade {
         return tempRoomList;
     }
 
-    public Guest getGuestDB(int bookingOwnerId) {
-        Guest guest;
-        con = null;
-        try {
-            con = openConnection();
-            guest = guestMapper.getGuestDB(bookingOwnerId, con);
-        }
-        finally {
-            closeConnection(con);
-        }
-        return guest;
-    }
-
+    /**
+    * Henter gæst med specifikt bookingId fra databasen.
+    *
+    * @return       Liste med alle Rooms i databasen.
+    */
     public Guest getGuestFromID(int guestId) {
         Guest guest;
         con = null;
@@ -233,11 +250,11 @@ public class DBFacade {
     /**
      * Benyttes ikke TODO slet?
      */
-    public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
+    public boolean updateGuestsInRoomDB(BookingDetail bookingDetail) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.updateGuestsInRoomDB(roomGuest);
+        return unitOfWork.updateGuestsInRoomDB(bookingDetail);
     }
 
     public boolean bookRoom(Booking booking) {

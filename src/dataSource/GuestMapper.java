@@ -245,35 +245,6 @@ public class GuestMapper {
         return guestList;
     }
 
-    public Guest getGuestDB(int bookingOwnerId, Connection con) {
-        Guest guest = null;
-        String SQLString = "select * from GUESTS"
-                + " where guest_id = ?";
-        PreparedStatement statement = null;
-        try {
-            statement = con.prepareStatement(SQLString);
-            statement.setInt(1, bookingOwnerId);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                guest = new Guest(rs);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - getGuestDB");
-            System.out.println(e.getMessage());
-        }
-        finally {
-            try {
-                statement.close();
-            }
-            catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - getGuestDB");
-                System.out.println(e.getMessage());
-            }
-        }
-        return guest;
-    }
-
     public enum ActionType {
 
         CREATE(1), UPDATE(2);

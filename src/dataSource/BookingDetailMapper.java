@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
 
 package dataSource;
@@ -42,7 +41,7 @@ public class BookingDetailMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
+            System.out.println("Fail in BookingDetailMapper.addGuestToRoom()");
             System.out.println(e.getMessage());
         }
         finally
@@ -51,7 +50,7 @@ public class BookingDetailMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in RoomGuestMapper - addGuestToRoom");
+                System.out.println("Fail in BookingDetailMapper.addGuestToRoom()");
                 System.out.println(e.getMessage());
             }
         }
@@ -79,7 +78,7 @@ public class BookingDetailMapper {
             rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = updateGuestInRoomList.size(), hvis Update går igennem
         }
         catch (SQLException e) {
-            System.out.println("Fail in RoomGuestMapper - updateGuestInRoom");
+            System.out.println("Fail in BookingDetailMapper.updateGuestInRoom()");
             System.out.println(e.getMessage());
         }
         finally // Skal køres efter catch
@@ -88,11 +87,10 @@ public class BookingDetailMapper {
                 statement.close(); //lukker statements
             }
             catch (SQLException e) {
-                System.out.println("Fail in RoomGuestMapper - updateGuestInRoom");
+                System.out.println("Fail in BookingDetailMapper.updateGuestInRoom()");
                 System.out.println(e.getMessage());
             }
         }
         return rowsUpdated == updateGuestInRoomList.size(); //hvis dette passer returneres true ellers false  
     }
-    
 }
