@@ -8,6 +8,7 @@ import dataSource.DBFacade;
 import java.util.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -275,8 +276,11 @@ public class Control {
         boolean doubleBooking = false;
         notSavedBookings = new ArrayList<>();
         ArrayList<Booking> bookingsForSaving = DBFacade.getBookingsFromUOF();
-        for (Booking booking : bookingsForSaving) {
-            Room newRoom = null;
+        ArrayList<Booking> bookingsForSavingCopy = new ArrayList<>(bookingsForSaving);
+        Room newRoom = null;
+        //ConcurrentModificationException: man kan ikke kører løkken igennem og ændre på listen samtidig. 
+        //Derfor har vi lavet en kopi af listen
+        for (Booking booking : bookingsForSavingCopy) {
             for (int i = 0; i < roomList.size(); i++) {
                 if (roomList.get(i).getRoomNo() == booking.getRoomNo()) {
                     newRoom = roomList.get(i);
@@ -287,12 +291,13 @@ public class Control {
                 DBFacade.removeBookingFromUOF(booking);
                 notSavedBookings.add(booking);
             }
-               commitSuccess = commitTransaction();
+            commitSuccess = commitTransaction();
         }
+
         return commitSuccess;
     }
-    
-    public ArrayList<Booking> getBookingsNotSaved(){
+
+    public ArrayList<Booking> getBookingsNotSaved() {
         return notSavedBookings;
     }
 
