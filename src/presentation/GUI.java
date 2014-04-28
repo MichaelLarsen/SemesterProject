@@ -1578,7 +1578,7 @@ public class GUI extends javax.swing.JFrame {
                 if (bookingsNotSaved.size() > 0) {
                     String stringShow = "";
                     for (Booking booking : bookingsNotSaved) {
-                        String str = "Room: "+booking.getRoomNo()+"is already occupied from "+booking.getCheckInDate()+" to "+booking.getCheckOutDate()+"\n";
+                        String str = "Room: "+booking.getRoomNo()+" is already occupied from "+booking.getCheckInDate()+" to "+booking.getCheckOutDate()+"\n";
                         stringShow = stringShow.concat(str);
                     }
                     jOptionPane.showMessageDialog(this, stringShow);
