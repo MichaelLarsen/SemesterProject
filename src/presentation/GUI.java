@@ -405,6 +405,12 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPaneMouseClicked(evt);
+            }
+        });
+
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/presentation/image/Casablanca_logo.jpg"))); // NOI18N
 
         introductionLabel.setText("Casablanca Holiday Center Booking System");
@@ -1658,6 +1664,10 @@ public class GUI extends javax.swing.JFrame {
             logTextArea.append(guestLogStrings.get(i));
         }
     }//GEN-LAST:event_getLogButtonActionPerformed
+
+    private void jTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPaneMouseClicked
+        refreshBookingTable(bookingTableModel);
+    }//GEN-LAST:event_jTabbedPaneMouseClicked
 
     /**
      * @param args the command line arguments
