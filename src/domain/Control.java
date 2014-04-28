@@ -8,7 +8,6 @@ import dataSource.DBFacade;
 import java.util.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -135,6 +134,7 @@ public class Control {
         Date bookingEndDate;
         Room room;
         ArrayList<Room> availableRoomList = new ArrayList<>();
+        bookingList = DBFacade.getBookingsFromDB();
 
         for (int i = 0; i < roomList.size(); i++) {
             room = roomList.get(i);
