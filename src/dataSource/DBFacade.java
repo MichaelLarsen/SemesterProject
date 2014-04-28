@@ -75,7 +75,7 @@ public class DBFacade {
         }
         return tempRoomList;
     }
-    
+
     public Guest getGuestDB(int bookingOwnerId) {
         Guest guest;
         con = null;
@@ -101,7 +101,7 @@ public class DBFacade {
         }
         return guest;
     }
-    
+
     //returns arraylist of guests
     public ArrayList<Guest> getGuestsFromDB() {
         con = null;
@@ -129,9 +129,9 @@ public class DBFacade {
         }
         return tempBookingList;
     }
-    
+
     public ArrayList<String> getBookingLog() {
-       con = null;
+        con = null;
         ArrayList<String> tempBookingLogList;
         try {
             con = openConnection();
@@ -142,8 +142,8 @@ public class DBFacade {
         }
         return tempBookingLogList;
     }
-    
-     public ArrayList<String> getGuestLog() {
+
+    public ArrayList<String> getGuestLog() {
         con = null;
         ArrayList<String> tempGuestLogList;
         try {
@@ -181,8 +181,8 @@ public class DBFacade {
         }
         return roomGuestList;
     }
-    
-     public ArrayList<Guest> searchForGuestDB(String status, String... names) {
+
+    public ArrayList<Guest> searchForGuestDB(String status, String... names) {
         con = null;
         ArrayList<Guest> guestsFound;
         try {
@@ -231,8 +231,7 @@ public class DBFacade {
     }
 
     /**
-     * Benyttes ikke
-     * TODO slet?
+     * Benyttes ikke TODO slet?
      */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         if (unitOfWork == null) {
