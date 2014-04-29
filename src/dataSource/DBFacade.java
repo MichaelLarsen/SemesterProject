@@ -102,9 +102,10 @@ public class DBFacade {
     }
 
     /**
-    * Henter gæst med specifikt bookingId fra databasen.
+    * Henter gæst med specifikt guestId fra databasen.
     *
-    * @return       Liste med alle Rooms i databasen.
+    * @param guestId        GuestId på gæst som ønskes.
+    * @return               Guest-objekt med ønskede bookingId.
     */
     public Guest getGuestFromID(int guestId) {
         Guest guest;
@@ -119,7 +120,11 @@ public class DBFacade {
         return guest;
     }
 
-    //returns arraylist of guests
+    /**
+    * Henter alle gæster fra databasen.
+    *
+    * @return       Liste med alle Guests i databasen.
+    */
     public ArrayList<Guest> getGuestsFromDB() {
         con = null;
         ArrayList<Guest> tempGuestList;
@@ -133,7 +138,11 @@ public class DBFacade {
         return tempGuestList;
     }
 
-    //returns arraylist of bookings
+    /**
+    * Henter alle bookinger fra databasen.
+    *
+    * @return       Liste med alle Bookings i databasen.
+    */
     public ArrayList<Booking> getBookingsFromDB() {
         con = null;
         ArrayList<Booking> tempBookingList;
@@ -147,6 +156,11 @@ public class DBFacade {
         return tempBookingList;
     }
 
+    /**
+    * Henter alle booking-logs fra databasen.
+    * 
+    * @return       Liste med alle Booking-logs som strings.
+    */
     public ArrayList<String> getBookingLog() {
         con = null;
         ArrayList<String> tempBookingLogList;
@@ -160,6 +174,11 @@ public class DBFacade {
         return tempBookingLogList;
     }
 
+    /**
+    * Henter alle guest-logs fra databasen.
+    * 
+    * @return       Liste med alle Guest-logs som strings.
+    */
     public ArrayList<String> getGuestLog() {
         con = null;
         ArrayList<String> tempGuestLogList;
@@ -173,6 +192,13 @@ public class DBFacade {
         return tempGuestLogList;
     }
 
+    /**
+    * Henter alle bookinger gæsten sover på (ikke dem han er ejer af). 
+    * - Bruges til at checke at gæsten ikke bookes til flere værelser i samme tidsrum.
+    *
+    * @param guest      Guest for hvem Bookings ønskes.
+    * @return           Liste med Bookings gæsten findes på.
+    */
     public ArrayList<Booking> getGuestBookingsFromDB(Guest guest) {
         con = null;
         ArrayList<Booking> tempBookingList;
@@ -186,6 +212,12 @@ public class DBFacade {
         return tempBookingList;
     }
 
+     /**
+     * Henter gæster som bor på booking/room, til visning i bookingoversigt.
+     *
+     * @param booking       Bookingen vi ønsker gæsterne for.
+     * @return              Liste med gæster fra bookingen.
+     */
     public ArrayList<Guest> getGuestsInRoomFromDB(Booking booking) {
         con = null;
         ArrayList<Guest> roomGuestList;

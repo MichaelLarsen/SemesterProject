@@ -227,9 +227,9 @@ public class BookingMapper {
      * Henter alle bookinger gæsten sover på (ikke dem han er ejer af). 
      * Bruges til at checke at gæsten ikke bookes til flere værelser i samme tidsrum.
      *
-     * @param guest         Gæst for hvem bookings ønskes.
+     * @param guest         Guest for hvem Bookings ønskes.
      * @param con           Forbindelse til databasen.
-     * @return              Liste med bookinger gæsten
+     * @return              Liste med Bookings gæsten findes på.
      */
     public ArrayList<Booking> getGuestBookingsFromDB(Guest guest, Connection con) {
         Booking booking = null;
