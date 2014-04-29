@@ -6,9 +6,10 @@
 package dataSource;
 
 import static dataSource.BookingMapper.log;
-import domain.BookingDetail;
+import domain.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -55,6 +56,48 @@ public class BookingDetailMapper {
             }
         }
         return guestAdded == newGuestInRoomList.size();
+    }
+    
+    /**
+     * Henter gæster som bor på booking/room, til visning i bookingoversigt.
+     *
+     * @param booking       Bookingen vi ønsker gæsterne for.
+     * @param con           Forbindelse til databasen.
+     * @return              Liste med gæster fra bookingen.
+     */
+    public ArrayList<Guest> getBookingDetailsFromDB(Booking booking, Connection con) {
+        ArrayList<Guest> roomGuestList = new ArrayList<>();
+        Guest guest = null;
+        String SQLString = "SELECT * "
+                + "FROM GUESTS "
+                + "JOIN booking_details "
+                + "ON guests.guest_id = booking_details.guest_id "
+                + "WHERE booking_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(SQLString);
+            statement.setInt(1, booking.getBookingId());
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                guest = new Guest(rs);
+                roomGuestList.add(guest);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fail in BookingMapper.getGuestsInRoom()");
+            System.out.println(e.getMessage());
+        }
+        finally {
+            try {
+                statement.close();
+            }
+            catch (SQLException e) {
+                System.out.println("Fail in BookingMapper.getGuestsInRoom()");
+                System.out.println(e.getMessage());
+            }
+        }
+        return roomGuestList;
     }
 
     /**

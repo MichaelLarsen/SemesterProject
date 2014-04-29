@@ -5,11 +5,9 @@
  */
 package domain;
 
-// Bruges for at kunne sende date mellem SQL og Java
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-//import java.util.ArrayList;
 
 /**
  *

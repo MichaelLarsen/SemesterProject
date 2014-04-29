@@ -4,10 +4,7 @@
  */
 package dataSource;
 
-import domain.Booking;
-import domain.Guest;
-import domain.Room;
-import domain.BookingDetail;
+import domain.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;

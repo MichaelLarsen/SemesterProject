@@ -83,27 +83,6 @@ public class BookingMapperTest {
     }
 
     /**
-     * Test of getGuestsInBooking method, of class BookingMapper.
-     *
-     */
-    @Test
-    public void testGetGuestsInBooking() {
-        System.out.println("getGuestsInBooking");
-        Booking booking = null;
-        bookingListTest = bm.getBookingsFromDB(con);
-        for (int i = 0; i < bookingListTest.size(); i++) {
-            if (bookingListTest.get(i).getBookingId() == 3000001) {
-                booking = bookingListTest.get(i);
-            }
-        }
-        ArrayList<Guest> result = bm.getGuestsInBooking(booking, con);
-        assertEquals(2, result.size());
-        //Test for de rigtige gæster
-        assertEquals(2000001, result.get(0).getGuestId());
-        assertEquals(2000002, result.get(1).getGuestId());
-    }
-
-    /**
      * Test of updateBooking method, of class BookingMapper.
      */
     @Test

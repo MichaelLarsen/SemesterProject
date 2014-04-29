@@ -21,6 +21,7 @@ public class DBFacade {
     private GuestMapper guestMapper;
     private RoomMapper roomMapper;
     private BookingMapper bookingMapper;
+    private BookingDetailMapper bookingDetailMapper;
     private Connection con;
     private UnitOfWork unitOfWork = new UnitOfWork();
 
@@ -33,6 +34,8 @@ public class DBFacade {
         guestMapper = new GuestMapper();
         roomMapper = new RoomMapper();
         bookingMapper = new BookingMapper();
+        bookingDetailMapper = new BookingDetailMapper();
+        
         con = null;
     }
 
@@ -107,7 +110,7 @@ public class DBFacade {
             finally {
                 closeConnection(con);
             }
-            unitOfWork = null;      // unitOfWork sættes til garbage-collection, da vi ikke længere skal bruge den.
+            unitOfWork = null;      // unitOfWork sættes til garbage-collection, da vi ikke længere skal bruge den og vores transaktion er hermed afsluttet.
         }
         return commitSuccess;
     }
@@ -247,12 +250,12 @@ public class DBFacade {
       * @param booking       Bookingen vi ønsker gæsterne for.
       * @return              Liste med gæster fra bookingen.
       */
-    public ArrayList<Guest> getGuestsInRoomFromDB(Booking booking) {
+    public ArrayList<Guest> getBookingDetailsFromDB(Booking booking) {
         con = null;
         ArrayList<Guest> roomGuestList;
         try {
             con = openConnection();
-            roomGuestList = bookingMapper.getGuestsInBooking(booking, con);
+            roomGuestList = bookingDetailMapper.getBookingDetailsFromDB(booking, con);
         }
         finally {
             closeConnection(con);

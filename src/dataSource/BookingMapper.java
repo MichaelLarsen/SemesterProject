@@ -4,8 +4,7 @@
  */
 package dataSource;
 
-import domain.Booking;
-import domain.Guest;
+import domain.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -132,48 +131,6 @@ public class BookingMapper {
             }
         }
         return bookingAdded == newBookingList.size();   // hvis antallet af rows UPDATED(/deleted/created) passer med størrelsen på listen af Bookings, ved vi at alle bookings er blevet tilføjet og vi returnerer TRUE.
-    }
-
-    /**
-     * Henter gæster som bor på booking/room, til visning i bookingoversigt.
-     *
-     * @param booking       Bookingen vi ønsker gæsterne for.
-     * @param con           Forbindelse til databasen.
-     * @return              Liste med gæster fra bookingen.
-     */
-    public ArrayList<Guest> getGuestsInBooking(Booking booking, Connection con) {
-        ArrayList<Guest> roomGuestList = new ArrayList<>();
-        Guest guest = null;
-        String SQLString = "SELECT * "
-                + "FROM GUESTS "
-                + "JOIN booking_details "
-                + "ON guests.guest_id = booking_details.guest_id "
-                + "WHERE booking_id = ?";
-        PreparedStatement statement = null;
-        try {
-            statement = con.prepareStatement(SQLString);
-            statement.setInt(1, booking.getBookingId());
-
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                guest = new Guest(rs);
-                roomGuestList.add(guest);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Fail in BookingMapper.getGuestsInRoom()");
-            System.out.println(e.getMessage());
-        }
-        finally {
-            try {
-                statement.close();
-            }
-            catch (SQLException e) {
-                System.out.println("Fail in BookingMapper.getGuestsInRoom()");
-                System.out.println(e.getMessage());
-            }
-        }
-        return roomGuestList;
     }
 
     /**

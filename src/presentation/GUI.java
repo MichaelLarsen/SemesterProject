@@ -5,10 +5,7 @@
  */
 package presentation;
 
-import domain.Booking;
-import domain.Control;
-import domain.Guest;
-import domain.Room;
+import domain.*;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -88,8 +85,6 @@ public class GUI extends javax.swing.JFrame {
         bookingTableModel.setColumnCount(0);
         bookingTableModel.addColumn("Booking id");
         bookingTableModel.addColumn("Booking owner(ID)");
-        bookingTableModel.addColumn("First name");
-        bookingTableModel.addColumn("Last name");
         bookingTableModel.addColumn("Room number");
         bookingTableModel.addColumn("Agency");
         bookingTableModel.addColumn("Check in");
@@ -134,16 +129,13 @@ public class GUI extends javax.swing.JFrame {
         ArrayList<Booking> bookingList;
         bookingList = ctr.getBookingsFromDB();
         for (Booking booking : bookingList) {
-            Guest guest = ctr.getGuestFromID(booking.getBookingOwnerId());
-            Object[] bookingArray = new Object[8];
+            Object[] bookingArray = new Object[6];
             bookingArray[0] = booking.getBookingId();
             bookingArray[1] = booking.getBookingOwnerId();
-            bookingArray[2] = guest.getFirstName();
-            bookingArray[3] = guest.getLastName();
-            bookingArray[4] = booking.getRoomNo();
-            bookingArray[5] = booking.getAgency();
-            bookingArray[6] = booking.getCheckInDate();
-            bookingArray[7] = booking.getCheckOutDate();
+            bookingArray[2] = booking.getRoomNo();
+            bookingArray[3] = booking.getAgency();
+            bookingArray[4] = booking.getCheckInDate();
+            bookingArray[5] = booking.getCheckOutDate();
             bookingTableModel.addRow(bookingArray);
         }
         bookingTable.setModel(bookingTableModel);
@@ -188,7 +180,7 @@ public class GUI extends javax.swing.JFrame {
         if (model.equals(infoBookingModel)) {
             infoBookingModel.clear();
             ArrayList<Guest> roomGuestList;
-            roomGuestList = ctr.getGuestsInRoom(chosenBooking);
+            roomGuestList = ctr.getBookingDetailsFromDB(chosenBooking);
 
             for (int i = 0; i < roomGuestList.size(); i++) {
                 infoBookingModel.addElement(roomGuestList.get(i));
@@ -406,9 +398,9 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTabbedPaneMouseClicked(evt);
+        jTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPaneStateChanged(evt);
             }
         });
 
@@ -1447,7 +1439,7 @@ public class GUI extends javax.swing.JFrame {
                 }
             }
         }
-        else{
+        else {
             jOptionPane.showMessageDialog(this, "There is nothing to save.");
         }
     }//GEN-LAST:event_saveNewGuestsButtonActionPerformed
@@ -1497,7 +1489,7 @@ public class GUI extends javax.swing.JFrame {
             if (chosenBooking != null) {
                 infoBookingModel.clear();
                 ArrayList<Guest> roomGuestList;
-                roomGuestList = ctr.getGuestsInRoom(chosenBooking);
+                roomGuestList = ctr.getBookingDetailsFromDB(chosenBooking);
 
                 for (int i = 0; i < roomGuestList.size(); i++) {
                     infoBookingModel.addElement(roomGuestList.get(i));
@@ -1506,18 +1498,18 @@ public class GUI extends javax.swing.JFrame {
                 bookingDetailsJList.setModel(infoBookingModel);
                 bookingIdLabel.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 0));
                 bookingOwnerLabel.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 1));
-                roomNoLabel.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 4));
-                agencyLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 5));
-                checkInLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 6));
-                checkOutLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 7));
+                roomNoLabel.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 2));
+                agencyLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 3));
+                checkInLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 4));
+                checkOutLabel.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 5));
 
                 bookingDetailsJList1.setModel(infoBookingModel);
                 bookingIdLabel3.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 0));
                 bookingOwnerLabel3.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 1));
-                roomNoLabel3.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 4));
-                agencyLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 5));
-                checkInLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 6));
-                checkOutLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 7));
+                roomNoLabel3.setText("" + (Integer) bookingTableModel.getValueAt(selectedRowIndex, 2));
+                agencyLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 3));
+                checkInLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 4));
+                checkOutLabel3.setText("" + bookingTableModel.getValueAt(selectedRowIndex, 5));
 
                 if (evt.getClickCount() == 2) {
                     jTabbedPane.setSelectedIndex(3);
@@ -1628,7 +1620,6 @@ public class GUI extends javax.swing.JFrame {
                     newBookingStatusLabel.setText("Booking(s) were saved!");
                     refreshBookingTable(bookingTableModel);
                     refreshRoomTable(roomTableModel, checkIn.getDate(), checkOut.getDate());
-                    newBookingStatusLabel.setText("");
                 }
                 else {
                     jOptionPane.showMessageDialog(this, "Something went wrong with saving the booking!", "Booking Error! - rollback", jOptionPane.ERROR_MESSAGE);
@@ -1636,7 +1627,7 @@ public class GUI extends javax.swing.JFrame {
             }
         }
         else {
-            newBookingStatusLabel.setText("There is no bookings to be saved");
+            newBookingStatusLabel.setText("There is no bookings to be saved.");
         }
     }//GEN-LAST:event_saveBookingButtonActionPerformed
 
@@ -1700,12 +1691,6 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_getLogButtonActionPerformed
 
-    private void jTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPaneMouseClicked
-        if (jTabbedPane.getSelectedIndex() == 2) {
-            refreshBookingTable(bookingTableModel);
-        }
-    }//GEN-LAST:event_jTabbedPaneMouseClicked
-
     private void searchLastNameFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchLastNameFieldKeyTyped
         int strLength = searchLastNameField.getText().length();      // Vi checker længden på vores String så vi kan begrænse dens max længde i vores IF-statement nedenfor.
         char c = evt.getKeyChar();
@@ -1725,9 +1710,17 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_searchLastNameField2KeyTyped
 
     private void clearAddedGuestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAddedGuestsButtonActionPerformed
-        addedGuestsModel.clear();
-        ctr.clearNewBookingDetails();
+        if (!addedGuestsModel.isEmpty()) {
+            addedGuestsModel.clear();
+            ctr.clearNewBookingDetails();
+        }
     }//GEN-LAST:event_clearAddedGuestsButtonActionPerformed
+
+    private void jTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPaneStateChanged
+        if (jTabbedPane.getSelectedIndex() == 2) {
+            refreshBookingTable(bookingTableModel);
+        }
+    }//GEN-LAST:event_jTabbedPaneStateChanged
 
     /**
      * @param args the command line arguments
