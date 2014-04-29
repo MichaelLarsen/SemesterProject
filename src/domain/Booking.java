@@ -69,8 +69,9 @@ public class Booking {
 
     @Override
     public String toString() {
-        String str = "BookingId:    " + bookingId + "    RoomNo: " + roomNo + "     OwnerID: " + bookingOwnerId
-                + "     CheckIn: " + checkInDate + "    CheckOut: " + checkOutDate;
+        String str = " RoomNo: " + roomNo + " OwnerID: " + bookingOwnerId
+                + " Period: " + checkInDate.toString().substring(0, 10) + checkInDate.toString().substring(24, 29)
+                +  "   -   " + checkOutDate.toString().substring(0, 10) + " - " + checkOutDate.toString().substring(24, 29);
         return str;
     }
 
