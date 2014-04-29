@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
 package dataSource;
 
@@ -13,15 +12,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * RoomMapper klassen håndterer kommunikation mellem programmet og
+ * databasens ROOMS tabel.
  *
  * @author Sebastian, Michael og Andreas
  */
 public class RoomMapper {
 
+    /**
+     * Henter alle rum fra databasen (ROOMS-tabel).
+     * - Bruges til visning i GUI, samt til at lave bookings og tilføje gæster til dem.
+     *
+     * @param con   Forbindelse til databasen.
+     * @return      Liste af alle rum i databasen.
+     */
     public ArrayList<Room> getRoomsFromDB(Connection con) {
         Room room = null;
         ArrayList<Room> roomList = new ArrayList<>();
-        String SQLString = "select * from ROOMS";
+        String SQLString = "SELECT * "
+                + "FROM ROOMS";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -35,27 +44,36 @@ public class RoomMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in RoomMapper - getRoomsFromDB");
+            System.out.println("Fail in RoomMapper.getRoomsFromDB()");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
+        finally
         {
             try {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in RoomMapper - getRoomsFromDB");
+                System.out.println("Fail in RoomMapper.getRoomsFromDB()");
                 System.out.println(e.getMessage());
             }
         }
         return roomList;
     }
 
+    /**
+     * Benyttes ikke pt. da vi indtil videre ikke tillader at man ændrer på rum.
+     *
+     * TODO slet? benyttes ikke
+     *
+     * @param newRoomList       Liste af rum som er ændret.
+     * @param con               Forbindelse til databasen.
+     * @return                  TRUE, hvis UPDATE lykkes. Rækker ændret == antallet af Rooms i liste.
+     */
     public boolean updateRoomDB(ArrayList<Room> newRoomList, Connection con) {
-        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "update ROOMS"
-                + " set room_type = ?, price = ?"
-                + " where room_no = ?";
+        int rowsUpdated = 0;
+        String SQLString = "UPDATE rooms "
+                + "SET room_type = ?, price = ? "
+                + "WHERE room_no = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -65,22 +83,22 @@ public class RoomMapper {
                 statement.setInt(3, newRoomList.get(i).getRoomNo());
             }
 
-            rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = newRoomList.size(), hvis Update går igennem
+            rowsUpdated += statement.executeUpdate();
         }
         catch (SQLException e) {
-            System.out.println("Fail in RoomMapper - UpdateRoomDB");
+            System.out.println("Fail in RoomMapper.UpdateRoomDB()");
             System.out.println(e.getMessage());
         }
-        finally // Skal køres efter catch
+        finally
         {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in RoomMapper - UpdateRoomDB");
+                System.out.println("Fail in RoomMapper.UpdateRoomDB()");
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == newRoomList.size(); //hvis dette passer returneres true ellers false  
+        return rowsUpdated == newRoomList.size();
     }
 }

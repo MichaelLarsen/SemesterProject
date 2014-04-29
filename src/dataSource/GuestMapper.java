@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
 package dataSource;
 
@@ -13,7 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- *
+ * GuestMapper klassen håndterer persistering af data mellem programmet og
+ * databasens GUESTS tabel.
+ * 
  * @author Sebastian, Michael og Andreas
  */
 public class GuestMapper {
@@ -21,14 +22,15 @@ public class GuestMapper {
     /**
      * Metoden henter en guest fra databasen via guestId.
      *
-     * @param guestId
-     * @param con
-     * @return guest
+     * @param guestId       ID for den gæst man ønsker hentet ud.
+     * @param con           Forbindelse til databasen.
+     * @return guest        Guest-objekt.
      */
     public Guest getGuestFromID(int guestId, Connection con) {
         Guest guest = null;
-        String SQLString = "select * from GUESTS "
-                + "where guest_id = ?";
+        String SQLString = "SELECT * "
+                + "FROM guests "
+                + "WHERE guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -36,29 +38,37 @@ public class GuestMapper {
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                guest = new Guest(rs);
+                guest = new Guest(rs);      // Vi sender vores ResultSet direkte videre til vores constructor
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - getGuestFromID");
+            System.out.println("Fail in GuestMapper.getGuestFromID()");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
+        finally     // SKAL køres efter try/catch statement
         {
             try {
-                statement.close();
+                statement.close();      // Vi beder eksplicit om at lukke/release vores statement, hvormed vores ResultSet også bliver lukket.
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - getGuestFromID");
+                System.out.println("Fail in GuestMapper.getGuestFromID()");
                 System.out.println(e.getMessage());
             }
         }
         return guest;
     }
 
+    /**
+     * Persisterer gæst i databasen.
+     * - Bruges ved oprettelse af ny gæst.
+     *
+     * @param newGuestList      Liste med Guest-objekter som skal persisteres. Kun én gæst af gangen pt.
+     * @param con               Forbindelse til databasen.
+     * @return                  TRUE, hvis INSERTs lykkes. Rækker tilføjet == antallet af Guests i liste.
+     */
     public boolean createGuest(ArrayList<Guest> newGuestList, Connection con) {
         int guestsCreated = 0;
-        String SQLString = "insert into GUESTS values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String SQLString = "INSERT INTO guests VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -74,31 +84,37 @@ public class GuestMapper {
                 statement.setString(8, newGuestList.get(i).getEmail());
                 statement.setInt(9, newGuestList.get(i).getPhone1());
                 statement.setInt(10, newGuestList.get(i).getPhone2());
-                guestsCreated += statement.executeUpdate(); // guestCreated bliver = newGuestList.size(), hvis Update går igennem
+                guestsCreated += statement.executeUpdate();      // guestCreated bliver = newGuestList.size(), hvis Update går igennem
                 log(newId, ActionType.CREATE, con);
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - createGuest");
+            System.out.println("Fail in GuestMapper.createGuest()");
             System.out.println(e.getMessage());
         }
-        finally // Skal lukke statement
+        finally
         {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - createGuest");
+                System.out.println("Fail in GuestMapper.createGuest()");
                 System.out.println(e.getMessage());
             }
         }
         return guestsCreated == newGuestList.size();
     }
 
+    /**
+     * Henter næste unikke guestId i databasen.
+     * - Bruges til oprettelse af ny gæst. Hentes først når vi persisterer den nye gæst.
+     *
+     * @param con   Forbindelse til databasen.
+     * @return      Næste guestId.
+     */
     public int getNewGuestsId(Connection con) {
         int nextGuestId = 0;
-
-        String SQLString = "select guest_id_seq.nextval from SYS.DUAL";
+        String SQLString = "SELECT guest_id_seq.NEXTVAL FROM SYS.DUAL";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -108,7 +124,7 @@ public class GuestMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - getNewGuestId");
+            System.out.println("Fail in GuestMapper.getNewGuestId()");
             System.out.println(e.getMessage());
         }
         finally {
@@ -116,18 +132,26 @@ public class GuestMapper {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - getNewGuestId");
+                System.out.println("Fail in GuestMapper.getNewGuestId()");
                 System.out.println(e.getMessage());
             }
         }
         return nextGuestId;
     }
 
+    /**
+     * Henter alle gæster fra databasen (GUESTS-tabel).
+     * - Bruges til at vise tabel med gæster i GUI.
+     *  
+     * @param con   Forbindelse til databasen.
+     * @return      Liste med alle gæster fra databasen.
+     */
     public ArrayList<Guest> getGuestsFromDB(Connection con) {
         Guest guest = null;
         ArrayList<Guest> guestList = new ArrayList<>();
-        String SQLString = "select * from GUESTS "
-                + "order by guest_id desc";
+        String SQLString = "SELECT * "
+                + "FROM guests "
+                + "ORDER BY guest_id DESC";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -138,27 +162,35 @@ public class GuestMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - getGuestsFromDB");
+            System.out.println("Fail in GuestMapper.getGuestsFromDB()");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
+        finally
         {
             try {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - getGuestsFromDB");
+                System.out.println("Fail in GuestMapper.getGuestsFromDB()");
                 System.out.println(e.getMessage());
             }
         }
         return guestList;
     }
 
+    /**
+     * Persisterer ændringer lavet til en gæst.
+     * - Bruges i Gæst-fanen i GUI, til at lave ændringer i en gæsts information.
+     * 
+     * @param dirtyGuestList    Liste med Guest-objekter som er blevet ændret og skal persisteres. Kun 1 gæst af gangen pt.
+     * @param con               Forbindelse til databasen.
+     * @return                  TRUE, hvis UPDATEs lykkes. Rækker tilføjet == antallet af Guests i liste.
+     */
     public boolean updateGuestDB(ArrayList<Guest> dirtyGuestList, Connection con) {
-        int rowsUpdated = 0; //hvis rowsInserted sættes == 1 er kunden booket til værelset
-        String SQLString = "update GUESTS"
-                + " set first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country = ?, email = ?, phone_1 = ?, phone_2 = ?"
-                + " where guest_id = ?";
+        int rowsUpdated = 0;
+        String SQLString = "UPDATE guests "
+                + "SET first_name = ?, last_name = ?, street = ?, zipcode = ?, city = ?, country = ?, email = ?, phone_1 = ?, phone_2 = ? "
+                + "WHERE guest_id = ?";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -173,50 +205,60 @@ public class GuestMapper {
                 statement.setInt(8, guest.getPhone1());
                 statement.setInt(9, guest.getPhone2());
                 statement.setInt(10, guest.getGuestId());
-                rowsUpdated += statement.executeUpdate(); //rowsInserted bliver = 1, hvis Update går igennem
+                rowsUpdated += statement.executeUpdate();
                 log(guest.getGuestId(), ActionType.UPDATE, con);
             }
-
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - UpdateGuestDB");
+            System.out.println("Fail in GuestMapper.UpdateGuestDB()");
             System.out.println(e.getMessage());
         }
-        finally // Skal køres efter catch
+        finally
         {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - UpdateGuestDB");
+                System.out.println("Fail in GuestMapper.UpdateGuestDB()");
                 System.out.println(e.getMessage());
             }
         }
-        return rowsUpdated == dirtyGuestList.size(); //hvis dette passer returneres true ellers false
+        return rowsUpdated == dirtyGuestList.size(); //hvis dette passer returneres true, ellers false
     }
 
+    /**
+     * Søger efter fornavn, efternavn, eller begge dele i databasen. Sammenligning sker i upper case.
+     * - Bruges til at søge efter en specifik gæst i GUI.
+     * 
+     * @param status        Angiver om der skal søges på fornavn, efternavn eller begge.
+     * @param con           Forbindelse til databasen.
+     * @param names         Navn(e) der skal søges efter.
+     * @return              Liste af Guests som matcher søgekriterierne.
+     */
     public ArrayList<Guest> searchForGuestDB(String status, Connection con, String... names) {
         Guest guest = null;
         String SQLString = "";
         ArrayList<Guest> guestList = new ArrayList<>();
         if (status.equals("both")) {
-            SQLString = "select * from GUESTS "
-                    + "where upper(first_name) LIKE upper(?) AND upper(last_name) LIKE upper(?)";
+            SQLString = "SELECT * "
+                    + "FROM guests "
+                    + "WHERE UPPER(first_name) LIKE UPPER(?) AND UPPER(last_name) LIKE UPPER(?)";
         }
         if (status.equals("firstName")) {
-            SQLString = "select * from GUESTS "
-                    + "where upper(first_name) LIKE upper(?)";
+            SQLString = "SELECT * "
+                    + "FROM guests "
+                    + "WHERE UPPER(first_name) LIKE UPPER(?)";
         }
         if (status.equals("lastName")) {
-            SQLString = "select * from GUESTS "
-                    + "where upper(last_name) LIKE upper(?)";
+            SQLString = "SELECT * "
+                    + "FROM guests "
+                    + "WHERE UPPER(last_name) LIKE UPPER(?)";
         }
-
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
             if (status.equals("both")) {
-                statement.setString(1, "%" + names[0] + "%");
+                statement.setString(1, "%" + names[0] + "%");       // Her indsættes "%navn%" på "?", for at opnå den ønskede søgning "WHERE first_name LIKE '%navn%'".
                 statement.setString(2, "%" + names[1] + "%");
             }
             else {
@@ -229,22 +271,27 @@ public class GuestMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - searchForGuestDB");
+            System.out.println("Fail in GuestMapper.searchForGuestDB()");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
+        finally
         {
             try {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - searchForGuestDB");
+                System.out.println("Fail in GuestMapper.searchForGuestDB()");
                 System.out.println(e.getMessage());
             }
         }
         return guestList;
     }
 
+    /**
+     * Enumerationen bruges når vi indsætter en guest-log i databasen til at angive,
+     * hvilken type guest-log der er tale om: 
+     * Ny gæst eller ændre gæst.
+     */
     public enum ActionType {
 
         CREATE(1), UPDATE(2);
@@ -255,10 +302,19 @@ public class GuestMapper {
         }
     }
 
+    /**
+     * Persisterer guest-log i databasen (GUEST_LOG-tabel). 
+     * Bruges hver gang vi kalder en metode, som ændrer(insert/update) en gæst i databasen.
+     * - tilsvarende log-metode for ændring af Booking er BookingMapper.log().
+     *
+     * @param guest_id      guestId for gæst som er blevet oprettet/ændret.
+     * @param action        Typen af ændring som er foretaget (opret/ændre) i form af enumeration ActionType.
+     * @param con           Forbindelse til databasen.
+     */
     public static void log(int guest_id, ActionType action, Connection con) {
-        String SQLString = "INSERT INTO GUEST_LOG (Id, Action, Guest_Id, Logdate, Content) "
-                + "SELECT GUEST_LOG_ID_SEQ.Nextval, ?, ?, CURRENT_TIMESTAMP(3), SYS.Dbms_Xmlgen.Getxml('SELECT * FROM GUESTS "
-                + "WHERE GUEST_ID = " + guest_id + "') xmlstr FROM Dual";
+        String SQLString = "INSERT INTO guest_log(id, action, guest_id, logdate, content) "                                        //laver ny log for ændret gæst
+                + "SELECT guest_log_id_seq.NEXTVAL, ?, ?, CURRENT_TIMESTAMP(3), SYS.DBMS_XMLGEN.GETXML('SELECT * FROM guests "     //henter næste unikke ID og indsætter det sammen med actiontype og guestId på '?'. CURRENT_TIMESTAMP(3) giver os dato + tid med præcision 3.
+                + "WHERE guest_id = " + guest_id + "') XMLSTR FROM DUAL";                                                          //Vi henter data fra den table vi vil logge, som xml da det kan bruges af mange programmer og i mange sammenhænge
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -267,25 +323,33 @@ public class GuestMapper {
             statement.executeUpdate();
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - log");
+            System.out.println("Fail in GuestMapper.log()");
             System.out.println(e.getMessage());
         }
-        finally // Skal lukke statement
+        finally
         {
             try {
-                statement.close(); //lukker statements
+                statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - log");
+                System.out.println("Fail in GuestMapper.log()");
                 System.out.println(e.getMessage());
             }
         }
     }
 
+    /**
+     * Henter alle guest-logs fra databasen (GUEST_LOG-tabel).
+     * - Bruges til at vise logs i Log-fanen i GUI.
+     *
+     * @param con       Forbindelse til databasen.
+     * @return          Liste med guest-logs fra databasen, som strings.
+     */
     public ArrayList<String> getLog(Connection con) {
         ArrayList<String> stringArrayList = new ArrayList<>();
-        String SQLString = "select * from guest_log"
-                + " order by id";
+        String SQLString = "SELECT * "
+                + "FROM guest_log "
+                + "ORDER BY id";
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
@@ -295,20 +359,19 @@ public class GuestMapper {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fail in GuestMapper - getLog");
+            System.out.println("Fail in GuestMapper.getLog()");
             System.out.println(e.getMessage());
         }
-        finally // must close statement
+        finally
         {
             try {
                 statement.close();
             }
             catch (SQLException e) {
-                System.out.println("Fail in GuestMapper - getLog");
+                System.out.println("Fail in GuestMapper.getLog()");
                 System.out.println(e.getMessage());
             }
         }
         return stringArrayList;
     }
-
 }

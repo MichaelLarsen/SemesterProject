@@ -858,7 +858,7 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        addedGuestsJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Added guests"));
+        addedGuestsJList.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Guests to add"));
         jScrollPane6.setViewportView(addedGuestsJList);
 
         addGuestToRoomButton.setText("Add guest to booking");

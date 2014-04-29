@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
 package domain;
 
@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * Tager sig af hovedelen af den logiske del af koden og håndterer kommunikation
+ * til de andre lag.
  *
  * @author Sebastian, Michael og Andreas
  */
@@ -26,16 +28,21 @@ public class Control {
         roomList = getRoomsFromDB();
     }
 
+    /**
+     * Commit'er alle ændringer foretaget inden for transaktionen.
+     *
+     * @return      True, hvis alle transaktionens ændringer går igennem, ellers returneres FALSE og alle ændringer bliver rollback'et.
+     */
     public boolean commitTransaction() {
         boolean commitSuccess = false;
         try {
             commitSuccess = DBFacade.commitTransaction();
             if (commitSuccess) {
-//                clearTempRoomGuestList();
             }
         }
         catch (SQLException e) {
-            System.out.println("Fejl ved at gemme transaction!");
+            System.out.println("Fejl ved commit af transaktion!");
+            System.out.println("Fail in Control.commitTransaction()");
             System.out.println(e.getMessage());
         }
         return commitSuccess;
@@ -76,6 +83,9 @@ public class Control {
         return DBFacade.searchForGuestDB(status, names);
     }
 
+    /**
+     * TODO slet? Benyttes ikke
+     */
     public boolean updateRoomDB(Room room) {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateRoomDB(room);
@@ -83,7 +93,7 @@ public class Control {
     }
 
     /**
-     * Benyttes ikke TODO slet?
+     * TODO slet? Benyttes ikke
      */
     public boolean updateBookingDB(Booking booking) {
         boolean updateSuccess;
@@ -93,7 +103,9 @@ public class Control {
 
     /**
      * Benyttes ikke pt, da vi endnu ikke har implementeret mulighed for at
-     * fjerne gæst fra en booking. TODO slet?
+     * fjerne gæst fra en booking. 
+     *
+     * TODO slet? Benyttes ikke
      */
     public boolean updateGuestsInRoomDB(BookingDetail roomGuest) {
         boolean updateSuccess;
@@ -105,16 +117,27 @@ public class Control {
         return DBFacade.deleteBookingFromDB(bookingId);
     }
 
+    /**
+     * Tilføjer booking til liste af bookings som skal oprettes.
+     * Checker at rummet ikke allerede er booked i den ønskede periode. 
+     * - Bruges ved oprettelse af ny booking.
+     *
+     * @param room          Rum som ønskes booked.
+     * @param guest         Gæst som ejer bookingen.
+     * @param checkIn       Check-in dato.
+     * @param checkOut      Check-out dato.
+     * @return              Booking som er oprettet med pågældende gæst og rum.
+     */
     public Booking bookRoom(Room room, Guest guest, Date checkIn, Date checkOut) {
-        Boolean bookingAddedSuccess;
+        boolean bookingAddedSuccess;
         boolean doubleBooking;
+        bookingList = DBFacade.getBookingsFromDB();
         Booking newBooking = null;
-
-        doubleBooking = checkForDoubleBooking(room, checkIn, checkOut);
+        doubleBooking = checkForDoubleBooking(room, checkIn, checkOut);                                 // Checker at rummet er ledigt i perioden. FALSE hvis rummet er ledigt.
         if (doubleBooking == false) {
-            newBooking = new Booking(guest.getGuestId(), room.getRoomNo(), "", checkIn, checkOut);
-            bookingAddedSuccess = DBFacade.bookRoom(newBooking);
-            if (bookingAddedSuccess == true && !bookingList.contains(newBooking)) {
+            newBooking = new Booking(guest.getGuestId(), room.getRoomNo(), "", checkIn, checkOut);      // Ny booking laves.
+            bookingAddedSuccess = DBFacade.bookRoom(newBooking);                                        // Booking tilføjes til nye bookings som skal persisteres.
+            if (bookingAddedSuccess == true && !bookingList.contains(newBooking)) {                     // Sørger for at bookingen ikke bliver vist flere gange.
                 bookingList.add(newBooking);
             }
         }
@@ -125,39 +148,22 @@ public class Control {
         return DBFacade.getGuestsInRoomFromDB(booking);
     }
 
+    /**
+     * Finder ledige rum for perioden.
+     * - Bruges til at populerer listen af ledige rum i GUI.
+     *
+     * @param checkInDate       Check-in dato.
+     * @param checkOutDate      Check-out dato.
+     * @return                  Liste af ledige rum for perioden.
+     */
     public ArrayList<Room> getAvailableRoomsDB(Date checkInDate, Date checkOutDate) {
-//        Date bookingStartDate;
-//        Date bookingEndDate;
-        bookingList = DBFacade.getBookingsFromDB();
+        bookingList = DBFacade.getBookingsFromDB();                                         // Henter alle Bookings fra databasen.
         Room room;
         ArrayList<Room> availableRoomList = new ArrayList<>();
         for (int i = 0; i < roomList.size(); i++) {
             room = roomList.get(i);
             boolean doubleBooking;
-            doubleBooking = checkForDoubleBooking(room, checkInDate, checkOutDate);
-//            boolean doubleBooking = false;
-//            int j = 0;
-//            while (doubleBooking == false && j < bookingList.size()) {
-//                if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
-//                    bookingStartDate = bookingList.get(j).getCheckInDate();
-//                    bookingEndDate = bookingList.get(j).getCheckOutDate();
-//                    //Januar starter på 00, så 03 er fx april.
-////                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-////                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
-//                    if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
-//                            || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
-//                            || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
-//                        doubleBooking = false;
-////                        availableRoomList.add(room);
-////                        System.out.println("Sådan - ledigt!");
-//                    }
-//                    else {
-//                        doubleBooking = true;
-////                        System.out.println("Doublebooking!");
-//                    }
-//                }
-//                j++;
-//            }
+            doubleBooking = checkForDoubleBooking(room, checkInDate, checkOutDate);         // Checker om rummet er ledigt i perioden, så det kan tilføjes til listen af ledige rum for perioden.
             if (doubleBooking == false && !availableRoomList.contains(room)) {
                 availableRoomList.add(room);
             }
@@ -165,6 +171,15 @@ public class Control {
         return availableRoomList;
     }
 
+    /**
+     * Checker om rum er ledigt ved at sammenligne den ønskede periode med alle bookings.
+     *
+     *
+     * @param room
+     * @param checkInDate
+     * @param checkOutDate
+     * @return
+     */
     public boolean checkForDoubleBooking(Room room, Date checkInDate, Date checkOutDate) {
         boolean doubleBooking = false;
         int j = 0;
@@ -172,24 +187,18 @@ public class Control {
             if ((bookingList.get(j).getRoomNo() == room.getRoomNo())) {
                 Date bookingStartDate = bookingList.get(j).getCheckInDate();
                 Date bookingEndDate = bookingList.get(j).getCheckOutDate();
-                //Januar starter på 00, så 03 er fx april.
-//                    System.out.println("checkInDate: " + checkInDate + " checkOutDate: " + checkOutDate);
-//                    System.out.println("bookingStartDate: " + bookingStartDate + " bookingEndDate: " + bookingEndDate);
                 if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                         || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
-                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {
+                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {       // Her checkes alle mulige måder rummet
                     doubleBooking = false;
-//                        availableRoomList.add(room);
-//                        System.out.println("Sådan - ledigt!");
                 }
                 else {
                     doubleBooking = true;
-//                        System.out.println("Doublebooking!");
                 }
             }
             j++;
         }
-            return doubleBooking;
+        return doubleBooking;
     }
 //        boolean doubleBooking = false;
 //        bookingList = DBFacade.getBookingsFromDB();
@@ -212,7 +221,6 @@ public class Control {
 //                }
 //            }
 //        }
-    
 
     public boolean addGuestToRoom(Guest guest, Booking booking) {
         ArrayList<Booking> tempBookingList;
