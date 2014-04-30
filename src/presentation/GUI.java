@@ -298,6 +298,35 @@ public class GUI extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         logo = new javax.swing.JLabel();
         introductionLabel = new javax.swing.JLabel();
+        guestPanel4 = new javax.swing.JPanel();
+        firstNameTextField = new javax.swing.JTextField();
+        lastNameTextField = new javax.swing.JTextField();
+        zipcodeTextField = new javax.swing.JTextField();
+        streetTextField = new javax.swing.JTextField();
+        cityTextField = new javax.swing.JTextField();
+        phone1TextField = new javax.swing.JTextField();
+        countryTextField = new javax.swing.JTextField();
+        emailTextField = new javax.swing.JTextField();
+        phone2TextField = new javax.swing.JTextField();
+        firstNameLabel = new javax.swing.JLabel();
+        lastNameLabel = new javax.swing.JLabel();
+        streetLabel = new javax.swing.JLabel();
+        addressLabel = new javax.swing.JLabel();
+        zipcodeLabel = new javax.swing.JLabel();
+        cityLabel = new javax.swing.JLabel();
+        countryLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
+        phone1Label = new javax.swing.JLabel();
+        phone2Label = new javax.swing.JLabel();
+        newGuestLabel = new javax.swing.JLabel();
+        createGuestButton = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        guestTable = new javax.swing.JTable();
+        mandatoryLabel = new javax.swing.JLabel();
+        editGuestButton = new javax.swing.JButton();
+        saveGuestChangesButton = new javax.swing.JButton();
+        clearGuestFieldsButton = new javax.swing.JButton();
+        guestIdLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         guestJList = new javax.swing.JList();
@@ -378,35 +407,6 @@ public class GUI extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         saveNewGuestsButton = new javax.swing.JButton();
-        guestPanel4 = new javax.swing.JPanel();
-        firstNameTextField = new javax.swing.JTextField();
-        lastNameTextField = new javax.swing.JTextField();
-        zipcodeTextField = new javax.swing.JTextField();
-        streetTextField = new javax.swing.JTextField();
-        cityTextField = new javax.swing.JTextField();
-        phone1TextField = new javax.swing.JTextField();
-        countryTextField = new javax.swing.JTextField();
-        emailTextField = new javax.swing.JTextField();
-        phone2TextField = new javax.swing.JTextField();
-        firstNameLabel = new javax.swing.JLabel();
-        lastNameLabel = new javax.swing.JLabel();
-        streetLabel = new javax.swing.JLabel();
-        addressLabel = new javax.swing.JLabel();
-        zipcodeLabel = new javax.swing.JLabel();
-        cityLabel = new javax.swing.JLabel();
-        countryLabel = new javax.swing.JLabel();
-        emailLabel = new javax.swing.JLabel();
-        phone1Label = new javax.swing.JLabel();
-        phone2Label = new javax.swing.JLabel();
-        newGuestLabel = new javax.swing.JLabel();
-        createGuestButton = new javax.swing.JButton();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        guestTable = new javax.swing.JTable();
-        mandatoryLabel = new javax.swing.JLabel();
-        editGuestButton = new javax.swing.JButton();
-        saveGuestChangesButton = new javax.swing.JButton();
-        clearGuestFieldsButton = new javax.swing.JButton();
-        guestIdLabel = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         logTextArea = new javax.swing.JTextArea();
@@ -449,6 +449,238 @@ public class GUI extends javax.swing.JFrame {
         );
 
         jTabbedPane.addTab("Home", jPanel9);
+
+        firstNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                firstNameTextFieldKeyTyped(evt);
+            }
+        });
+
+        lastNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lastNameTextFieldKeyTyped(evt);
+            }
+        });
+
+        zipcodeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                zipcodeTextFieldKeyTyped(evt);
+            }
+        });
+
+        streetTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                streetTextFieldKeyTyped(evt);
+            }
+        });
+
+        cityTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                cityTextFieldKeyTyped(evt);
+            }
+        });
+
+        phone1TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phone1TextFieldKeyTyped(evt);
+            }
+        });
+
+        countryTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                countryTextFieldKeyTyped(evt);
+            }
+        });
+
+        emailTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                emailTextFieldKeyTyped(evt);
+            }
+        });
+
+        phone2TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phone2TextFieldKeyTyped(evt);
+            }
+        });
+
+        firstNameLabel.setText("First name *");
+
+        lastNameLabel.setText("Family name *");
+
+        streetLabel.setText("Street *");
+
+        addressLabel.setText("Address:");
+
+        zipcodeLabel.setText("Zipcode *");
+
+        cityLabel.setText("City *");
+
+        countryLabel.setText("Country *");
+
+        emailLabel.setText("E-mail *");
+
+        phone1Label.setText("Phone #1 *");
+
+        phone2Label.setText("Phone #2");
+
+        newGuestLabel.setText("Register new guest:");
+
+        createGuestButton.setText("Create guest");
+        createGuestButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createGuestButtonActionPerformed(evt);
+            }
+        });
+
+        guestTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        guestTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane7.setViewportView(guestTable);
+
+        mandatoryLabel.setText("* mandatory");
+
+        editGuestButton.setText("Edit guest");
+        editGuestButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editGuestButtonActionPerformed(evt);
+            }
+        });
+
+        saveGuestChangesButton.setText("Save changes");
+        saveGuestChangesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveGuestChangesButtonActionPerformed(evt);
+            }
+        });
+
+        clearGuestFieldsButton.setText("Clear");
+        clearGuestFieldsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearGuestFieldsButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout guestPanel4Layout = new javax.swing.GroupLayout(guestPanel4);
+        guestPanel4.setLayout(guestPanel4Layout);
+        guestPanel4Layout.setHorizontalGroup(
+            guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(guestPanel4Layout.createSequentialGroup()
+                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(guestPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(addressLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phone1Label, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phone2Label, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mandatoryLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                .addComponent(newGuestLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                .addComponent(lastNameLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(lastNameTextField))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(streetLabel)
+                                    .addComponent(zipcodeLabel)
+                                    .addComponent(cityLabel)
+                                    .addComponent(emailLabel)
+                                    .addComponent(firstNameLabel))
+                                .addGap(27, 27, 27)
+                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(emailTextField)
+                                    .addComponent(phone2TextField)
+                                    .addComponent(phone1TextField)
+                                    .addComponent(countryTextField)
+                                    .addComponent(cityTextField)
+                                    .addComponent(streetTextField)
+                                    .addComponent(firstNameTextField)
+                                    .addGroup(guestPanel4Layout.createSequentialGroup()
+                                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(saveGuestChangesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                                        .addGap(63, 63, 63)))))
+                        .addGap(40, 40, 40)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editGuestButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(guestPanel4Layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addComponent(clearGuestFieldsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(287, Short.MAX_VALUE))
+        );
+        guestPanel4Layout.setVerticalGroup(
+            guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(guestPanel4Layout.createSequentialGroup()
+                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(guestPanel4Layout.createSequentialGroup()
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newGuestLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(firstNameLabel)
+                            .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lastNameLabel)
+                            .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37)
+                        .addComponent(addressLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(streetLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(zipcodeLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cityLabel)
+                            .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(countryLabel)
+                            .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(phone1Label)
+                            .addComponent(phone1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(phone2Label)
+                            .addComponent(phone2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(emailLabel)
+                            .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mandatoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createGuestButton)
+                    .addComponent(editGuestButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(saveGuestChangesButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clearGuestFieldsButton)
+                .addContainerGap(92, Short.MAX_VALUE))
+        );
+
+        jTabbedPane.addTab("Guests", guestPanel4);
 
         guestJList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPane1.setViewportView(guestJList);
@@ -1027,239 +1259,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(74, 74, 74))
         );
 
-        jTabbedPane.addTab("Booking details", jPanel3);
-
-        firstNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                firstNameTextFieldKeyTyped(evt);
-            }
-        });
-
-        lastNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                lastNameTextFieldKeyTyped(evt);
-            }
-        });
-
-        zipcodeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                zipcodeTextFieldKeyTyped(evt);
-            }
-        });
-
-        streetTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                streetTextFieldKeyTyped(evt);
-            }
-        });
-
-        cityTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cityTextFieldKeyTyped(evt);
-            }
-        });
-
-        phone1TextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                phone1TextFieldKeyTyped(evt);
-            }
-        });
-
-        countryTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                countryTextFieldKeyTyped(evt);
-            }
-        });
-
-        emailTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                emailTextFieldKeyTyped(evt);
-            }
-        });
-
-        phone2TextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                phone2TextFieldKeyTyped(evt);
-            }
-        });
-
-        firstNameLabel.setText("First name *");
-
-        lastNameLabel.setText("Family name *");
-
-        streetLabel.setText("Street *");
-
-        addressLabel.setText("Address:");
-
-        zipcodeLabel.setText("Zipcode *");
-
-        cityLabel.setText("City *");
-
-        countryLabel.setText("Country *");
-
-        emailLabel.setText("E-mail *");
-
-        phone1Label.setText("Phone #1 *");
-
-        phone2Label.setText("Phone #2");
-
-        newGuestLabel.setText("Register new guest:");
-
-        createGuestButton.setText("Create guest");
-        createGuestButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createGuestButtonActionPerformed(evt);
-            }
-        });
-
-        guestTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        guestTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane7.setViewportView(guestTable);
-
-        mandatoryLabel.setText("* mandatory");
-
-        editGuestButton.setText("Edit guest");
-        editGuestButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editGuestButtonActionPerformed(evt);
-            }
-        });
-
-        saveGuestChangesButton.setText("Save changes");
-        saveGuestChangesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveGuestChangesButtonActionPerformed(evt);
-            }
-        });
-
-        clearGuestFieldsButton.setText("Clear");
-        clearGuestFieldsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearGuestFieldsButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout guestPanel4Layout = new javax.swing.GroupLayout(guestPanel4);
-        guestPanel4.setLayout(guestPanel4Layout);
-        guestPanel4Layout.setHorizontalGroup(
-            guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(guestPanel4Layout.createSequentialGroup()
-                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(guestPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(addressLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phone1Label, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phone2Label, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mandatoryLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addComponent(newGuestLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addComponent(lastNameLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(lastNameTextField))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(streetLabel)
-                                    .addComponent(zipcodeLabel)
-                                    .addComponent(cityLabel)
-                                    .addComponent(emailLabel)
-                                    .addComponent(firstNameLabel))
-                                .addGap(27, 27, 27)
-                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(emailTextField)
-                                    .addComponent(phone2TextField)
-                                    .addComponent(phone1TextField)
-                                    .addComponent(countryTextField)
-                                    .addComponent(cityTextField)
-                                    .addComponent(streetTextField)
-                                    .addComponent(firstNameTextField)
-                                    .addGroup(guestPanel4Layout.createSequentialGroup()
-                                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(saveGuestChangesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                                        .addGap(63, 63, 63)))))
-                        .addGap(40, 40, 40)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editGuestButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(guestPanel4Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(clearGuestFieldsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(287, Short.MAX_VALUE))
-        );
-        guestPanel4Layout.setVerticalGroup(
-            guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(guestPanel4Layout.createSequentialGroup()
-                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(guestPanel4Layout.createSequentialGroup()
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(newGuestLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(firstNameLabel)
-                            .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lastNameLabel)
-                            .addComponent(lastNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37)
-                        .addComponent(addressLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(streetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(streetLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(zipcodeLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cityLabel)
-                            .addComponent(cityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(countryLabel)
-                            .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(phone1Label)
-                            .addComponent(phone1TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(phone2Label)
-                            .addComponent(phone2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(emailLabel)
-                            .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mandatoryLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(createGuestButton)
-                    .addComponent(editGuestButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(saveGuestChangesButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(clearGuestFieldsButton)
-                .addContainerGap(92, Short.MAX_VALUE))
-        );
-
-        jTabbedPane.addTab("Guests", guestPanel4);
+        jTabbedPane.addTab("Add guest to room", jPanel3);
 
         logTextArea.setColumns(20);
         logTextArea.setRows(5);
