@@ -1550,7 +1550,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addGuestToBookingButtonActionPerformed
 
     private void guestsToBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestsToBookingButtonActionPerformed
-        jTabbedPane.setSelectedIndex(3);
+        jTabbedPane.setSelectedIndex(4);
     }//GEN-LAST:event_guestsToBookingButtonActionPerformed
 
     private void bookingTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookingTableMouseClicked
@@ -1604,7 +1604,7 @@ public class GUI extends javax.swing.JFrame {
                 noOfGuestsInRoomLabel3.setText("" + roomGuestList.size() + "/" + roomSize);
 
                 if (evt.getClickCount() == 2) {
-                    jTabbedPane.setSelectedIndex(3);
+                    jTabbedPane.setSelectedIndex(4);
                 }
             }
         }
