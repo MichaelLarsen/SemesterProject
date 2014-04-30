@@ -102,7 +102,7 @@ public class Control {
         doubleBooking = checkForDoubleBooking(room, checkIn, checkOut);                                 // Checker at rummet er ledigt i perioden. FALSE hvis rummet er ledigt.
         if (doubleBooking == false) {
             newBooking = new Booking(guest.getGuestId(), room.getRoomNo(), "", checkIn, checkOut);      // Ny booking laves.
-            DBFacade.bookRoom(newBooking);                                                              // Booking tilføjes til nye bookings som skal persisteres.
+            DBFacade.createBooking(newBooking);                                                              // Booking tilføjes til nye bookings som skal persisteres.
         }
         return newBooking;
     }

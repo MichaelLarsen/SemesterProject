@@ -339,11 +339,11 @@ public class DBFacade {
      * @param booking       Booking som skal oprettes.
      * @return              TRUE, hvis bookingen ikke allerede er tilføjet.
      */
-    public boolean bookRoom(Booking booking) {
+    public boolean createBooking(Booking booking) {
         if (unitOfWork == null) {
             openNewTransaction();
         }
-        return unitOfWork.bookRoom(booking);
+        return unitOfWork.createBooking(booking);
     }
 
     /**
@@ -417,8 +417,8 @@ public class DBFacade {
 
     /**
      * Bruges af Control.saveBooking() til at hente liste over nuværende Bookings som ønskes tilføjet,
-     * til at checke at det rum som man har tilføjet til oprettelse gennem bookRoom(), ikke mens transaktionen laves er blevet gemt af en anden bruger,
-     * da vi ikke endnu har commit'et bookingen.
+ til at checke at det rum som man har tilføjet til oprettelse gennem createBooking(), ikke mens transaktionen laves er blevet gemt af en anden bruger,
+ da vi ikke endnu har commit'et bookingen.
      *  
      * @return      Liste af bookings som er tilføjet til listen af Bookings som skal oprettes.
      */
