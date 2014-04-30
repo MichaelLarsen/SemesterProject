@@ -289,16 +289,16 @@ public class BookingMapper {
      * @param con           Forbindelse til databasen.
      */
     public static void log(int bookingId, ActionType action, Connection con) {
-        String SQLString = "INSERT INTO booking_log (id, action, booking_id, logdate, content) "                                            //laver ny log for ændret booking
-                + "SELECT booking_log_id_seq.NEXTVAL, ?, ?, CURRENT_TIMESTAMP(3), SYS.DBMS_XMLGEN.GETXML('SELECT "                          //henter næste unikke ID og indsætter det sammen med actiontype og bookingID på '?'. CURRENT_TIMESTAMP(3) giver os dato + tid med præcision 3.
+        String SQLString = "INSERT INTO booking_log (id, booking_id, logdate, action, content) "                                            //laver ny log for ændret booking
+                + "SELECT booking_log_id_seq.NEXTVAL, ?, CURRENT_TIMESTAMP(3), ?, SYS.DBMS_XMLGEN.GETXML('SELECT "                          //henter næste unikke ID og indsætter det sammen med actiontype og bookingID på '?'. CURRENT_TIMESTAMP(3) giver os dato + tid med præcision 3.
                 + "(SELECT LISTAGG(CONCAT(CONCAT(g.first_name, '' ''), g.last_name), '','') WITHIN GROUP (ORDER BY 1) AS Fullname "         //henter de gæster som bor på bookingen med fornavn og efternavn aggregeret som en kolonne og gruppere dem som Fullname
                 + "FROM guests g JOIN booking_details bd ON bd.guest_id = g.guest_id AND bd.booking_id = " + bookingId + ") AS Guests, "
                 + "b.* FROM bookings b WHERE b.booking_id = " + bookingId + "') XMLSTR FROM DUAL";                                          //Vi henter data fra den table vi vil logge, som xml da det kan bruges af mange programmer og i mange sammenhænge
         PreparedStatement statement = null;
         try {
             statement = con.prepareStatement(SQLString);
-            statement.setInt(1, action.actionType);
-            statement.setInt(2, bookingId);
+            statement.setInt(1, bookingId);
+            statement.setInt(2, action.actionType);
             statement.executeUpdate();
         }
         catch (SQLException e) {
