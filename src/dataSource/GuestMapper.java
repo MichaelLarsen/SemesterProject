@@ -343,7 +343,7 @@ public class GuestMapper {
      * - Bruges til at vise logs i Log-fanen i GUI.
      *
      * @param con       Forbindelse til databasen.
-     * @return          Liste med guest-logs fra databasen, som strings.
+     * @return          Liste med guest-logs fra databasen som strings.
      */
     public ArrayList<String> getLog(Connection con) {
         ArrayList<String> stringArrayList = new ArrayList<>();
