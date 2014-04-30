@@ -114,51 +114,59 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="phone1Label" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="phone2Label" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="mandatoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="newGuestLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="guestIdLabel" min="-2" pref="95" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lastNameLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lastNameTextField" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="streetLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="zipcodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="emailLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="firstNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="emailTextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="phone2TextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="phone1TextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="countryTextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="cityTextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="streetTextField" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="firstNameTextField" max="32767" attributes="0"/>
-                                          <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="zipcodeTextField" alignment="0" min="-2" pref="56" max="-2" attributes="0"/>
-                                                  <Component id="createGuestButton" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="saveGuestChangesButton" alignment="0" pref="137" max="32767" attributes="0"/>
-                                              </Group>
-                                              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="phone1Label" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="phone2Label" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="newGuestLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="guestIdLabel" min="-2" pref="95" max="-2" attributes="0"/>
                                           </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lastNameLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="lastNameTextField" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="streetLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="zipcodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="emailLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="firstNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="emailTextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="phone2TextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="phone1TextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="countryTextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="cityTextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="streetTextField" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="firstNameTextField" max="32767" attributes="0"/>
+                                                  <Group type="102" attributes="0">
+                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                          <Component id="zipcodeTextField" alignment="0" min="-2" pref="56" max="-2" attributes="0"/>
+                                                          <Component id="createGuestButton" alignment="0" max="32767" attributes="0"/>
+                                                          <Component id="saveGuestChangesButton" alignment="0" pref="137" max="32767" attributes="0"/>
+                                                      </Group>
+                                                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                          </Group>
+                                          <Component id="mandatoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="guestPanelStatusLabel" min="-2" pref="293" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jScrollPane7" min="-2" pref="837" max="-2" attributes="0"/>
                                   <Component id="editGuestButton" min="-2" pref="92" max="-2" attributes="0"/>
@@ -243,7 +251,9 @@
                       <Component id="saveGuestChangesButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="clearGuestFieldsButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="92" max="32767" attributes="0"/>
+                      <EmptySpace pref="58" max="32767" attributes="0"/>
+                      <Component id="guestPanelStatusLabel" min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -412,6 +422,8 @@
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="guestIdLabel">
+            </Component>
+            <Component class="javax.swing.JLabel" name="guestPanelStatusLabel">
             </Component>
           </SubComponents>
         </Container>

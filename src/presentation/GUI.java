@@ -327,6 +327,7 @@ public class GUI extends javax.swing.JFrame {
         saveGuestChangesButton = new javax.swing.JButton();
         clearGuestFieldsButton = new javax.swing.JButton();
         guestIdLabel = new javax.swing.JLabel();
+        guestPanelStatusLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         guestJList = new javax.swing.JList();
@@ -575,43 +576,48 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(guestPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(addressLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phone1Label, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phone2Label, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mandatoryLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addComponent(newGuestLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addComponent(lastNameLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(lastNameTextField))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
-                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(streetLabel)
-                                    .addComponent(zipcodeLabel)
-                                    .addComponent(cityLabel)
-                                    .addComponent(emailLabel)
-                                    .addComponent(firstNameLabel))
-                                .addGap(27, 27, 27)
-                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(emailTextField)
-                                    .addComponent(phone2TextField)
-                                    .addComponent(phone1TextField)
-                                    .addComponent(countryTextField)
-                                    .addComponent(cityTextField)
-                                    .addComponent(streetTextField)
-                                    .addComponent(firstNameTextField)
-                                    .addGroup(guestPanel4Layout.createSequentialGroup()
+                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(guestPanel4Layout.createSequentialGroup()
+                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(addressLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(phone1Label, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(phone2Label, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                        .addComponent(newGuestLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(guestIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                        .addComponent(lastNameLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lastNameTextField))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, guestPanel4Layout.createSequentialGroup()
+                                        .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(streetLabel)
+                                            .addComponent(zipcodeLabel)
+                                            .addComponent(cityLabel)
+                                            .addComponent(emailLabel)
+                                            .addComponent(firstNameLabel))
+                                        .addGap(27, 27, 27)
                                         .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(saveGuestChangesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                                        .addGap(63, 63, 63)))))
-                        .addGap(40, 40, 40)
+                                            .addComponent(emailTextField)
+                                            .addComponent(phone2TextField)
+                                            .addComponent(phone1TextField)
+                                            .addComponent(countryTextField)
+                                            .addComponent(cityTextField)
+                                            .addComponent(streetTextField)
+                                            .addComponent(firstNameTextField)
+                                            .addGroup(guestPanel4Layout.createSequentialGroup()
+                                                .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(zipcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(createGuestButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(saveGuestChangesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                                                .addGap(63, 63, 63))))
+                                    .addComponent(mandatoryLabel, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(40, 40, 40))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, guestPanel4Layout.createSequentialGroup()
+                                .addComponent(guestPanelStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(guestPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(editGuestButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -677,7 +683,9 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(saveGuestChangesButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(clearGuestFieldsButton)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(guestPanelStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane.addTab("Guests", guestPanel4);
@@ -1317,17 +1325,22 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_clearGuestFieldsButtonActionPerformed
 
     private void saveGuestChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGuestChangesButtonActionPerformed
-        boolean status;
-        status = getGuestFieldData("saveGuest");
-        if (status) {
-            clearGuestFields();
-            createGuestButton.setEnabled(true);
-            guestIdLabel.setText("");
-            newGuestLabel.setText("Register new guest:");
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save changes to the guest?", "Save?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            boolean status;
+            status = getGuestFieldData("saveGuest");
+            if (status) {
+                clearGuestFields();
+                createGuestButton.setEnabled(true);
+                guestIdLabel.setText("");
+                newGuestLabel.setText("Register new guest:");
+                guestPanelStatusLabel.setText("Guest changes have been saved.");
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
+            }
         }
-        else {
-            jOptionPane.showMessageDialog(this, "An error occured. No changes were saved.", "Save failed", jOptionPane.WARNING_MESSAGE);
-        }
+
     }//GEN-LAST:event_saveGuestChangesButtonActionPerformed
 
     private void editGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editGuestButtonActionPerformed
@@ -1359,14 +1372,19 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_editGuestButtonActionPerformed
 
     private void createGuestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGuestButtonActionPerformed
-        boolean status = false;
-        status = getGuestFieldData("createGuest");
-        if (status) {
-            clearGuestFields();
+        int reply = jOptionPane.showConfirmDialog(this, "Are you sure you want to save changes to the guest?", "Save?", jOptionPane.YES_NO_OPTION);
+        if (reply == jOptionPane.YES_OPTION) {
+            boolean status = false;
+            status = getGuestFieldData("createGuest");
+            if (status) {
+                clearGuestFields();
+                guestPanelStatusLabel.setText("New guest has been created.");
+            }
+            else {
+                jOptionPane.showMessageDialog(this, "An error occured. Guest was not created.", "Create failed", jOptionPane.WARNING_MESSAGE);
+            }
         }
-        else {
-            jOptionPane.showMessageDialog(this, "An error occured. Guest was not created.", "Create failed", jOptionPane.WARNING_MESSAGE);
-        }
+
     }//GEN-LAST:event_createGuestButtonActionPerformed
 
     private void phone2TextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phone2TextFieldKeyTyped
@@ -1499,7 +1517,7 @@ public class GUI extends javax.swing.JFrame {
             if (reply == jOptionPane.YES_OPTION) {
                 commitSuccess = ctr.commitTransaction();
                 if (commitSuccess) {
-                    
+
                     //
                     String string = noOfGuestsInRoomLabel.getText();
                     int numberOfGuestInRoom = Integer.parseInt(string.substring(0, 1));
@@ -1507,7 +1525,7 @@ public class GUI extends javax.swing.JFrame {
                     int newNumberOfGuestsInRoom = numberOfGuestInRoom + addedGuestsModel.size();
                     noOfGuestsInRoomLabel.setText("" + newNumberOfGuestsInRoom + "/" + roomSize);
                     //
-                    
+
                     jOptionPane.showMessageDialog(this, "Guests added to booking!");
                     refreshModel(bookingDetailModel);
                     addedGuestsModel.clear();
@@ -1899,6 +1917,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JList guestJList;
     private javax.swing.JList guestJList2;
     private javax.swing.JPanel guestPanel4;
+    private javax.swing.JLabel guestPanelStatusLabel;
     private javax.swing.JTable guestTable;
     private javax.swing.JButton guestsToBookingButton;
     private javax.swing.JLabel introductionLabel;
