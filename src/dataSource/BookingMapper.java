@@ -36,6 +36,7 @@ public class BookingMapper {
             statement = con.prepareStatement(SQLString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
+                
                 booking = new Booking(rs);      // Vi sender vores ResultSet direkte videre til vores constructor
                 bookingList.add(booking);
             }
@@ -99,7 +100,7 @@ public class BookingMapper {
      * @param con               Forbindelse til databasen.
      * @return                  TRUE, hvis INSERTs lykkes. Rækker tilføjet == antallet af Bookings i liste.
      */
-    public boolean addBooking(ArrayList<Booking> newBookingList, Connection con) {
+    public boolean createBooking(ArrayList<Booking> newBookingList, Connection con) {
         int bookingAdded = 0;
         String SQLString = "INSERT INTO bookings VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;

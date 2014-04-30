@@ -63,7 +63,7 @@ public class UnitOfWork {
             commitSuccess = commitSuccess && guestMapper.updateGuestDB(dirtyGuestList, con);
         }
         if (!newBookingList.isEmpty()) {
-            commitSuccess = commitSuccess && bookingMapper.addBooking(newBookingList, con);
+            commitSuccess = commitSuccess && bookingMapper.createBooking(newBookingList, con);
         }
         if (!dirtyRoomList.isEmpty()) {
             commitSuccess = commitSuccess && roomMapper.updateRoomDB(dirtyRoomList, con);

@@ -68,7 +68,7 @@ public class BookingMapperTest {
     }
 
     /**
-     * Test of addBooking method, of class BookingMapper. Tester tilføjning af
+     * Test of createBooking method, of class BookingMapper. Tester tilføjning af
      * ny booking
      */
     @Test
@@ -78,7 +78,7 @@ public class BookingMapperTest {
         Date checkOut = new Date(1451, 6, 29);
         Booking booking = new Booking(2000001, 1009, "Star Tours", checkIn, checkOut);
         bookingListTest.add(booking);
-        boolean result = bm.addBooking(bookingListTest, con);
+        boolean result = bm.createBooking(bookingListTest, con);
         assertEquals(true, result);
     }
 
@@ -147,7 +147,7 @@ public class BookingMapperTest {
         Date checkOut = new Date(1451, 6, 29);
         Booking booking = new Booking(2000002, 1009, "Star Tours", checkIn, checkOut);
         bookingListTest.add(booking);
-        bm.addBooking(bookingListTest, con);
+        bm.createBooking(bookingListTest, con);
         ArrayList<String> stringTestList;
         stringTestList = bm.getLog(con);
         //da vi lige har oprettet en booking i databasen, burde vi også have lavet en log.
