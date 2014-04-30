@@ -1821,7 +1821,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_clearAddedGuestsButtonActionPerformed
 
     private void jTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPaneStateChanged
-        if (jTabbedPane.getSelectedIndex() == 2) {
+        if (jTabbedPane.getSelectedIndex() == 3) {
             refreshBookingTable(bookingTableModel);
         }
     }//GEN-LAST:event_jTabbedPaneStateChanged
