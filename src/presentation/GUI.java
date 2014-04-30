@@ -20,7 +20,6 @@ import javax.swing.table.DefaultTableModel;
 public class GUI extends javax.swing.JFrame {
 
     private Control ctr;
-    private Booking currentBooking;
     private DefaultListModel<Guest> guestModel;
     private DefaultListModel<Booking> newBookingModel;
     private DefaultListModel bookingDetailModel;
@@ -182,7 +181,7 @@ public class GUI extends javax.swing.JFrame {
         if (model.equals(bookingDetailModel)) {
             bookingDetailModel.clear();
             ArrayList<Guest> roomGuestList;
-            roomGuestList = ctr.getBookingDetailsFromDB(currentBooking);
+            roomGuestList = ctr.getBookingDetailsFromDB(ctr.getCurrentBooking());
 
             for (int i = 0; i < roomGuestList.size(); i++) {
                 bookingDetailModel.addElement(roomGuestList.get(i));
@@ -1543,6 +1542,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void addGuestToBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGuestToBookingButtonActionPerformed
         boolean addGuestSuccess;
+        Booking currentBooking = ctr.getCurrentBooking();
         if (currentBooking != null && guestJList2.getSelectedValue() != null) {
             Guest guest = (Guest) guestJList2.getSelectedValue();
             if (!addedGuestsModel.contains(guest)) {
@@ -1575,11 +1575,13 @@ public class GUI extends javax.swing.JFrame {
         if (bookingTable.getSelectedRow() > -1) {
             int selectedRowIndex = bookingTable.getSelectedRow();
             int bookingId = (Integer) bookingTableModel.getValueAt(selectedRowIndex, 0);
+            Booking currentBooking = null;
             ArrayList<Booking> bookingList;
             bookingList = ctr.getBookings();
 
             for (Booking booking : bookingList) {
                 if (booking.getBookingId() == bookingId) {
+                    ctr.setCurrentBooking(booking);
                     currentBooking = booking;
                 }
             }

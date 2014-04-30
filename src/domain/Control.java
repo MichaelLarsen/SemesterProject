@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Control {
 
     private DBFacade DBFacade;
+    private Booking currentBooking;
     private ArrayList<Room> roomList;
     private ArrayList<Booking> bookingList;
     private ArrayList<Booking> notSavedBookings;
@@ -437,5 +438,12 @@ public class Control {
         boolean updateSuccess;
         updateSuccess = DBFacade.updateGuestsInRoomDB(roomGuest);
         return updateSuccess;
+    }
+
+    public void setCurrentBooking(Booking booking) {
+        this.currentBooking = booking;
+    }
+    public Booking getCurrentBooking() {
+        return currentBooking;
     }
 }
