@@ -422,7 +422,7 @@ public class GUI extends javax.swing.JFrame {
 
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/presentation/image/Casablanca_logo.jpg"))); // NOI18N
 
-        introductionLabel.setText("Casablanca Holiday Center Booking System");
+        introductionLabel.setText("Casablanca Holiday Center Booking System.");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -433,7 +433,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(logo)
                 .addGap(186, 186, 186)
                 .addComponent(introductionLabel)
-                .addContainerGap(555, Short.MAX_VALUE))
+                .addContainerGap(551, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -870,9 +870,9 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(checkOutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addGap(30, 30, 30)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(noOfGuestsInRoomLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(noOfGuestsInRoomLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

@@ -61,7 +61,7 @@
                       <Component id="logo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="186" max="-2" attributes="0"/>
                       <Component id="introductionLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="555" max="32767" attributes="0"/>
+                      <EmptySpace pref="551" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -93,7 +93,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="introductionLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Casablanca Holiday Center Booking System"/>
+                <Property name="text" type="java.lang.String" value="Casablanca Holiday Center Booking System."/>
               </Properties>
             </Component>
           </SubComponents>
@@ -795,9 +795,9 @@
                               <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="noOfGuestsInRoomLabel" alignment="0" min="-2" pref="14" max="-2" attributes="0"/>
+                              <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
