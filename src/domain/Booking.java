@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
+
 package domain;
 
 import java.sql.ResultSet;
@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
+ * Booking klassen tillader en gæst at booke et rum i en given periode.
  *
  * @author Sebastian, Michael og Andreas
  */
@@ -22,6 +23,12 @@ public class Booking {
     private int roomNo;
     private int bookingOwnerId;
 
+    /**
+     * Constructor som bruges til at instansierer allerede eksisterende bookings,
+     * hentet fra databasen.
+     *
+     * @param rs    ResultSet indeholder bookingems parametre fra databasen.
+     */
     public Booking(ResultSet rs) {
         super();
         try {
@@ -43,6 +50,17 @@ public class Booking {
         }
     }
 
+    /**
+     * Constructor som bruges når vi opretter en ny booking. I modsætning til
+     * ovenstående constructor, indeholder den ikke bookingId, som vi først henter
+     * i databasen i samme transaktion, for at sikre data-integritet.
+     *
+     * @param bookingOwnerId        Gæsten som ejer bookingen.
+     * @param roomNo                Nummer på rum som skal bookes.
+     * @param agency                Eventuel agency bookingen er modtaget.
+     * @param checkInDate           Check-in dato.
+     * @param checkOutDate          Check-out dato.
+     */
     public Booking(int bookingOwnerId, int roomNo, String agency, Date checkInDate, Date checkOutDate) {
         this.bookingOwnerId = bookingOwnerId;
         this.roomNo = roomNo;

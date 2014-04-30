@@ -95,7 +95,7 @@ public class Control {
      * @param checkOut      Check-out dato.
      * @return              Booking som er oprettet med pågældende gæst og rum.
      */
-    public Booking bookRoom(Room room, Guest guest, Date checkIn, Date checkOut) {
+    public Booking createBooking(Room room, Guest guest, Date checkIn, Date checkOut) {
         boolean doubleBooking;
         bookingList = DBFacade.getBookingsFromDB();                                                     // Vi opdaterer listen af bookings fra databasen, så checkForDoubleBooking() har de nyeste data før den kører.
         Booking newBooking = null;
@@ -122,7 +122,7 @@ public class Control {
     /**
      * Commit'er de nye bookings brugeren har oprettet, efter at have checket 
      * for doubleBookings. 
-     * Control.bookRoom() har allerede checket for doubleBooking, men vi checker 
+     * Control.createBooking() har allerede checket for doubleBooking, men vi checker 
      * også her, i fald en anden bruger har booked samme rum imellemtiden.
      * 
      * @return      TRUE, hvis commit lykkes og bookings bliver oprettet.
@@ -182,13 +182,13 @@ public class Control {
      * @param booking       Booking gæsten skal tilføjes til.
      * @return              TRUE, hvis BookingDetail ikke allerede er tilføjet.
      */
-    public boolean addGuestToRoom(Guest guest, Booking booking) {
+    public boolean createBookingDetail(Guest guest, Booking booking) {
         boolean addGuestSuccess = false;
         boolean doubleBooking = false;
         ArrayList<Booking> tempBookingList;
-        tempBookingList = DBFacade.getGuestBookingsFromDB(guest);                                               // Henter evt. bookings hvori kunden allerede indgår
-        if (!tempBookingList.isEmpty()) {                                                                       // Checker om kunden allerede bor på andre bookinger i samme periode
-            doubleBooking = checkGuestForDoubleBooking(tempBookingList, booking);
+        tempBookingList = DBFacade.getGuestBookingsFromDB(guest);                                               // Henter alle bookings hvori kunden allerede indgår
+        if (!tempBookingList.isEmpty()) {                                                                       
+            doubleBooking = checkGuestForDoubleBooking(tempBookingList, booking);                               // Checker om kunden allerede bor på andre bookinger i samme periode
         }
         if (doubleBooking == false) {
             BookingDetail bookingDetail = new BookingDetail(guest.getGuestId(), booking.getBookingId());
@@ -197,17 +197,23 @@ public class Control {
         return addGuestSuccess;
     }
     
+    /**
+     * Fjerner alle gæster som er tilføjet til en Booking, men som endnu ikke er persisteret.
+     * - Bruges til at clear listen af gæster man har tilføjet til en Booking, men endnu ikke gemt, i GUI.
+     */
     public void clearNewBookingDetails() {
         DBFacade.clearNewBookingDetails();
     }
     
     /**
-     * Checker om rum er ledigt ved at sammenligne den ønskede periode med alle bookings.
+     * Checker om rum er ledigt i en given periode, ved at sammenligne med alle bookings.
+     * - Bruges når vi opretter en booking, når vi commit'er en booking og når vi skal 
+     *   vise alle ledige rum for en given periode i GUI.
      *
-     * @param room
-     * @param checkInDate
-     * @param checkOutDate
-     * @return
+     * @param room              Rum som ønskes booked.
+     * @param checkInDate       Check-in dato.
+     * @param checkOutDate      Check-out dato.
+     * @return                  TRUE, hvis rummet ER booked/optaget i perioden, ellers FALSE.
      */
     public boolean checkForDoubleBooking(Room room, Date checkInDate, Date checkOutDate) {
         boolean doubleBooking = false;
@@ -218,7 +224,7 @@ public class Control {
                 Date bookingEndDate = bookingList.get(i).getCheckOutDate();
                 if ((checkInDate.before(bookingStartDate) && checkOutDate.before(bookingStartDate))
                         || (checkInDate.after(bookingEndDate) && checkOutDate.after(bookingEndDate))
-                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {       // Her checkes alle mulige måder rummet
+                        || checkInDate.equals(bookingEndDate) || checkOutDate.equals(bookingStartDate)) {       // Her checkes alle mulige kombinationer, hvorpå rummet kan være optaget.
                     doubleBooking = false;
                 }
                 else {
@@ -231,12 +237,16 @@ public class Control {
     }
     
     /**
-     * Man kunne have kundens bookings for en specifik periode direkte i 
-     * database via SQL statement, men vi har valgt at gøre det i koden.
+     * Checker om en gæst allerede er på et rum i en given periode.
+     * - Bruges når vi tilføjer en gæst til et værelse af Control.createBookingDetail().
+     * 
+     * Alternativt kunne man blot hente gæstens eventuelle bookings for en specifik periode direkte i 
+     * database via SQL statement. Hvis der var nogle bookings, var gæsten allerede booked.
+     * Vi har valgt at gøre det i programmet i stedet for databasen.
      *
-     * @param oldBookingList
-     * @param newBooking
-     * @return 
+     * @param oldBookingList        Liste med alle gæstens bookings fra databasen.
+     * @param newBooking            Booking som vi ønsker at filføje gæsten til.
+     * @return                      TRUE, hvis gæsten allerede ER booked/optaget i perioden, ellers FALSE.
      */
     private boolean checkGuestForDoubleBooking(ArrayList<Booking> oldBookingList, Booking newBooking) {
         boolean doubleBooking = false;
@@ -259,11 +269,23 @@ public class Control {
         return doubleBooking;
     }
     
+    /**
+     * Henter alle rum fra databasen.
+     *
+     * @return       Liste med alle Rooms i databasen.
+     */
     public final ArrayList<Room> getRoomsFromDB() {
         roomList = DBFacade.getRoomFromDB();
         return roomList;
     }
 
+    /**
+     * Returnerer liste af rum fra programmets hukommelse.
+     * - Bruges hver gang vi skal bruge hotellets rum. Da rum ikke kan ændres, er
+     *   unødvendigt at hente dem fra databasen mere end én gang.
+     *
+     * @return      Liste med alle rum.
+     */
     public ArrayList<Room> getRooms() {
         return roomList;
     }
@@ -291,45 +313,98 @@ public class Control {
         return availableRoomList;
     }
     
-    public boolean checkRoomAvailability(Booking booking, int arraySize) {
-        boolean available = false;
+    /**
+     * Checker om der er ledige senge i bookingen/rummet.
+     * - Bruges til at sikre at vi ikke overbooker et rum.
+     *
+     * @param booking       Booking for hvilken vi ønsker ledighed.
+     * @param arraySize     Liste med gæster som foreløbigt ønskes tilføjet.
+     * @return              TRUE, så længe der stadig er 
+     */
+    public int checkRoomAvailability(Booking booking, int arraySize) {
+        int availability = 0;
         ArrayList<Guest> tempRoomGuestList = DBFacade.getBookingDetailsFromDB(booking);  // vi henter en liste over allerede eksisterende kunder på bookingen
         for (int i = 0; i < roomList.size(); i++) {
             if (roomList.get(i).getRoomNo() == booking.getRoomNo()) {
                 if (roomList.get(i).getRoomSize() > arraySize + tempRoomGuestList.size()) {   // vi checker at antallet af folk vi vil tilføje (arraySize) + antallet af folk allerede i bookingen (tempRoomGuestList) ikke overstiger getRoomSize.
-                    available = true;
+                    availability = roomList.get(i).getRoomSize() - (arraySize + tempRoomGuestList.size());
                 }
             }
         }
-        return available;
+        return availability;
     }
     
+    /**
+     * Henter alle gæster fra databasen.
+     *
+     * @return       Liste med alle Guests i databasen.
+     */
     public ArrayList<Guest> getGuestsFromDB() {
         ArrayList<Guest> guestList;
         guestList = DBFacade.getGuestsFromDB();
         return guestList;
     }
     
+    /**
+     * Tilføjer gæst til liste af gæster som skal oprettes.
+     * - Bruges ved oprettelse af ny gæst.
+     *
+     * @param guest     Guest-objekter som skal persisteres.
+     * @return          TRUE, hvis gæsten ikke allerede er tilføjet.
+     */
     public boolean createGuest(Guest guest) {
         return DBFacade.createGuest(guest);
     }
 
+    /**
+     * Henter gæst med specifikt guestId fra databasen.
+     *
+     * @param guestId        GuestId på gæst som ønskes.
+     * @return               Guest-objekt med ønskede bookingId.
+     */
     public Guest getGuestFromID(int guestId) {
         return DBFacade.getGuestFromID(guestId);
     }
 
+    /**
+     * Tilføjer gæst til liste af gæster som skal ændres.
+     * - Bruges ved ændring af gæstens informationer.
+     *
+     * @param guest     Guest-objekter som skal opdateres.
+     * @return          TRUE, hvis gæsten ikke allerede er tilføjet.
+     */
     public boolean updateGuestDB(Guest guest) {
         return DBFacade.updateGuestDB(guest);
     }
     
+    /**
+     * Søger efter fornavn, efternavn, eller begge dele i databasen. Sammenligning sker i upper case.
+     * - Bruges til at søge efter en specifik gæst i GUI.
+     * 
+     * @param status        Angiver om der skal søges på fornavn, efternavn eller begge.
+     * @param names         Navn(e) der skal søges efter.
+     * @return              Liste af Guests som matcher søgekriterierne.
+     */
     public ArrayList<Guest> searchForGuestDB(String status, String... names) {
         return DBFacade.searchForGuestDB(status, names);
     }
 
+    /**
+     * Henter alle bookinger gæsten sover på (ikke dem han er ejer af). 
+     * - Bruges til at checke at gæsten ikke bookes til flere værelser i samme tidsrum.
+     *
+     * @param guest      Guest for hvem Bookings ønskes.
+     * @return           Liste med Bookings gæsten findes på.
+     */
     public ArrayList<Booking> getGuestBookingsFromDB(Guest guest) {
         return DBFacade.getGuestBookingsFromDB(guest);
     }
 
+    /**
+     * Henter alle guest-logs fra databasen.
+     * 
+     * @return       Liste med alle Guest-logs som strings.
+     */
     public ArrayList<String> getGuestLog() {
         return DBFacade.getGuestLog();
     }

@@ -1,14 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Semester Projekt, Datamatiker 2. semester
+ * Gruppe 4: Andreas, Michael og Sebastian
  */
+
 package domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * Gæst klassen repræsenterer hotellets gæst.
  *
  * @author Sebastian, Michael og Andreas
  */
@@ -25,6 +26,12 @@ public class Guest {
     private int phone1;
     private int phone2;
 
+    /**
+     * Constructor som bruges til at instansierer allerede eksisterende gæster,
+     * hentet fra databasen.
+     *
+     * @param rs    ResultSet indeholder gæstens parametre fra databasen.
+     */
     public Guest(ResultSet rs) {
         super();
         try {
@@ -45,6 +52,22 @@ public class Guest {
         }
     }
 
+    /**
+     * Constructor som bruges når vi opretter en ny gæst. I modsætning til
+     * ovenstående constructor, indeholder den ikke guestId, som vi først henter
+     * i databasen i samme transaktion, for at sikre data-integritet.
+     * - Bruges af GUI.getGuestFieldData()
+     *
+     * @param firstName
+     * @param lastName
+     * @param street
+     * @param zipcode
+     * @param city
+     * @param country
+     * @param email
+     * @param phone1
+     * @param phone2
+     */
     public Guest(String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,6 +80,22 @@ public class Guest {
         this.phone2 = phone2;
     }
     
+    /**
+     * Constructor som bruges når vi ændrer en allerede eksisterende gæsts 
+     * informationer, hvorfor den allerede indeholder guestId. 
+     * - Bruges af GUI.getGuestFieldData()
+     *
+     * @param guestId
+     * @param firstName
+     * @param lastName
+     * @param street
+     * @param zipcode
+     * @param city
+     * @param country
+     * @param email
+     * @param phone1
+     * @param phone2
+     */
     public Guest(int guestId, String firstName, String lastName, String street, String zipcode, String city, String country, String email, int phone1, int phone2) {
         this.guestId = guestId;
         this.firstName = firstName;
